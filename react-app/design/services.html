@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Customer Management</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="vendor/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body>
+    <ul class="nav nav-tabs mb-4 pt-4 px-4 bg-dark">
+        <li class="nav-item mr-1">
+            <a class="nav-link text-light" href="./customers.html">Customers</a>
+        </li>
+        <li class="nav-item mr-1">
+            <a class="nav-link text-light" href="./tickets.html">Tickets</a>
+        </li>
+        <li class="nav-item mr-1">
+            <a class="nav-link active" href="./services.html">Services</a>
+        </li>
+        <li class="nav-item mr-1">
+            <a class="nav-link text-light" href="./products.html">Products</a>
+        </li>
+    </ul>
+    <div class="mx-4">
+        <a class="mb-4 btn btn-primary" href="#">Add service</a>
+        <form class="mb-4">
+            <div class="row">
+                <div class="col-md">
+                    <input type="text" class="form-control" placeholder="name">
+                </div>
+                <div class="col-md">
+                    <input type="text" class="form-control" placeholder="price">
+                </div>
+                <div class="col-md">
+                    <input type="text" class="form-control" placeholder="tax">
+                </div>
+                <div class="col-md">
+                    <button type="submit" class="btn col">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive">
+            <table class="text-center table table-striped table-sm table-bordered table-hover p-4">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>tax</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Cortar</td>
+                        <td>7€</td>
+                        <td>21%</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary" href="#">Edit</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Lavar</td>
+                        <td>5€</td>
+                        <td>21%</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary" href="#">Edit</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Uñas</td>
+                        <td>10€</td>
+                        <td>21%</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary" href="#">Edit</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Tinte</td>
+                        <td>15€</td>
+                        <td>21%</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary" href="#">Edit</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>

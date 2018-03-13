@@ -102,4 +102,4 @@ And more functions for accounting:
 * Show daily
 * Show weekly
 
-[Trello](https://trello.com/b/jt3Bpx3M/tiki-ticket)
+[Trello](https://trello.com/b/Pexusfgm/customermanagement)
