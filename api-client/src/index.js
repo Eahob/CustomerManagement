@@ -17,17 +17,17 @@ const api = {
 
         return rp(options)
     },
-    showCustomers(){
-        return this._call('get', 'customers')
+    showCustomers(query) {
+        return this._call('get', 'customers' + (query ? '/?' + query : ''))
     },
-    showTickets(){
-        return this._call('get', 'tickets')
+    showTickets(query) {
+        return this._call('get', 'tickets'+ (query ? '/?' + query : ''))
     },
-    showServices(){
-        return this._call('get', 'services')
+    showServices(query) {
+        return this._call('get', 'services'+ (query ? '/?' + query : ''))
     },
-    showProducts(){
-        return this._call('get', 'products')
+    showProducts(query) {
+        return this._call('get', 'products'+ (query ? '/?' + query : ''))
     }
 }
 

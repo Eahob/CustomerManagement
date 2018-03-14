@@ -2,13 +2,7 @@ const mongoose = require('mongoose')
 
 const Ticket = mongoose.model('tickets', {
     id: String,
-    time: {
-        date: String,
-        minute: Number,
-        hour: Number,
-        day: Number,
-        year: Number
-    },
+    date: Date,
     idCustomer: String,
     services: [
         {

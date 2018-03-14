@@ -7,22 +7,22 @@ api.host = 'localhost'
 api.port = '5000'
 
 class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      customers:[],
-      tickets:[]
-    }
-  }
+  // constructor() {
+  //   super()
+  //   this.state = {
+  //     customers: [],
+  //     tickets: []
+  //   }
+  // }
 
-  componentDidMount() {
-    api.showCustomers().then(res => {
-      this.setState({customers:res.data})
-    })
-    api.showTickets().then(res => {
-      this.setState({tickets:res.data})
-    })
-  }
+  // componentDidMount() {
+  //   api.showCustomers().then(res => {
+  //     this.setState({ customers: res.data })
+  //   })
+  //   api.showTickets().then(res => {
+  //     this.setState({ tickets: res.data })
+  //   })
+  // }
 
   render() {
     return (
@@ -68,8 +68,37 @@ class Customers extends Component {
     super()
     this.state = {
       customers: [],
-      responseStatus: ''
+      responseStatus: '',
+      form: {
+        name: '',
+        surname: '',
+        phone: '',
+        observations: ''
+      }
     }
+  }
+  keepInput(input, property) {
+    this.setState(prevState => {
+      let form = prevState.form
+      form[property] = input.trim()
+      return { form }
+    }, function () {
+      this.submit()
+    })
+  }
+  submit() {
+    function serialize(obj) {
+      /* https://stackoverflow.com/a/1714899 */
+      let str = [];
+      for (let p in obj)
+        if (obj.hasOwnProperty(p) && obj[p]) {
+          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        }
+      return str.join("&");
+    }
+    api.showCustomers(serialize(this.state.form)).then(res => {
+      this.setState({ customers: res.data, responseStatus: res.status })
+    })
   }
   componentDidMount() {
     api.showCustomers().then(res => {
@@ -80,6 +109,26 @@ class Customers extends Component {
   render() {
     return (
       <div className="mx-4">
+        <form className="mb-4" onSubmit={e => { e.preventDefault(); this.submit() }}>
+          <div className="row">
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} name="name" className="form-control" placeholder="name" type="text" />
+            </div>
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} name="surname" className="form-control" placeholder="surname" type="text" />
+            </div>
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} name="phone" className="form-control" placeholder="phone" type="text" />
+            </div>
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} name="observations" className="form-control" placeholder="observations" type="text" />
+            </div>
+            <div className="col-md">
+              <button type="submit" className="btn btn-outline-secondary col">Search</button>
+            </div>
+          </div>
+        </form>
+
         <div className="table-responsive">
           <table className="text-center table table-striped table-sm table-bordered table-hover">
             <thead>
@@ -118,8 +167,35 @@ class Tickets extends Component {
     super()
     this.state = {
       tickets: [],
-      responseStatus: ''
+      responseStatus: '',
+      form: {
+        pricemin: '',
+        pricemax: '',
+        datemin: '',
+        datemax: ''
+      }
     }
+  }
+  keepInput(input, property) {
+    this.setState(prevState => {
+      let form = prevState.form
+      form[property] = input.trim()
+      return { form }
+    })
+  }
+  submit() {
+    function serialize(obj) {
+      /* https://stackoverflow.com/a/1714899 */
+      let str = [];
+      for (let p in obj)
+        if (obj.hasOwnProperty(p) && obj[p]) {
+          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        }
+      return str.join("&");
+    }
+    api.showTickets(serialize(this.state.form)).then(res => {
+      this.setState({ tickets: res.data, responseStatus: res.status })
+    })
   }
   componentDidMount() {
     api.showTickets().then(res => {
@@ -130,6 +206,31 @@ class Tickets extends Component {
   render() {
     return (
       <div className="mx-4">
+        <form className="mb-4" onSubmit={e => { e.preventDefault(); this.submit() }}>
+          <div className="row">
+            {/* <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="service" className="form-control" placeholder="service" type="text" />
+            </div>
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="product" className="form-control" placeholder="product" type="text" />
+            </div> */}
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="datemin" className="form-control" placeholder="Minimun date" type="date" />
+            </div>
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="datemax" className="form-control" placeholder="Maximun date" type="date" />
+            </div>
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="pricemin" className="form-control" placeholder="Minimun price" type="text" />
+            </div>
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="pricemax" className="form-control" placeholder="Maximun price" type="text" />
+            </div>
+            <div className="col-md">
+              <button type="submit" className="btn btn-outline-secondary col">Search</button>
+            </div>
+          </div>
+        </form>
         <div className="table-responsive">
           <table className="text-center table table-striped table-sm table-bordered table-hover">
             <thead>
@@ -146,7 +247,7 @@ class Tickets extends Component {
             </thead>
             <tbody>
               {this.state.tickets.map(ticket => {
-                let d = new Date(ticket.time.date)
+                let d = new Date(ticket.date)
                 return (
                   <tr key={ticket.id}>
                     <td>{ticket.id}</td>
@@ -175,9 +276,37 @@ class Services extends Component {
     super()
     this.state = {
       services: [],
-      responseStatus: ''
+      responseStatus: '',
+      form: {
+        name: '',
+        pricemin: '',
+        pricemax: ''
+      }
     }
   }
+
+  keepInput(input, property) {
+    this.setState(prevState => {
+      let form = prevState.form
+      form[property] = input.trim()
+      return { form }
+    })
+  }
+  submit() {
+    function serialize(obj) {
+      /* https://stackoverflow.com/a/1714899 */
+      let str = [];
+      for (let p in obj)
+        if (obj.hasOwnProperty(p) && obj[p]) {
+          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        }
+      return str.join("&");
+    }
+    api.showServices(serialize(this.state.form)).then(res => {
+      this.setState({ services: res.data, responseStatus: res.status })
+    })
+  }
+
   componentDidMount() {
     api.showServices().then(res => {
       this.setState({ services: res.data, responseStatus: res.status })
@@ -187,6 +316,22 @@ class Services extends Component {
   render() {
     return (
       <div className="mx-4">
+        <form className="mb-4" onSubmit={e => { e.preventDefault(); this.submit() }}>
+          <div className="row">
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="name" className="form-control" placeholder="name" type="text" />
+            </div>
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="pricemin" className="form-control" placeholder="Minimun price" type="text" />
+            </div>
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="pricemax" className="form-control" placeholder="Maximun price" type="text" />
+            </div>
+            <div className="col-md">
+              <button type="submit" className="btn btn-outline-secondary col">Search</button>
+            </div>
+          </div>
+        </form>
         <div className="table-responsive">
           <table className="text-center table table-striped table-sm table-bordered table-hover">
             <thead>
@@ -225,8 +370,34 @@ class Products extends Component {
     super()
     this.state = {
       products: [],
-      responseStatus: ''
+      responseStatus: '',
+      form: {
+        name: '',
+        pricemin: '',
+        pricemax: ''
+      }
     }
+  }
+  keepInput(input, property) {
+    this.setState(prevState => {
+      let form = prevState.form
+      form[property] = input.trim()
+      return { form }
+    })
+  }
+  submit() {
+    function serialize(obj) {
+      /* https://stackoverflow.com/a/1714899 */
+      let str = [];
+      for (let p in obj)
+        if (obj.hasOwnProperty(p) && obj[p]) {
+          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        }
+      return str.join("&");
+    }
+    api.showProducts(serialize(this.state.form)).then(res => {
+      this.setState({ products: res.data, responseStatus: res.status })
+    })
   }
   componentDidMount() {
     api.showProducts().then(res => {
@@ -237,6 +408,22 @@ class Products extends Component {
   render() {
     return (
       <div className="mx-4">
+        <form className="mb-4" onSubmit={e => { e.preventDefault(); this.submit() }}>
+          <div className="row">
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="name" className="form-control" placeholder="name" type="text" />
+            </div>
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="pricemin" className="form-control" placeholder="Minimun price" type="text" />
+            </div>
+            <div className="col-md">
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="pricemax" className="form-control" placeholder="Maximun price" type="text" />
+            </div>
+            <div className="col-md">
+              <button type="submit" className="btn btn-outline-secondary col">Search</button>
+            </div>
+          </div>
+        </form>
         <div className="table-responsive">
           <table className="text-center table table-striped table-sm table-bordered table-hover">
             <thead>

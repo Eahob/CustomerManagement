@@ -42,21 +42,40 @@ function selectMongooseModel(pathname) {
     }
 }
 
-function filterAndShow(req, res) {
+function showAndFilterText(req, res) {
     // to do: add pagination
     let filter = {}
     if (req.query) {
         for (const prop in req.query) {
-            
-            filter[prop] =  { $regex: new RegExp(req.query[prop], 'i') }
-            //console.log(`req.query.${prop} = ${req.query[prop]}`);
+            switch (prop) {
+                case 'pricemin':
+                    if (!filter.price) filter.price = {}
+                    filter.price['$gte'] = req.query.pricemin
+                    break
+                case 'pricemax':
+                    if (!filter.price) filter.price = {}
+                    filter.price['$lte'] = req.query.pricemax
+                    break
+                case 'datemin':
+                    if (!filter.date) filter.date = {}
+                    filter.date['$gte'] = new Date(req.query.datemin)
+                    break
+                case 'datemax':
+                    if (!filter.date) filter.date = {}
+                    filter.date['$lte'] = new Date(req.query.datemax)
+                    break
+                default:
+                    let queryValue = req.query[prop]
+                    if (queryValue) {
+                        filter[prop] = { $regex: new RegExp(queryValue, 'i') }
+                    }
+                    break
+            }
         }
-        //const { name } = req.query
-        //const regexp = new RegExp(name, 'i')
-        //filter = { name: { $regex: regexp } }
     }
-    console.log(filter)
-
+    show(req, res, filter)
+}
+function show(req, res, filter = {}) {
     const model = selectMongooseModel(url.parse(req.url).pathname)
     model.find(filter, { _id: 0, __v: 0 })
         .then(list => {
@@ -66,19 +85,20 @@ function filterAndShow(req, res) {
 }
 
 router.get('/customers', (req, res) => {
-    filterAndShow(req, res)
+    showAndFilterText(req, res)
 })
 
 router.get('/tickets', (req, res) => {
-    filterAndShow(req, res)
+    //show(req, res)
+    showAndFilterText(req, res)
 })
 
 router.get('/services', (req, res) => {
-    filterAndShow(req, res)
+    showAndFilterText(req, res)
 })
 
 router.get('/products', (req, res) => {
-    filterAndShow(req, res)
+    showAndFilterText(req, res)
 })
 
 module.exports = router
