@@ -4,12 +4,14 @@ const api = {
     _baseUrl() {
         return `${this.protocol}://${this.host}:${this.port}/api`
     },
-    _call(method, path, body, token) {
+    _call(method, path, body, query, token) {
         const options = {
             method,
             uri: `${this._baseUrl()}/${path}`,
             json: true
         }
+
+        if (query) options.qs = query
 
         if (body) options.body = body
 
@@ -17,17 +19,21 @@ const api = {
 
         return rp(options)
     },
-    showCustomers(query) {
-        return this._call('get', 'customers' + (query ? '/?' + query : ''))
+    showCustomersBy(name, surname, phone, email, observations) {
+        let query = { name, surname, phone, email, observations }
+        return this._call('get', 'customers', undefined, query)
     },
-    showTickets(query) {
-        return this._call('get', 'tickets'+ (query ? '/?' + query : ''))
+    showTicketsBy(pricemin, pricemax, datemin, datemax) {
+        let query = { pricemin, pricemax, datemin, datemax }
+        return this._call('get', 'tickets', undefined, query)
     },
-    showServices(query) {
-        return this._call('get', 'services'+ (query ? '/?' + query : ''))
+    showServicesBy(pricemin, pricemax, name) {
+        let query = { pricemin, pricemax}
+        return this._call('get', 'services', undefined, query)
     },
-    showProducts(query) {
-        return this._call('get', 'products'+ (query ? '/?' + query : ''))
+    showProductsBy(query) {
+        let query = { pricemin, pricemax}
+        return this._call('get', 'products', undefined, query)
     }
 }
 

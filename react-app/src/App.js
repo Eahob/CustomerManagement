@@ -7,23 +7,6 @@ api.host = 'localhost'
 api.port = '5000'
 
 class App extends Component {
-  // constructor() {
-  //   super()
-  //   this.state = {
-  //     customers: [],
-  //     tickets: []
-  //   }
-  // }
-
-  // componentDidMount() {
-  //   api.showCustomers().then(res => {
-  //     this.setState({ customers: res.data })
-  //   })
-  //   api.showTickets().then(res => {
-  //     this.setState({ tickets: res.data })
-  //   })
-  // }
-
   render() {
     return (
       <BrowserRouter>
@@ -56,13 +39,19 @@ const PrimaryLayout = () => (
       <Switch>
         <Route path="/customers" component={Customers} />
         <Route path="/tickets" component={Tickets} />
-        <Route path="/services" component={Services} />
-        <Route path="/products" component={Products} />
+        {/* <Route path="/services" component={Services} />
+        <Route path="/products" component={Products} /> */}
       </Switch>
     </main>
   </div>
 )
-
+function InputAutoSubmit(props) {
+  return (
+    <div className="col-md">
+      <input onChange={e => this.keepInput(e.target.value, e.target.name)} name="name" className="form-control" placeholder="name" type="text" />
+    </div>
+  )
+}
 class Customers extends Component {
   constructor() {
     super()
@@ -87,22 +76,14 @@ class Customers extends Component {
     })
   }
   submit() {
-    function serialize(obj) {
-      /* https://stackoverflow.com/a/1714899 */
-      let str = [];
-      for (let p in obj)
-        if (obj.hasOwnProperty(p) && obj[p]) {
-          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-        }
-      return str.join("&");
-    }
-    api.showCustomers(serialize(this.state.form)).then(res => {
-      this.setState({ customers: res.data, responseStatus: res.status })
+    const { name, surname, phone, email, observations } = this.state.form
+    api.showCustomersBy(name, surname, phone, email, observations).then(res => {
+      this.setState({ customers: res.data || [], responseStatus: res.status })
     })
   }
   componentDidMount() {
-    api.showCustomers().then(res => {
-      this.setState({ customers: res.data, responseStatus: res.status })
+    api.showCustomersBy().then(res => {
+      this.setState({ customers: res.data || [], responseStatus: res.status })
     })
   }
 
@@ -141,10 +122,10 @@ class Customers extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.customers.map(customer => {
+              {this.state.customers.map((customer, index) => {
                 return (
-                  <tr key={customer.id}>
-                    <td>{customer.id}</td>
+                  <tr key={customer._id}>
+                    <td>{index}</td>
                     <td>{customer.name}</td>
                     <td>{customer.surname}</td>
                     <td>{customer.phone}</td>
@@ -184,21 +165,13 @@ class Tickets extends Component {
     })
   }
   submit() {
-    function serialize(obj) {
-      /* https://stackoverflow.com/a/1714899 */
-      let str = [];
-      for (let p in obj)
-        if (obj.hasOwnProperty(p) && obj[p]) {
-          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-        }
-      return str.join("&");
-    }
-    api.showTickets(serialize(this.state.form)).then(res => {
+    const { pricemin, pricemax, datemin, datemax } = this.state.form
+    api.showTicketsBy(pricemin, pricemax, datemin, datemax).then(res => {
       this.setState({ tickets: res.data, responseStatus: res.status })
     })
   }
   componentDidMount() {
-    api.showTickets().then(res => {
+    api.showTicketsBy().then(res => {
       this.setState({ tickets: res.data, responseStatus: res.status })
     })
   }
@@ -221,10 +194,10 @@ class Tickets extends Component {
               <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="datemax" className="form-control" placeholder="Maximun date" type="date" />
             </div>
             <div className="col-md">
-              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="pricemin" className="form-control" placeholder="Minimun price" type="text" />
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="pricemin" className="form-control" placeholder="Minimun total with tax" type="text" />
             </div>
             <div className="col-md">
-              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="pricemax" className="form-control" placeholder="Maximun price" type="text" />
+              <input onChange={e => this.keepInput(e.target.value, e.target.name)} value={this.state.name} name="pricemax" className="form-control" placeholder="Maximun total with tax" type="text" />
             </div>
             <div className="col-md">
               <button type="submit" className="btn btn-outline-secondary col">Search</button>
@@ -293,22 +266,14 @@ class Services extends Component {
     })
   }
   submit() {
-    function serialize(obj) {
-      /* https://stackoverflow.com/a/1714899 */
-      let str = [];
-      for (let p in obj)
-        if (obj.hasOwnProperty(p) && obj[p]) {
-          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-        }
-      return str.join("&");
-    }
-    api.showServices(serialize(this.state.form)).then(res => {
+    const { pricemin, pricemax, name } = this.state.form
+    api.showServicesBy(pricemin, pricemax, name).then(res => {
       this.setState({ services: res.data, responseStatus: res.status })
     })
   }
 
   componentDidMount() {
-    api.showServices().then(res => {
+    api.showServicesBy().then(res => {
       this.setState({ services: res.data, responseStatus: res.status })
     })
   }
@@ -347,7 +312,7 @@ class Services extends Component {
               {this.state.services.map(service => {
                 return (
                   <tr key={service.id}>
-                    <td>{service.id}</td>
+                    <td>#</td>
                     <td>{service.name}</td>
                     <td>{service.price}</td>
                     <td>{service.tax}</td>
@@ -387,7 +352,7 @@ class Products extends Component {
   }
   submit() {
     function serialize(obj) {
-      /* https://stackoverflow.com/a/1714899 */
+      //https://stackoverflow.com/a/1714899
       let str = [];
       for (let p in obj)
         if (obj.hasOwnProperty(p) && obj[p]) {
@@ -399,11 +364,11 @@ class Products extends Component {
       this.setState({ products: res.data, responseStatus: res.status })
     })
   }
-  componentDidMount() {
-    api.showProducts().then(res => {
-      this.setState({ products: res.data, responseStatus: res.status })
-    })
-  }
+  // componentDidMount() {
+  //   // api.showProducts().then(res => {
+  //   //   this.setState({ products: res.data, responseStatus: res.status })
+  //   // })
+  // }
 
   render() {
     return (

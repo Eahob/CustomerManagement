@@ -1,9 +1,11 @@
 const url = require('url')
 const { Router } = require('express')
-const Customer = require('../models/Customer')
+//const Customer = require('../models/Customer')
 const Ticket = require('../models/Ticket')
 const Service = require('../models/Service')
 const Product = require('../models/Product')
+
+const { findCustomersBy,findTicketsBy,findServicesBy } = require('./handlers')
 
 const router = Router()
 
@@ -43,7 +45,6 @@ function selectMongooseModel(pathname) {
 }
 
 function showAndFilterText(req, res) {
-    // to do: add pagination
     let filter = {}
     if (req.query) {
         for (const prop in req.query) {
@@ -75,7 +76,42 @@ function showAndFilterText(req, res) {
     }
     show(req, res, filter)
 }
+
+function showAndFilterTickets (req, res) {
+    let filter = {}
+    if (req.query) {
+        for (const prop in req.query) {
+            switch (prop) {
+                case 'pricemin':
+                    if (!filter.price) filter.price = {}
+                    filter.price['$gte'] = req.query.pricemin
+                    break
+                case 'pricemax':
+                    if (!filter.price) filter.price = {}
+                    filter.price['$lte'] = req.query.pricemax
+                    break
+                case 'datemin':
+                    if (!filter.date) filter.date = {}
+                    filter.date['$gte'] = new Date(req.query.datemin)
+                    break
+                case 'datemax':
+                    if (!filter.date) filter.date = {}
+                    filter.date['$lte'] = new Date(req.query.datemax)
+                    break
+                default:
+                    let queryValue = req.query[prop]
+                    if (queryValue) {
+                        filter[prop] = { $regex: new RegExp(queryValue, 'i') }
+                    }
+                    break
+            }
+        }
+    }
+    show(req, res, filter)
+}
+
 function show(req, res, filter = {}) {
+    // to do: add pagination
     const model = selectMongooseModel(url.parse(req.url).pathname)
     model.find(filter, { _id: 0, __v: 0 })
         .then(list => {
@@ -84,18 +120,11 @@ function show(req, res, filter = {}) {
         .catch(failResponse)
 }
 
-router.get('/customers', (req, res) => {
-    showAndFilterText(req, res)
-})
+router.get('/customers', findCustomersBy)
 
-router.get('/tickets', (req, res) => {
-    //show(req, res)
-    showAndFilterText(req, res)
-})
+router.get('/tickets', findTicketsBy)
 
-router.get('/services', (req, res) => {
-    showAndFilterText(req, res)
-})
+router.get('/services', findServicesBy)
 
 router.get('/products', (req, res) => {
     showAndFilterText(req, res)
