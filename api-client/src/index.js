@@ -20,20 +20,16 @@ const api = {
         return rp(options)
     },
     showCustomersBy(name, surname, phone, email, observations) {
-        let query = { name, surname, phone, email, observations }
-        return this._call('get', 'customers', undefined, query)
+        return this._call('get', 'customers', undefined, { name, surname, phone, email, observations })
     },
     showTicketsBy(pricemin, pricemax, datemin, datemax) {
-        let query = { pricemin, pricemax, datemin, datemax }
-        return this._call('get', 'tickets', undefined, query)
+        return this._call('get', 'tickets', undefined, { pricemin, pricemax, datemin, datemax })
     },
     showServicesBy(pricemin, pricemax, name) {
-        let query = { pricemin, pricemax}
-        return this._call('get', 'services', undefined, query)
+        return this._call('get', 'services', undefined, { pricemin, pricemax, name })
     },
-    showProductsBy(query) {
-        let query = { pricemin, pricemax}
-        return this._call('get', 'products', undefined, query)
+    showProductsBy(pricemin, pricemax, name) {
+        return this._call('get', 'products', undefined, { pricemin, pricemax, name })
     }
 }
 

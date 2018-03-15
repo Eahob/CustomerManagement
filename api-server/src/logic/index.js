@@ -27,7 +27,7 @@ module.exports = {
             if (datemin) filter.date['$gte'] = datemin
             if (datemax) filter.date['$lte'] = datemax
         }
-        console.log(filter)
+
         return Ticket.find(filter)
     },
     findServicesBy(pricemin, pricemax, name) {

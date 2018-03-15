@@ -39,8 +39,8 @@ const PrimaryLayout = () => (
       <Switch>
         <Route path="/customers" component={Customers} />
         <Route path="/tickets" component={Tickets} />
-        {/* <Route path="/services" component={Services} />
-        <Route path="/products" component={Products} /> */}
+        <Route path="/services" component={Services} />
+        <Route path="/products" component={Products} />
       </Switch>
     </main>
   </div>
@@ -351,24 +351,16 @@ class Products extends Component {
     })
   }
   submit() {
-    function serialize(obj) {
-      //https://stackoverflow.com/a/1714899
-      let str = [];
-      for (let p in obj)
-        if (obj.hasOwnProperty(p) && obj[p]) {
-          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-        }
-      return str.join("&");
-    }
-    api.showProducts(serialize(this.state.form)).then(res => {
+    const {pricemin, pricemax, name} = this.state.form
+    api.showProductsBy(pricemin, pricemax, name).then(res => {
       this.setState({ products: res.data, responseStatus: res.status })
     })
   }
-  // componentDidMount() {
-  //   // api.showProducts().then(res => {
-  //   //   this.setState({ products: res.data, responseStatus: res.status })
-  //   // })
-  // }
+  componentDidMount() {
+    api.showProductsBy().then(res => {
+      this.setState({ products: res.data, responseStatus: res.status })
+    })
+  }
 
   render() {
     return (
