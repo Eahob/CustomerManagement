@@ -52,5 +52,9 @@ module.exports = {
         if (name) filter.name = { $regex: new RegExp(name, 'i') }
 
         return Product.find(filter)
+    },
+    createCustomer(name, surname, phone, email, observations = '') {
+        customer = new Customer({ name, surname, phone, email, observations })
+        return customer.save()
     }
 }

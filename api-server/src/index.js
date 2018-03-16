@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 const express = require('express')
-//const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 //const uuid = require('uuid/v4')
 const cors = require('cors')
@@ -10,7 +9,7 @@ const routes = require('./routes')
 const port = process.env.PORT
 const database = process.env.MONGO_DB
 
-if (false) {
+if (true) {
     const host = process.env.MONGO_HOST
     const mongo_port = process.env.MONGO_PORT
     mongoose.connect(`mongodb://${host}:${mongo_port}/${database}`)
@@ -21,7 +20,6 @@ if (false) {
     mongoose.connect(`mongodb://${user}:${password}@ds1${mlab_port}.mlab.com:${mlab_port}/${database}`)
 }
 
-//const jsonBodyParser = bodyParser.json()
 const app = express()
 app.use(cors())
 
