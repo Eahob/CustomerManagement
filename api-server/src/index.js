@@ -8,11 +8,18 @@ const cors = require('cors')
 const routes = require('./routes')
 
 const port = process.env.PORT
-const host = process.env.MONGO_HOST
-const mongo_port = process.env.MONGO_PORT
 const database = process.env.MONGO_DB
 
-mongoose.connect(`mongodb://${host}:${mongo_port}/${database}`)
+if (false) {
+    const host = process.env.MONGO_HOST
+    const mongo_port = process.env.MONGO_PORT
+    mongoose.connect(`mongodb://${host}:${mongo_port}/${database}`)
+} else {
+    const user = process.env.MLAB_USER
+    const password = process.env.MLAB_PASSWORD
+    const mlab_port = process.env.MLAB_PORT
+    mongoose.connect(`mongodb://${user}:${password}@ds1${mlab_port}.mlab.com:${mlab_port}/${database}`)
+}
 
 //const jsonBodyParser = bodyParser.json()
 const app = express()

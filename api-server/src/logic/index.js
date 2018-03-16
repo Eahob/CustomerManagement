@@ -17,7 +17,6 @@ module.exports = {
         const filter = {}
 
         if (pricemax || pricemin) {
-            //filter.total={}
             filter['total.withTax'] = {}
             if (pricemin) filter['total.withTax']['$gte'] = pricemin
             if (pricemax) filter['total.withTax']['$lte'] = pricemax
@@ -35,8 +34,8 @@ module.exports = {
 
         if (pricemax || pricemin) {
             filter.price = {}
-            if (pricemax) filter.price['$gte'] = pricemin
-            if (pricemin) filter.price['$lte'] = pricemax
+            if (pricemin) filter.price['$gte'] = parseFloat(pricemin)
+            if (pricemax) filter.price['$lte'] = parseFloat(pricemax)
         }
         if (name) filter.name = { $regex: new RegExp(name, 'i') }
 
@@ -47,8 +46,8 @@ module.exports = {
 
         if (pricemax || pricemin) {
             filter.price = {}
-            if (pricemin) filter.price['$gte'] = pricemin
-            if (pricemax) filter.price['$lte'] = pricemax
+            if (pricemin) filter.price['$gte'] = parseFloat(pricemin)
+            if (pricemax) filter.price['$lte'] = parseFloat(pricemax)
         }
         if (name) filter.name = { $regex: new RegExp(name, 'i') }
 
