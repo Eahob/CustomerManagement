@@ -36,9 +36,9 @@ class Services extends React.Component {
     setDataTable(arr) {
         let res = []
         arr.forEach(element => {
-            res.push([element.name, element.price + '€', element.tax + ' %'])
+            res.push([[element.name, element.price + '€', element.tax + ' %'], element._id])
         })
-        return res
+        return [res, '/service/']
     }
 
     render() {

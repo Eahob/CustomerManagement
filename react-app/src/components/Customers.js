@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import InputAutoSubmit from './InputAutoSubmit'
 import TableData from './TableData'
 import api from 'api-client'
@@ -19,9 +20,9 @@ class Customers extends React.Component {
     setDataTable(arr) {
         let res = []
         arr.forEach(element => {
-            res.push([element.name, element.surname, element.phone, element.email])
+            res.push([[element.name, element.surname, element.phone, element.email], element._id])
         })
-        return res
+        return [res, '/customer/']
     }
 
     readInput = (input, query) => {
@@ -43,6 +44,7 @@ class Customers extends React.Component {
     render() {
         return (
             <div className="mx-4">
+                <Link to="/customer/" className="mb-4 btn btn-primary">New Customer</Link>
                 <div className="row mb-4">
                     <InputAutoSubmit read={this.readInput} query="name" placeholder="Search name" type="text" />
                     <InputAutoSubmit read={this.readInput} query="surname" placeholder="Search surname" type="text" />

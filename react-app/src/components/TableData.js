@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 
 function TableData(props) {
     let counter = 0
@@ -6,7 +7,7 @@ function TableData(props) {
     function keyGenerator() {
         return `${date}${++counter}`
     }
-    const tableData = props.callback(props.data)
+    const [tableData,path] = props.callback(props.data)
     return (
         <div className="table-responsive">
             <table className="text-center table table-striped table-sm table-bordered table-hover">
@@ -20,9 +21,9 @@ function TableData(props) {
                     {tableData.map(element => {
                         return (
                             <tr key={keyGenerator()}>
-                                {element.map(elm => <td key={keyGenerator()}>{elm}</td>)}
+                                {element[0].map(elm => <td key={keyGenerator()}>{elm}</td>)}
                                 <td>
-                                    <a className="btn btn-sm btn-outline-primary" href="#">More/Edit</a>
+                                    <Link className="btn btn-sm btn-outline-primary" to={path+element[1]}>More/Edit</Link>
                                 </td>
                             </tr>
                         )
