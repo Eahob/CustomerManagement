@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import PrimaryLayout from './components/PrimaryLayout'
 
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
+      <HashRouter>
         <PrimaryLayout />
-      </BrowserRouter>
+      </HashRouter>
     )
   }
 }

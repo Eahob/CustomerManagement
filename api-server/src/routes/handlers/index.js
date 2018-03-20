@@ -10,6 +10,7 @@ const deleteCustomer = require('./deleteCustomer')
 const deleteTicket = require('./deleteTicket')
 const deleteService = require('./deleteService')
 const deleteProduct = require('./deleteProduct')
+const showCustomer = require('./showCustomer')
 
 module.exports = {
     findCustomersBy,
@@ -23,5 +24,6 @@ module.exports = {
     deleteCustomer,
     deleteTicket,
     deleteService,
-    deleteProduct
+    deleteProduct,
+    showCustomer
 }

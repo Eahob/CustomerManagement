@@ -4,7 +4,8 @@ const bodyParser = require('body-parser')
 const {
     findCustomersBy, findTicketsBy, findServicesBy, findProductsBy,
     createCustomer, createTicket, createService, createProduct,
-    deleteCustomer, deleteTicket, deleteService, deleteProduct } = require('./handlers')
+    deleteCustomer, deleteTicket, deleteService, deleteProduct,
+    showCustomer } = require('./handlers')
 
 const router = Router()
 
@@ -16,6 +17,12 @@ router.get('/services', findServicesBy)
 
 router.get('/products', findProductsBy)
 
+//---
+
+router.get('/customer/:id',showCustomer)
+
+//---
+
 router.delete('/customer/:id', deleteCustomer)
 
 router.delete('/ticket/:id', deleteTicket)
@@ -23,6 +30,8 @@ router.delete('/ticket/:id', deleteTicket)
 router.delete('/service/:id', deleteService)
 
 router.delete('/product/:id', deleteProduct)
+
+//---
 
 const jsonBodyParser = bodyParser.json()
 

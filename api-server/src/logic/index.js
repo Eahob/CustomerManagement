@@ -127,5 +127,8 @@ module.exports = {
     },
     deleteProduct(_id) {
         return Product.deleteOne({ _id })
+    },
+    showCustomer(_id){
+        return Customer.findOne({_id})
     }
 }

@@ -14,7 +14,7 @@ function PrimaryHeader() {
         <NavLink className="nav-link text-white" activeClassName="active text-dark" to="/services">Services</NavLink>
       </li>
       <li className="nav-item mr-1">
-        <NavLink className="nav-link text-white" activeClassName="active text-dark" to="/Products">Products</NavLink>
+        <NavLink className="nav-link text-white" activeClassName="active text-dark" to="/products">Products</NavLink>
       </li>
     </ul>
   )

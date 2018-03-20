@@ -30,6 +30,12 @@ const api = {
     },
     showProductsBy(pricemin, pricemax, name) {
         return this._call('get', 'products', undefined, { pricemin, pricemax, name })
+    },
+    createCustomer(name, surname, phone, email, observations) {
+        return this._call('post', 'customer', { name, surname, phone, email, observations })
+    },
+    showCustomer(id) {
+        return this_call('get', 'customer/' + id)
     }
 }
 
