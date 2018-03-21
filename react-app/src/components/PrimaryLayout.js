@@ -5,7 +5,9 @@ import Customers from './Customers'
 import Tickets from './Tickets'
 import Services from './Services'
 import Products from './Products'
-import CreateAndEditCustomer from './CreateAndEditCustomer';
+import CreateAndEditCustomer from './CreateAndEditCustomer'
+import CreateAndEditService from './CreateAndEditService'
+import CreateAndEditProduct from './CreateAndEditProduct'
 
 function PrimaryLayout() {
   return (
@@ -19,6 +21,10 @@ function PrimaryLayout() {
           <Route path="/products" component={Products} />
           <Route exact path="/customer" component={CreateAndEditCustomer} />
           <Route path="/customer/:id" component={CreateAndEditCustomer} />
+          <Route exact path="/service" component={CreateAndEditService} />
+          <Route path="/service/:id" component={CreateAndEditService} />
+          <Route exact path="/product" component={CreateAndEditProduct} />
+          <Route path="/product/:id" component={CreateAndEditProduct} />
         </Switch>
       </main>
     </div>

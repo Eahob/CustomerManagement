@@ -34,8 +34,44 @@ const api = {
     createCustomer(name, surname, phone, email, observations) {
         return this._call('post', 'customer', { name, surname, phone, email, observations })
     },
+    createService(name, price, tax) {
+        return this._call('post', 'service', { name, price, tax })
+    },
+    createProduct(name, price, tax) {
+        return this._call('post', 'product', { name, price, tax })
+    },
+    deleteCustomer(id) {
+        return this._call('delete', 'customer/' + id)
+    },
+    deleteTicket(id) {
+        return this._call('delete', 'ticket/' + id)
+    },
+    deleteService(id) {
+        return this._call('delete', 'service/' + id)
+    },
+    deleteProduct(id) {
+        return this._call('delete', 'product/' + id)
+    },
     showCustomer(id) {
-        return this_call('get', 'customer/' + id)
+        return this._call('get', 'customer/' + id)
+    },
+    showTicket(id) {
+        return this._call('get', 'ticket/' + id)
+    },
+    showService(id) {
+        return this._call('get', 'service/' + id)
+    },
+    showProduct(id) {
+        return this._call('get', 'product/' + id)
+    },
+    modifyCustomer(name, surname, phone, email, observations, id) {
+        return this._call('put', 'customer/' + id, { name, surname, phone, email, observations })
+    },
+    modifyService(name, price, tax, id) {
+        return this._call('put', 'service/' + id, { name, price, tax })
+    },
+    modifyProduct(name, price, tax, id) {
+        return this._call('put', 'product/' + id, { name, price, tax })
     }
 }
 

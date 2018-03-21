@@ -1,5 +1,8 @@
 import React from 'react'
 import api from 'api-client'
+import BSAlert from './BSAlert'
+import BSLabeledInput from './BSLabeledInput'
+import BSLabeledTextarea from './BSLabeledTextarea'
 
 api.protocol = 'http'
 api.host = 'localhost'
@@ -19,23 +22,29 @@ class CreateAndEditCustomer extends React.Component {
             observations: ''
         }
     }
-    componentDidMount(){
-        if (this.state.id) {
-            api.showCustomer(this.state.id).then(res => {
-                this.setState({})
-            })
-        }
+    componentDidMount() {
+        this.setState({ id: this.props.match.params.id }, function () {
+            if (this.state.id) {
+                api.showCustomer(this.state.id).then(res => {
+                    const { name, surname, phone, email, observations } = res.data
+                    this.setState({ name, surname, phone, email, observations })
+                })
+            }
+        })
     }
-    componentWillReceiveProps(nextProps){
-        this.setState({id:nextProps.match.params.id})
+    componentWillReceiveProps(nextProps) {
+        this.setState({ id: nextProps.match.params.id })
     }
     readInput = (input, query) => {
-        this.setState({ [query]: input.trim() })
+        this.setState({ [query]: input })
+    }
+    delete() {
+        api.deleteCustomer(this.state.id).then(()=> this.props.history.push('/customers'))
     }
     submit() {
         const { name, surname, phone, email, observations } = this.state
         Promise.resolve().then(() => {
-            if (this.state.id) return true//api.modifyCustomer()
+            if (this.state.id) return api.modifyCustomer(name, surname, phone, email, observations, this.state.id)
             return api.createCustomer(name, surname, phone, email, observations)
         }).then(res => {
             this.setState({ responseStatus: res.status, error: res.error }, function () {
@@ -56,36 +65,21 @@ class CreateAndEditCustomer extends React.Component {
                         }} className="mb-3">
                             <div className="row">
                                 <div className="col-sm">
-                                    <div className="form-group">
-                                        <label htmlFor="name">Name</label>
-                                        <input onChange={e => this.readInput(e.target.value, e.target.id)} className="form-control" id="name" placeholder="Customer name" type="text" />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="phone">Phone</label>
-                                        <input onChange={e => this.readInput(e.target.value, e.target.id)} className="form-control" id="phone" placeholder="Phone number" type="text" />
-                                    </div>
+                                    <BSLabeledInput value={this.state.name} query="name" read={this.readInput} label="Name" />
+                                    <BSLabeledInput value={this.state.phone} query="phone" read={this.readInput} label="Phone" />
                                 </div>
                                 <div className="col-sm">
-                                    <div className="form-group">
-                                        <label htmlFor="surname">Surname</label>
-                                        <input onChange={e => this.readInput(e.target.value, e.target.id)} className="form-control" id="surname" placeholder="Customer surname" type="text" />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="email">email</label>
-                                        <input onChange={e => this.readInput(e.target.value, e.target.id)} className="form-control" id="email" placeholder="name@example.com" type="text" />
-                                    </div>
+                                    <BSLabeledInput value={this.state.surname} query="surname" read={this.readInput} label="Surname" />
+                                    <BSLabeledInput value={this.state.email} query="email" read={this.readInput} label="email" />
                                 </div>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="observations">Observations</label>
-                                <textarea onChange={e => this.readInput(e.target.value, e.target.id)} className="form-control" id="observations" rows={3} defaultValue={""} />
-                            </div>
+                            <BSLabeledTextarea value={this.state.observations} query="observations" read={this.readInput} label="Observations" rows={3} />
                             <div className="clearfix">
-                                {/* <button type="button" className="btn btn-danger float-left">Delete</button> */}
-                                <button type="submit" className="btn btn-primary float-right">Save</button>
+                                {this.state.id && <a className="btn btn-danger float-left text-white" onClick={e => this.delete()}>Delete</a>}
+                                <button type="submit" className="btn btn-primary float-right">{this.state.id ? 'Save changes' : 'Create'}</button>
                             </div>
                         </form>
-                        <BSAlert stt={this.state} alertError="Customer creation failed" alertSuccess="Customer creation succesful" />
+                        <BSAlert stt={this.state} alertError={this.state.id ? 'Customer modification failed' : 'Customer creation failed'} alertSuccess={this.state.id ? 'Customer modification succesfuld' : 'Customer creation succesful'} />
                     </div>
                     <div className="col-md">
                         {this.state.id}
@@ -94,18 +88,6 @@ class CreateAndEditCustomer extends React.Component {
             </div>
         )
     }
-}
-
-function BSAlert(props) {
-    if (!props.stt.responseStatus) {
-        return null
-    }
-    return (
-        <div className={' alert alert-' + (props.stt.error ? 'danger' : 'success')} role="alert">
-            <h4>{props.stt.error ? props.alertError : props.alertSuccess}</h4>
-            {props.stt.error && <p>{props.stt.error}</p>}
-        </div>
-    )
 }
 
 export default CreateAndEditCustomer

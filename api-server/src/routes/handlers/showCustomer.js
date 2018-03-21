@@ -1,4 +1,4 @@
-const  { successResponse, failResponse } = require('../../utils/api-utils')
+const { successResponse, failResponse } = require('../../utils/api-utils')
 const logic = require('../../logic')
 
 module.exports = (req, res) => {

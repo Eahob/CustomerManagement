@@ -128,7 +128,45 @@ module.exports = {
     deleteProduct(_id) {
         return Product.deleteOne({ _id })
     },
-    showCustomer(_id){
-        return Customer.findOne({_id})
+    showCustomer(_id) {
+        return Customer.findOne({ _id }, { _id: 0, __v: 0 })
+    },
+    showTicket(_id) {
+        return Ticket.findOne({ _id }, { _id: 0, __v: 0 })
+    },
+    showService(_id) {
+        return Service.findOne({ _id }, { _id: 0, __v: 0 })
+    },
+    showProduct(_id) {
+        return Product.findOne({ _id }, { _id: 0, __v: 0 })
+    },
+    editCustomer(name, surname, phone, email, observations, _id) {
+        return Customer.findById(_id).then(customer => {
+            let update = {}
+            if (customer.name != name) update.name = name.trim()
+            if (customer.surname != surname) update.surname = surname.trim()
+            if (customer.phone != phone) { update.phone = phone.trim() }
+            if (customer.email != email) update.email = email.trim()
+            if (customer.observations != observations) update.observations = observations.trim()
+            return Customer.updateOne({ _id }, { $set: update })
+        }).then(() => ({ _id }))
+    },
+    editService(name, price, tax, _id) {
+        return Service.findById(_id).then(service => {
+            let update = {}
+            if (service.name != name) update.name = name
+            if (service.price != price) update.price = price
+            if (service.tax != tax) update.tax = tax
+            return Service.updateOne({ _id }, { $set: update})
+        }).then(() => ({ _id }))
+    },
+    editProduct(name, price, tax, _id) {
+        return Product.findById(_id).then(product => {
+            let update = {}
+            if (product.name != name) update.name = name
+            if (product.price != price) update.price = price
+            if (product.tax != tax) update.tax = tax
+            return Product.updateOne({ _id }, { $set: update})
+        }).then(() => ({ _id }))
     }
 }

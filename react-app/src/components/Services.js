@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import InputAutoSubmit from './InputAutoSubmit'
 import TableData from './TableData'
 import api from 'api-client'
@@ -44,6 +45,7 @@ class Services extends React.Component {
     render() {
         return (
             <div className="mx-4">
+                <Link to="/service" className="mb-4 btn btn-primary">New Service</Link>
                 <div className="row mb-4">
                     <InputAutoSubmit read={this.readInput} query="name" placeholder="Search service name" type="text" />
                     <InputAutoSubmit read={this.readInput} query="pricemin" placeholder="Minimun price" type="number" />
