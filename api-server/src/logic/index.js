@@ -111,7 +111,7 @@ module.exports = {
         }).then(res => {
             const serv = res[0]
             const prod = res[1]
-            let total = { withTax: serv[0] + prod[0], withoutTax: serv[1] + prod[1] }
+            let total = { withTax: (serv[0] + prod[0].toFixed(2)), withoutTax: (serv[1] + prod[1].toFixed(2)) }
             return [serv[2], prod[2], total]
         })
     },
