@@ -15,6 +15,7 @@ class CreateAndEditCustomer extends React.Component {
             id: '',
             responseStatus: '',
             error: '',
+            creation: false,
             name: '',
             surname: '',
             phone: '',
@@ -36,7 +37,7 @@ class CreateAndEditCustomer extends React.Component {
         this.setState({ id: nextProps.match.params.id })
     }
     readInput = (input, query) => {
-        this.setState({ [query]: input })
+        this.setState({ [query]: input, creation: false})
     }
     delete() {
         api.deleteCustomer(this.state.id).then(()=> this.props.history.push('/customers'))
@@ -45,6 +46,7 @@ class CreateAndEditCustomer extends React.Component {
         const { name, surname, phone, email, observations } = this.state
         Promise.resolve().then(() => {
             if (this.state.id) return api.modifyCustomer(name, surname, phone, email, observations, this.state.id)
+            this.setState({ creation: true })
             return api.createCustomer(name, surname, phone, email, observations)
         }).then(res => {
             this.setState({ responseStatus: res.status, error: res.error }, function () {
@@ -79,7 +81,7 @@ class CreateAndEditCustomer extends React.Component {
                                 <button type="submit" className="btn btn-primary float-right">{this.state.id ? 'Save changes' : 'Create'}</button>
                             </div>
                         </form>
-                        <BSAlert stt={this.state} alertError={this.state.id ? 'Customer modification failed' : 'Customer creation failed'} alertSuccess={this.state.id ? 'Customer modification succesfuld' : 'Customer creation succesful'} />
+                        <BSAlert stt={this.state} alertError={this.state.id ? 'Customer modification failed' : 'Customer creation failed'} alertSuccess={this.state.creation ? 'Customer creation succesful' : 'Customer modification succesfuld'} />
                     </div>
                     <div className="col-md">
                         {this.state.id}
