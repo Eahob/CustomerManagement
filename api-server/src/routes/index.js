@@ -6,7 +6,7 @@ const {
     createCustomer, createTicket, createService, createProduct,
     deleteCustomer, deleteTicket, deleteService, deleteProduct,
     showCustomer, showTicket, showService, showProduct,
-    editCustomer, editService, editProduct } = require('./handlers')
+    editCustomer, editTicket, editService, editProduct } = require('./handlers')
 
 const router = Router()
 
@@ -57,6 +57,8 @@ router.post('/product', jsonBodyParser, createProduct)
 //--
 
 router.put('/customer/:id', jsonBodyParser, editCustomer)
+
+router.put('/ticket/:id', jsonBodyParser, editTicket)
 
 router.put('/service/:id', jsonBodyParser, editService)
 

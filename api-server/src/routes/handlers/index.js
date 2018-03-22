@@ -15,6 +15,7 @@ const showTicket = require('./showTicket')
 const showService = require('./showService')
 const showProduct = require('./showProduct')
 const editCustomer = require('./editCustomer')
+const editTicket = require('./editTicket')
 const editService = require('./editService')
 const editProduct = require('./editProduct')
 
@@ -36,6 +37,7 @@ module.exports = {
     showService,
     showProduct,
     editCustomer,
+    editTicket,
     editService,
     editProduct
 }

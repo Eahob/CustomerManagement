@@ -1,8 +1,8 @@
 const { Customer, Ticket, Service, Product } = require('../models')
 
+// to do: add pagination
 module.exports = {
     findCustomersBy(name, surname, phone, email, observations) {
-        // to do: add pagination
         const filter = {}
 
         if (name) filter.name = { $regex: new RegExp(name, 'i') }
@@ -65,7 +65,7 @@ module.exports = {
         product = new Product({ name, price, tax })
         return product.save()
     },
-    createTicket(customer, services = [], products = []) {
+    calculateTicket(services = [], products = []) {
         // services is an array. Each element has and id for the service and the quantity
         // products is an array. Each element has and id for the product and the quantity
 
@@ -112,7 +112,12 @@ module.exports = {
             const serv = res[0]
             const prod = res[1]
             let total = { withTax: serv[0] + prod[0], withoutTax: serv[1] + prod[1] }
-            ticket = new Ticket({ date: Date(), customer, services: serv[2], products: prod[2], total })
+            return [serv[2], prod[2], total]
+        })
+    },
+    createTicket(customer, services, products) {
+        return this.calculateTicket(services, products).then(res => {
+            ticket = new Ticket({ date: Date(), customer, services: res[0], products: res[1], total: res[2] })
             return ticket.save()
         })
     },
@@ -151,13 +156,22 @@ module.exports = {
             return Customer.updateOne({ _id }, { $set: update })
         }).then(() => ({ _id }))
     },
+    editTicket(customer, services, products, _id) {
+        return Ticket.findById(_id).then(ticket => {
+            return this.calculateTicket(services, products)
+        }).then(res => {
+            let update = {}
+            update = { services: res[0], products: res[1], total: res[2] }
+            return Ticket.updateOne({ _id }, { $set: update })
+        }).then(() => ({ _id }))
+    },
     editService(name, price, tax, _id) {
         return Service.findById(_id).then(service => {
             let update = {}
             if (service.name != name) update.name = name
             if (service.price != price) update.price = price
             if (service.tax != tax) update.tax = tax
-            return Service.updateOne({ _id }, { $set: update})
+            return Service.updateOne({ _id }, { $set: update })
         }).then(() => ({ _id }))
     },
     editProduct(name, price, tax, _id) {
@@ -166,7 +180,7 @@ module.exports = {
             if (product.name != name) update.name = name
             if (product.price != price) update.price = price
             if (product.tax != tax) update.tax = tax
-            return Product.updateOne({ _id }, { $set: update})
+            return Product.updateOne({ _id }, { $set: update })
         }).then(() => ({ _id }))
     }
 }
