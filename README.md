@@ -103,4 +103,5 @@ And more functions for accounting:
 * Show weekly
 
 [Trello](https://trello.com/b/Pexusfgm/customermanagement)
+
 [Demo](http://eahob-cm.surge.sh)
