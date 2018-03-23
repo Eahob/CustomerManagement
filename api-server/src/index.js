@@ -9,7 +9,7 @@ const routes = require('./routes')
 const port = process.env.PORT
 const database = process.env.MONGO_DB
 
-if (true) {
+if (process.env.WORKING_LOCALLY) {
     const host = process.env.MONGO_HOST
     const mongo_port = process.env.MONGO_PORT
     mongoose.connect(`mongodb://${host}:${mongo_port}/${database}`)
