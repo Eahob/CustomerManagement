@@ -2,7 +2,7 @@ const rp = require('request-promise')
 
 const api = {
     _baseUrl() {
-        return `${this.protocol}://${this.host}:${this.port}/api`
+        return `${this.protocol}://${this.host}${this.port ? ':' + this.port : ''}/api`
     },
     _call(method, path, body, query, token) {
         const options = {
@@ -33,6 +33,9 @@ const api = {
     },
     createCustomer(name, surname, phone, email, observations) {
         return this._call('post', 'customer', { name, surname, phone, email, observations })
+    },
+    createTicket(customer, services, products) {
+        return this._call('post', 'ticket', { customer, services, products })
     },
     createService(name, price, tax) {
         return this._call('post', 'service', { name, price, tax })
