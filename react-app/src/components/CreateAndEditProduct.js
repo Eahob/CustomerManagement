@@ -1,11 +1,7 @@
 import React from 'react'
-import api from 'api-client'
+import api from '../api-config'
 import BSAlert from './BSAlert'
 import BSLabeledInput from './BSLabeledInput'
-
-api.protocol = 'http'
-api.host = 'localhost'
-api.port = '5000'
 
 class CreateAndEditProduct extends React.Component {
     constructor(props) {
@@ -70,7 +66,7 @@ class CreateAndEditProduct extends React.Component {
                                 <button type="submit" className="btn btn-primary float-right">{this.state.id ? 'Save changes' : 'Create'}</button>
                             </div>
                         </form>
-                        <BSAlert stt={this.state} alertError={this.state.id ? 'Product modification failed' : 'Product creation failed'} alertSuccess={this.state.creation ? 'Product creation succesful' : 'Product modification succesfuld'} />
+                        <BSAlert stt={this.state} alertError={this.state.id ? 'Product modification failed' : 'Product creation failed'} alertSuccess={this.state.creation ? 'Product creation successful' : 'Product modification successful'} />
                     </div>
                     <div className="d-lg-none col-sm-4"></div>
                     <div className="d-xl-none col-sm-4"></div>

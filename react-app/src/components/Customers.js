@@ -1,12 +1,8 @@
-import React from 'react';
+import React from 'react'
 import { Link } from 'react-router-dom'
 import InputAutoSubmit from './InputAutoSubmit'
 import TableData from './TableData'
-import api from 'api-client'
-
-api.protocol = 'http'
-api.host = 'localhost'
-api.port = '5000'
+import api from '../api-config'
 
 class Customers extends React.Component {
     constructor() {

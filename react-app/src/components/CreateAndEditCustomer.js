@@ -1,12 +1,8 @@
 import React from 'react'
-import api from 'api-client'
+import api from '../api-config'
 import BSAlert from './BSAlert'
 import BSLabeledInput from './BSLabeledInput'
 import BSLabeledTextarea from './BSLabeledTextarea'
-
-api.protocol = 'http'
-api.host = 'localhost'
-api.port = '5000'
 
 class CreateAndEditCustomer extends React.Component {
     constructor(props) {
@@ -81,10 +77,9 @@ class CreateAndEditCustomer extends React.Component {
                                 <button type="submit" className="btn btn-primary float-right">{this.state.id ? 'Save changes' : 'Create'}</button>
                             </div>
                         </form>
-                        <BSAlert stt={this.state} alertError={this.state.id ? 'Customer modification failed' : 'Customer creation failed'} alertSuccess={this.state.creation ? 'Customer creation succesful' : 'Customer modification succesfuld'} />
+                        <BSAlert stt={this.state} alertError={this.state.id ? 'Customer modification failed' : 'Customer creation failed'} alertSuccess={this.state.creation ? 'Customer creation successful' : 'Customer modification successful'} />
                     </div>
                     <div className="col-md">
-                        {this.state.id}
                     </div>
                 </div>
             </div>

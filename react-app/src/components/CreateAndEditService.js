@@ -1,11 +1,7 @@
 import React from 'react'
-import api from 'api-client'
+import api from '../api-config'
 import BSAlert from './BSAlert'
 import BSLabeledInput from './BSLabeledInput'
-
-api.protocol = 'http'
-api.host = 'localhost'
-api.port = '5000'
 
 class CreateAndEditService extends React.Component {
     constructor(props) {
@@ -70,7 +66,7 @@ class CreateAndEditService extends React.Component {
                                 <button type="submit" className="btn btn-primary float-right">{this.state.id ? 'Save changes' : 'Create'}</button>
                             </div>
                         </form>
-                        <BSAlert stt={this.state} alertError={this.state.id ? 'Service modification failed' : 'Service creation failed'} alertSuccess={this.state.creation ? 'Service creation succesful' : 'Service modification succesfuld'} />
+                        <BSAlert stt={this.state} alertError={this.state.id ? 'Service modification failed' : 'Service creation failed'} alertSuccess={this.state.creation ? 'Service creation successful' : 'Service modification successful'} />
                     </div>
                     <div className="d-lg-none col-sm-4"></div>
                     <div className="d-xl-none col-sm-4"></div>

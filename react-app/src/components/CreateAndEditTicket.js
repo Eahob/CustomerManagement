@@ -1,16 +1,16 @@
 import React from 'react'
-import api from 'api-client'
+import api from '../api-config'
 import BSAlert from './BSAlert'
 import InputAutoSubmit from './InputAutoSubmit'
-
-api.protocol = 'http'
-api.host = 'localhost'
-api.port = '5000'
 
 class CreateAndEditTicket extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            id: '',
+            responseStatus: '',
+            error: '',
+            creation: false,
             customers: [],
             services: [],
             products: [],
@@ -29,6 +29,18 @@ class CreateAndEditTicket extends React.Component {
         ]).then(res => {
             this.setState({ customers: res[0], services: res[1], products: res[2] })
         })
+        this.setState({ id: this.props.match.params.id }, function () {
+            if (this.state.id) {
+                api.showTicket(this.state.id).then(res => {
+                    console.log(res)
+                    //const { name, surname, phone, email, observations } = res.data
+                    //this.setState({ name, surname, phone, email, observations })
+                })
+            }
+        })
+    }
+    componentWillReceiveProps(nextProps) {
+        this.setState({ id: nextProps.match.params.id })
     }
     readCustomerName = (name) => {
         api.showCustomersBy(name).then(res => res.data || []).then(res => {
@@ -59,9 +71,6 @@ class CreateAndEditTicket extends React.Component {
             selected.services.push({ id, name, price, quantity: 1 })
             this.forceUpdate()
         }
-        // else {
-        //     selected.services[index].quantity += 1
-        // }
     }
     selectProduct = (id, name, price) => {
         let selected = this.state.selected
@@ -72,9 +81,6 @@ class CreateAndEditTicket extends React.Component {
             selected.products.push({ id, name, price, quantity: 1 })
             this.forceUpdate()
         }
-        // else {
-        //     selected.products[index].quantity += 1
-        // }
     }
     removeSelectedService = (index) => {
         this.state.selected.services.splice(index, 1)
@@ -104,6 +110,16 @@ class CreateAndEditTicket extends React.Component {
         this.state.selected.services[index].quantity = quantity
         this.forceUpdate()
     }
+    submit() {
+        this.setState({ creation: true })
+        api.createTicket(this.state.selected.customer.id, this.state.selected.services.map(e => ({ id: e.id, quantity: e.quantity })), this.state.selected.products.map(e => ({ id: e.id, quantity: e.quantity }))).then(res => {
+            this.setState({ responseStatus: res.status, error: res.error }, function () {
+                if (res.status === 'OK') {
+                    this.props.history.push('/ticket/' + res.data.id)
+                }
+            })
+        })
+    }
     render() {
         let reducer = (accum, current) => {
             return accum + current.price * current.quantity
@@ -119,24 +135,26 @@ class CreateAndEditTicket extends React.Component {
                             <span className="text-muted">Customer:</span> {this.state.selected.customer.name}
                         </h4>
                         <h4>
-                            <span className="text-muted">Total:</span> <span class="badge badge-primary">{total}€</span>
+                            <span className="text-muted">Total:</span> <span className="badge badge-primary">{total}€</span>
                         </h4>
-                        <h6 className="text-muted">Services <span class="badge badge-secondary">{servicesTotal}€</span></h6>
+                        <BSAlert stt={this.state} alertError={this.state.id ? 'Ticket modification failed' : 'Ticket creation failed'} alertSuccess={this.state.creation ? 'Ticket creation successful' : 'Ticket modification successful'} />
+                        <button onClick={() => this.submit()} type="button" className="my-4 btn btn-primary btn-lg btn-block">{this.state.id ? 'Modify' : 'Create'} ticket</button>
+                        <h6 className="text-muted">Services <span className="badge badge-secondary">{servicesTotal}€</span></h6>
                         <TicketList data={this.state.selected.services} removeSelected={this.removeSelectedService} modify={this.modifyServiceQuantity} />
                         <br />
-                        <h6 className="text-muted">Products <span class="badge badge-secondary">{productsTotal}€</span></h6>
+                        <h6 className="text-muted">Products <span className="badge badge-secondary">{productsTotal}€</span></h6>
                         <TicketList data={this.state.selected.products} removeSelected={this.removeSelectedProduct} modify={this.modifyProductQuantity} />
                     </div>
                     <div className="col">
-                        <InputAutoSubmit read={this.readCustomerName} placeholder="Serach customer by name" />
+                        <InputAutoSubmit read={this.readCustomerName} placeholder="Search customer by name" />
                         <FindAndList select={this.selectCustomer} data={this.state.customers} />
                     </div>
                     <div className="col">
-                        <InputAutoSubmit read={this.readServiceName} placeholder="Serach service by name" />
+                        <InputAutoSubmit read={this.readServiceName} placeholder="Search service by name" />
                         <FindAndList select={this.selectService} data={this.state.services} />
                     </div>
                     <div className="col">
-                        <InputAutoSubmit read={this.readProductName} placeholder="Serach product by name" />
+                        <InputAutoSubmit read={this.readProductName} placeholder="Search product by name" />
                         <FindAndList select={this.selectProduct} data={this.state.products} />
                     </div>
                 </div>
@@ -153,7 +171,7 @@ function FindAndList(props) {
     }
     return (
         <div className="list-group list-group-flush mt-4">
-            {props.data.map(elm => <a onClick={e => props.select(elm._id, elm.name, elm.price)} key={keyGenerator()} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center">{elm.name} {elm.surname ? elm.surname : ''} {elm.price && <span className="badge badge-pill badge-info">{elm.price + '€'}</span>}</a>)}
+            {props.data.map(elm => <a onClick={e => props.select(elm._id, elm.name, elm.price)} key={keyGenerator()} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center">{elm.name} {elm.surname ? elm.surname : ''} {elm.price && <span className="badge badge-info">{elm.price + '€'}</span>}</a>)}
         </div>
     )
 }
