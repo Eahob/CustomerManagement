@@ -111,7 +111,7 @@ module.exports = {
         }).then(res => {
             const serv = res[0]
             const prod = res[1]
-            let total = { withTax: (serv[0] + prod[0].toFixed(2)), withoutTax: (serv[1] + prod[1].toFixed(2)) }
+            let total = { withTax: (serv[0] + prod[0]).toFixed(2), withoutTax: (serv[1] + prod[1]).toFixed(2) }
             return [serv[2], prod[2], total]
         })
     },
@@ -137,7 +137,7 @@ module.exports = {
         return Customer.findOne({ _id }, { _id: 0, __v: 0 })
     },
     showTicket(_id) {
-        return Ticket.findOne({ _id }, { _id: 0, __v: 0 })
+        return Ticket.findOne({ _id }, { _id: 0, __v: 0 }).populate('customer', 'name').populate('services.service', 'name').populate('products.product','name')
     },
     showService(_id) {
         return Service.findOne({ _id }, { _id: 0, __v: 0 })
