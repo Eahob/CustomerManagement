@@ -45,7 +45,21 @@ class CreateAndEditTicket extends React.Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-        this.setState({ id: nextProps.match.params.id })
+        if (nextProps.match.params.id) {
+            this.setState({ id: nextProps.match.params.id })
+        } else {
+            this.setState({
+                id: '',
+                responseStatus: '',
+                error: '',
+                creation: false,
+                selected: {
+                    customer: '',
+                    services: [],
+                    products: []
+                }
+            })
+        }
     }
     readCustomerName = (name) => {
         api.showCustomersBy(name).then(res => res.data || []).then(res => {
