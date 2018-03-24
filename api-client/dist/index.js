@@ -5,8 +5,6 @@ var rp = require('request-promise');
 var api = {
     _baseUrl: function _baseUrl() {
         return this.protocol + '://' + this.host + (this.port ? ':' + this.port : '') + '/api';
-        //return `${this.protocol}://${this.host}/api`
-        //return `${this.protocol}://${this.host}:${this.port}/api`
     },
     _call: function _call(method, path, body, query, token) {
         var options = {
@@ -73,6 +71,9 @@ var api = {
     },
     modifyCustomer: function modifyCustomer(name, surname, phone, email, observations, id) {
         return this._call('put', 'customer/' + id, { name: name, surname: surname, phone: phone, email: email, observations: observations });
+    },
+    modifyTicket: function modifyTicket(customer, services, products, id) {
+        return this._call('put', 'ticket/' + id, { customer: customer, services: services, products: products });
     },
     modifyService: function modifyService(name, price, tax, id) {
         return this._call('put', 'service/' + id, { name: name, price: price, tax: tax });
