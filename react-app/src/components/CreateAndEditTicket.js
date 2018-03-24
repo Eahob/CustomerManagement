@@ -32,9 +32,13 @@ class CreateAndEditTicket extends React.Component {
         this.setState({ id: this.props.match.params.id }, function () {
             if (this.state.id) {
                 api.showTicket(this.state.id).then(res => {
-                    console.log(res)
-                    //const { name, surname, phone, email, observations } = res.data
-                    //this.setState({ name, surname, phone, email, observations })
+                    this.selectCustomer(res.data.customer._id, res.data.customer.name)
+                    res.data.services.forEach(service => {
+                        this.selectService(service.service._id, service.service.name, service.price, service.quantity)
+                    })
+                    res.data.products.forEach(product => {
+                        this.selectProduct(product.product._id, product.product.name, product.price, product.quantity)
+                    })
                 })
             }
         })
@@ -62,23 +66,23 @@ class CreateAndEditTicket extends React.Component {
         selected.customer = { id, name }
         this.forceUpdate()
     }
-    selectService = (id, name, price) => {
+    selectService = (id, name, price, quantity = 1) => {
         let selected = this.state.selected
         let index = selected.services.findIndex(element => {
             return element.id === id
         })
         if (index < 0) {
-            selected.services.push({ id, name, price, quantity: 1 })
+            selected.services.push({ id, name, price, quantity })
             this.forceUpdate()
         }
     }
-    selectProduct = (id, name, price) => {
+    selectProduct = (id, name, price, quantity = 1) => {
         let selected = this.state.selected
         let index = selected.products.findIndex(element => {
             return element.id === id
         })
         if (index < 0) {
-            selected.products.push({ id, name, price, quantity: 1 })
+            selected.products.push({ id, name, price, quantity })
             this.forceUpdate()
         }
     }
@@ -111,8 +115,14 @@ class CreateAndEditTicket extends React.Component {
         this.forceUpdate()
     }
     submit() {
-        this.setState({ creation: true })
-        api.createTicket(this.state.selected.customer.id, this.state.selected.services.map(e => ({ id: e.id, quantity: e.quantity })), this.state.selected.products.map(e => ({ id: e.id, quantity: e.quantity }))).then(res => {
+        let customerId = this.state.selected.customer.id
+        let selectedServices = this.state.selected.services.map(e => ({ id: e.id, quantity: e.quantity }))
+        let selectedProducts = this.state.selected.products.map(e => ({ id: e.id, quantity: e.quantity }))
+        Promise.resolve().then(() => {
+            if (this.state.id) return api.modifyTicket(customerId, selectedServices, selectedProducts, this.state.id)
+            this.setState({ creation: true })
+            return api.createTicket(customerId, selectedServices, selectedProducts)
+        }).then(res => {
             this.setState({ responseStatus: res.status, error: res.error }, function () {
                 if (res.status === 'OK') {
                     this.props.history.push('/ticket/' + res.data.id)
