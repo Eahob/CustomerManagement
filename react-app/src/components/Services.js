@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import InputAutoSubmit from './InputAutoSubmit'
 import TableData from './TableData'
 import api from '../api-config'
