@@ -40,7 +40,7 @@ class Products extends React.Component {
     render() {
         return (
             <div className="mx-4">
-                <Link to="/product" className="mb-4 btn btn-primary">New Product</Link>
+                <h1 className="mb-4">Product List</h1>
                 <div className="row mb-4">
                     <InputAutoSubmit read={this.readInput} query="name" placeholder="Search product name" type="text" />
                     <InputAutoSubmit read={this.readInput} query="pricemin" placeholder="Minimun price" type="number" />

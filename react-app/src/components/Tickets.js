@@ -41,7 +41,7 @@ class Tickets extends React.Component {
     render() {
         return (
             <div className="mx-4">
-                <Link to="/ticket" className="mb-4 btn btn-primary">New Ticket</Link>
+                <h1 className="mb-4">Ticket List</h1>
                 <div className="row mb-4">
                     <InputAutoSubmit read={this.readInput} query="datemin" placeholder="Minimun date" type="date" />
                     <InputAutoSubmit read={this.readInput} query="datemax" placeholder="Maximun date" type="date" />

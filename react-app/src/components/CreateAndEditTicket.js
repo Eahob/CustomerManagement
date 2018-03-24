@@ -139,6 +139,7 @@ class CreateAndEditTicket extends React.Component {
         let total = servicesTotal + productsTotal
         return (
             <div className="mx-4">
+                <h1 className="mb-4">{this.state.id ? 'Modify ticket' : 'Creating new ticket'}</h1>
                 <div className="row">
                     <div className="col">
                         <h4>

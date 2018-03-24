@@ -52,6 +52,7 @@ class CreateAndEditProduct extends React.Component {
     render() {
         return (
             <div className="mx-4">
+                <h1 className="mb-4">{this.state.id ? 'Modify product' : 'Creating new product'}</h1>
                 <div className="row">
                     <div className="col-md-4">
                         <form onSubmit={e => {

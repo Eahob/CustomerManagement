@@ -52,6 +52,7 @@ class CreateAndEditService extends React.Component {
     render() {
         return (
             <div className="mx-4">
+                <h1 className="mb-4">{this.state.id ? 'Modify service' : 'Creating new service'}</h1>
                 <div className="row">
                     <div className="col-md-4">
                         <form onSubmit={e => {

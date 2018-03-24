@@ -19,13 +19,13 @@ function PrimaryLayout() {
         <Route path="/tickets" component={Tickets} />
         <Route path="/services" component={Services} />
         <Route path="/products" component={Products} />
-        <Route exact path="/customer" component={CreateAndEditCustomer} />
+        <Route path="/new/customer" component={CreateAndEditCustomer} />
+        <Route path="/new/ticket" component={CreateAndEditTicket} />
+        <Route path="/new/service" component={CreateAndEditService} />
+        <Route path="/new/product" component={CreateAndEditProduct} />
         <Route path="/customer/:id" component={CreateAndEditCustomer} />
-        <Route exact path="/ticket" component={CreateAndEditTicket} />
         <Route path="/ticket/:id" component={CreateAndEditTicket} />
-        <Route exact path="/service" component={CreateAndEditService} />
         <Route path="/service/:id" component={CreateAndEditService} />
-        <Route exact path="/product" component={CreateAndEditProduct} />
         <Route path="/product/:id" component={CreateAndEditProduct} />
       </Switch>
     </div>

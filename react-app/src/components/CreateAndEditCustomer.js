@@ -33,10 +33,10 @@ class CreateAndEditCustomer extends React.Component {
         this.setState({ id: nextProps.match.params.id })
     }
     readInput = (input, query) => {
-        this.setState({ [query]: input, creation: false})
+        this.setState({ [query]: input, creation: false })
     }
     delete() {
-        api.deleteCustomer(this.state.id).then(()=> this.props.history.push('/customers'))
+        api.deleteCustomer(this.state.id).then(() => this.props.history.push('/customers'))
     }
     submit() {
         const { name, surname, phone, email, observations } = this.state
@@ -55,6 +55,7 @@ class CreateAndEditCustomer extends React.Component {
     render() {
         return (
             <div className="mx-4">
+                <h1 className="mb-4">{this.state.id ? 'Modify customer information' : 'Creating new customer'}</h1>
                 <div className="row">
                     <div className="col-md">
                         <form onSubmit={e => {

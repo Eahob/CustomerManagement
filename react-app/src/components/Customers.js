@@ -40,7 +40,7 @@ class Customers extends React.Component {
     render() {
         return (
             <div className="mx-4">
-                <Link to="/customer" className="mb-4 btn btn-primary">New Customer</Link>
+                <h1 className="mb-4">Customer List</h1>
                 <div className="row mb-4">
                     <InputAutoSubmit read={this.readInput} query="name" placeholder="Search name" type="text" />
                     <InputAutoSubmit read={this.readInput} query="surname" placeholder="Search surname" type="text" />
