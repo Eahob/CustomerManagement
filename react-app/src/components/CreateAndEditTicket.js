@@ -31,6 +31,7 @@ class CreateAndEditTicket extends React.Component {
         })
         this.setState({ id: this.props.match.params.id }, function () {
             if (this.state.id) {
+                this.setState({ creation: false })
                 api.showTicket(this.state.id).then(res => {
                     this.selectCustomer(res.data.customer._id, res.data.customer.name)
                     res.data.services.forEach(service => {
