@@ -70,6 +70,9 @@ const api = {
     modifyCustomer(name, surname, phone, email, observations, id) {
         return this._call('put', 'customer/' + id, { name, surname, phone, email, observations })
     },
+    modifyTicket(customer, services, products, id) {
+        return this._call('put', 'ticket/' + id, { customer, services, products })
+    },
     modifyService(name, price, tax, id) {
         return this._call('put', 'service/' + id, { name, price, tax })
     },
