@@ -20,7 +20,11 @@ const Customer = new Schema({
         type: String,
         unique: true
     },
-    observations: String
+    observations: String,
+    hide:{
+        type: Boolean,
+        required: true
+    }
 })
 
 const Ticket = new Schema({
@@ -100,6 +104,10 @@ const Service = new Schema({
     tax: {
         type: Number,
         required: true
+    },
+    hide:{
+        type: Boolean,
+        required: true
     }
 })
 
@@ -115,6 +123,10 @@ const Product = new Schema({
     },
     tax: {
         type: Number,
+        required: true
+    },
+    hide:{
+        type: Boolean,
         required: true
     }
 })
