@@ -1,5 +1,6 @@
 import React from 'react'
 import api from '../api-config'
+import InputAutoSubmit from './InputAutoSubmit'
 import TableData from './TableData'
 import BSAlert from './BSAlert'
 import BSLabeledInput from './BSLabeledInput'
@@ -44,6 +45,15 @@ class CreateAndEditCustomer extends React.Component {
     }
     readInput = (input, query) => {
         this.setState({ [query]: input, creation: false })
+    }
+    readTableInput = (input, query) => {
+        this.setState({ [query]: input.trim() }, () => this.submitTable())
+    }
+    submitTable() {
+        const { pricemin, pricemax, datemin, datemax, id } = this.state
+        api.showTicketsBy(pricemin, pricemax, datemin, datemax, id).then(res => {
+            this.setState({ tickets: res.data || [] })
+        })
     }
     delete() {
         api.deleteCustomer(this.state.id).then(() => this.props.history.push('/customers'))
@@ -106,6 +116,14 @@ class CreateAndEditCustomer extends React.Component {
                     </div>
                     <div className="col-md">
                         {this.state.id && <label>Customer history</label>}
+                        {this.state.id && <div className="row mb-3">
+                            <InputAutoSubmit read={this.readTableInput} query="datemin" placeholder="Minimun date" type="date" label="From" />
+                            <InputAutoSubmit read={this.readTableInput} query="datemax" placeholder="Maximun date" type="date" label="To" />
+                        </div>}
+                        {this.state.id && <div className="row mb-3">
+                            <InputAutoSubmit read={this.readTableInput} query="pricemin" placeholder="Minimun total" type="text" />
+                            <InputAutoSubmit read={this.readTableInput} query="pricemax" placeholder="Maximun total" type="text" />
+                        </div>}
                         {this.state.id && <TableData data={this.state.tickets} heads={['Date', 'Total']} callback={this.setDataTable} />}
                     </div>
                 </div>
