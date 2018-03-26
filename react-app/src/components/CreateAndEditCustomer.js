@@ -99,8 +99,8 @@ class CreateAndEditCustomer extends React.Component {
                         <BSAlert stt={this.state} alertError={this.state.id ? 'Customer modification failed' : 'Customer creation failed'} alertSuccess={this.state.creation ? 'Customer creation successful' : 'Customer modification successful'} />
                     </div>
                     <div className="col-md">
-                        <label>Customer history</label>
-                        <TableData data={this.state.tickets} heads={['Date', 'Total']} callback={this.setDataTable} />
+                        {this.state.id && <label>Customer history</label>}
+                        {this.state.id && <TableData data={this.state.tickets} heads={['Date', 'Total']} callback={this.setDataTable} />}
                     </div>
                 </div>
             </div>
