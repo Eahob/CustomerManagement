@@ -32,7 +32,7 @@ class Tickets extends React.Component {
         let res = []
         arr.forEach(element => {
             let d = new Date(element.date)
-            res.push([[d.toLocaleDateString('es-ES', { hour: "2-digit", minute: "2-digit" }), element.customer.name + ' ' + element.customer.surname, element.total.withoutTax + '€', element.total.withTax + '€'], element._id])
+            res.push([[d.toLocaleDateString('es-ES', { hour: "2-digit", minute: "2-digit" }), element.customer.name + ' ' + element.customer.surname, element.total.withTax + '€'], element._id])
         })
         return [res, '/ticket/']
     }
@@ -47,7 +47,7 @@ class Tickets extends React.Component {
                     <InputAutoSubmit read={this.readInput} query="pricemin" placeholder="Minimun total with tax" type="text" />
                     <InputAutoSubmit read={this.readInput} query="pricemax" placeholder="Maximun total with tax" type="text" />
                 </div>
-                <TableData data={this.state.tickets} heads={['Date', 'Customer', 'Total', 'Total + tax']} callback={this.setDataTable} />
+                <TableData data={this.state.tickets} heads={['Date', 'Customer', 'Total']} callback={this.setDataTable} />
             </div>
         )
     }
