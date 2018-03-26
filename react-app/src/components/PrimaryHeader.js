@@ -29,14 +29,14 @@ function PrimaryHeader() {
                 <div className="navbar-collapse collapse order-3 dual-collapse2">
                     <ul className="navbar-nav ml-auto">
                         <li className="nav-item dropdown">
-                            <button type="button" className="btn btn-dark nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Services</button>
+                            <button type="button" className="btn btn-dark nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Services</button>
                             <div className="dropdown-menu dropdown-menu-right text-right">
                                 <NavLink className="dropdown-item" to="/services">Services List</NavLink>
                                 <NavLink className="dropdown-item" to="/new/service">New Service</NavLink>
                             </div>
                         </li>
                         <li className="nav-item dropdown">
-                            <button type="button" className="btn btn-dark nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Products</button>
+                            <button type="button" className="btn btn-dark nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Products</button>
                             <div className="dropdown-menu dropdown-menu-right text-right">
                                 <NavLink className="dropdown-item" to="/products">Products List</NavLink>
                                 <NavLink className="dropdown-item" to="/new/product">New Product</NavLink>
