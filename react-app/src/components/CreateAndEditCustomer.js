@@ -114,22 +114,26 @@ class CreateAndEditCustomer extends React.Component {
                         </form>
                         <BSAlert stt={this.state} alertError={this.state.id ? 'Customer modification failed' : 'Customer creation failed'} alertSuccess={this.state.creation ? 'Customer creation successful' : 'Customer modification successful'} />
                     </div>
-                    <div className="col-md">
-                        {this.state.id && <label>Customer history</label>}
-                        {this.state.id && <div className="row mb-3">
-                            <InputAutoSubmit read={this.readTableInput} query="datemin" placeholder="Minimun date" type="date" label="From" />
-                            <InputAutoSubmit read={this.readTableInput} query="datemax" placeholder="Maximun date" type="date" label="To" />
-                        </div>}
-                        {this.state.id && <div className="row mb-3">
-                            <InputAutoSubmit read={this.readTableInput} query="pricemin" placeholder="Minimun total" type="text" />
-                            <InputAutoSubmit read={this.readTableInput} query="pricemax" placeholder="Maximun total" type="text" />
-                        </div>}
-                        {this.state.id && <TableData data={this.state.tickets} heads={['Date', 'Total']} callback={this.setDataTable} />}
-                    </div>
+                    {this.state.id ?
+                        <div className="col-md">
+                            <label>Customer history</label>
+                            <div className="row mb-3">
+                                <InputAutoSubmit read={this.readTableInput} query="datemin" placeholder="Minimun date" type="date" label="From" />
+                                <InputAutoSubmit read={this.readTableInput} query="datemax" placeholder="Maximun date" type="date" label="To" />
+                            </div>
+                            <div className="row mb-3">
+                                <InputAutoSubmit read={this.readTableInput} query="pricemin" placeholder="Minimun total" type="text" />
+                                <InputAutoSubmit read={this.readTableInput} query="pricemax" placeholder="Maximun total" type="text" />
+                            </div>
+                            <TableData data={this.state.tickets} heads={['Date', 'Total']} callback={this.setDataTable} />
+                        </div>
+                    :
+                        <div className="col-md"></div>
+                    }
                 </div>
-            </div>
-        )
-    }
-}
-
-export default CreateAndEditCustomer
+                </div>
+                )
+            }
+        }
+        
+        export default CreateAndEditCustomer
