@@ -11,9 +11,9 @@ module.exports = {
         if (email) filter.email = { $regex: new RegExp(email, 'i') }
         if (observations) filter.observations = { $regex: new RegExp(observations, 'i') }
 
-        filter.hide = undefined
+        filter.hide = false
 
-        return Customer.find(filter)
+        return Customer.find(filter, { __v: 0, hide: 0 })
     },
     findTicketsBy(pricemin, pricemax, datemin, datemax, customerId) {
         const filter = {}
@@ -30,7 +30,7 @@ module.exports = {
         }
         if (customerId) filter.customer = customerId
 
-        return Ticket.find(filter).populate('customer', 'name surname')
+        return Ticket.find(filter, { __v: 0 }).populate('customer', 'name surname')
     },
     findServicesBy(pricemin, pricemax, name) {
         const filter = {}
@@ -42,9 +42,9 @@ module.exports = {
         }
         if (name) filter.name = { $regex: new RegExp(name, 'i') }
 
-        filter.hide = undefined
+        filter.hide = false
 
-        return Service.find(filter)
+        return Service.find(filter, { __v: 0, hide: 0 })
     },
     findProductsBy(pricemin, pricemax, name) {
         const filter = {}
@@ -56,20 +56,20 @@ module.exports = {
         }
         if (name) filter.name = { $regex: new RegExp(name, 'i') }
 
-        filter.hide = undefined
+        filter.hide = false
 
-        return Product.find(filter)
+        return Product.find(filter, { __v: 0, hide: 0 })
     },
     createCustomer(name, surname, phone, email, observations = '') {
-        customer = new Customer({ name, surname, phone, email, observations, hide: undefined })
+        customer = new Customer({ name, surname, phone, email, observations, hide: false })
         return customer.save()
     },
     createService(name, price, tax) {
-        service = new Service({ name, price, tax, hide: undefined })
+        service = new Service({ name, price, tax, hide: false })
         return service.save()
     },
     createProduct(name, price, tax) {
-        product = new Product({ name, price, tax, hide: undefined })
+        product = new Product({ name, price, tax, hide: false })
         return product.save()
     },
     calculateTicket(services = [], products = []) {
@@ -136,22 +136,24 @@ module.exports = {
         return Customer.updateOne({ _id }, { $set: { hide: true } })
     },
     deleteService(_id) {
-        return Service.deleteOne({ _id })
+        //return Service.deleteOne({ _id })
+        return Customer.updateOne({ _id }, { $set: { hide: true } })
     },
     deleteProduct(_id) {
-        return Product.deleteOne({ _id })
+        //return Product.deleteOne({ _id })
+        return Customer.updateOne({ _id }, { $set: { hide: true } })
     },
     showCustomer(_id) {
-        return Customer.findOne({ _id }, { _id: 0, __v: 0 })
+        return Customer.findOne({ _id }, { _id: 0, __v: 0, hide: 0 })
     },
     showTicket(_id) {
-        return Ticket.findOne({ _id }, { _id: 0, __v: 0 }).populate('customer', 'name').populate('services.service', 'name').populate('products.product', 'name')
+        return Ticket.findOne({ _id }, { _id: 0, __v: 0, hide: 0 }).populate('customer', 'name').populate('services.service', 'name').populate('products.product', 'name')
     },
     showService(_id) {
-        return Service.findOne({ _id }, { _id: 0, __v: 0 })
+        return Service.findOne({ _id }, { _id: 0, __v: 0, hide: 0 })
     },
     showProduct(_id) {
-        return Product.findOne({ _id }, { _id: 0, __v: 0 })
+        return Product.findOne({ _id }, { _id: 0, __v: 0, hide: 0 })
     },
     editCustomer(name, surname, phone, email, observations, _id) {
         return Customer.findById(_id).then(customer => {
