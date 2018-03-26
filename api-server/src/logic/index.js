@@ -11,6 +11,8 @@ module.exports = {
         if (email) filter.email = { $regex: new RegExp(email, 'i') }
         if (observations) filter.observations = { $regex: new RegExp(observations, 'i') }
 
+        filter.hide = undefined
+
         return Customer.find(filter)
     },
     findTicketsBy(pricemin, pricemax, datemin, datemax, customerId) {
@@ -40,6 +42,8 @@ module.exports = {
         }
         if (name) filter.name = { $regex: new RegExp(name, 'i') }
 
+        filter.hide = undefined
+
         return Service.find(filter)
     },
     findProductsBy(pricemin, pricemax, name) {
@@ -52,18 +56,20 @@ module.exports = {
         }
         if (name) filter.name = { $regex: new RegExp(name, 'i') }
 
+        filter.hide = undefined
+
         return Product.find(filter)
     },
     createCustomer(name, surname, phone, email, observations = '') {
-        customer = new Customer({ name, surname, phone, email, observations })
+        customer = new Customer({ name, surname, phone, email, observations, hide: undefined })
         return customer.save()
     },
     createService(name, price, tax) {
-        service = new Service({ name, price, tax })
+        service = new Service({ name, price, tax, hide: undefined })
         return service.save()
     },
     createProduct(name, price, tax) {
-        product = new Product({ name, price, tax })
+        product = new Product({ name, price, tax, hide: undefined })
         return product.save()
     },
     calculateTicket(services = [], products = []) {
@@ -126,7 +132,8 @@ module.exports = {
         return Ticket.deleteOne({ _id })
     },
     deleteCustomer(_id) {
-        return Customer.deleteOne({ _id })
+        //return Customer.deleteOne({ _id })
+        return Customer.updateOne({ _id }, { $set: { hide: true } })
     },
     deleteService(_id) {
         return Service.deleteOne({ _id })
