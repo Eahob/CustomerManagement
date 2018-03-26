@@ -24,8 +24,8 @@ var api = {
     showCustomersBy: function showCustomersBy(name, surname, phone, email, observations) {
         return this._call('get', 'customers', undefined, { name: name, surname: surname, phone: phone, email: email, observations: observations });
     },
-    showTicketsBy: function showTicketsBy(pricemin, pricemax, datemin, datemax) {
-        return this._call('get', 'tickets', undefined, { pricemin: pricemin, pricemax: pricemax, datemin: datemin, datemax: datemax });
+    showTicketsBy: function showTicketsBy(pricemin, pricemax, datemin, datemax, customerId) {
+        return this._call('get', 'tickets', undefined, { pricemin: pricemin, pricemax: pricemax, datemin: datemin, datemax: datemax, customerId: customerId });
     },
     showServicesBy: function showServicesBy(pricemin, pricemax, name) {
         return this._call('get', 'services', undefined, { pricemin: pricemin, pricemax: pricemax, name: name });
