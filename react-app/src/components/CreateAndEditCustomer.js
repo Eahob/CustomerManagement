@@ -1,5 +1,6 @@
 import React from 'react'
 import api from '../api-config'
+import TableData from './TableData'
 import BSAlert from './BSAlert'
 import BSLabeledInput from './BSLabeledInput'
 import BSLabeledTextarea from './BSLabeledTextarea'
@@ -14,7 +15,8 @@ class CreateAndEditCustomer extends React.Component {
         surname: '',
         phone: '',
         email: '',
-        observations: ''
+        observations: '',
+        tickets: []
     }
     constructor(props) {
         super(props)
@@ -26,6 +28,9 @@ class CreateAndEditCustomer extends React.Component {
                 api.showCustomer(this.state.id).then(res => {
                     const { name, surname, phone, email, observations } = res.data
                     this.setState({ name, surname, phone, email, observations })
+                })
+                api.showTicketsBy(undefined, undefined, undefined, undefined, this.state.id).then(res => {
+                    this.setState({ tickets: res.data || [] })
                 })
             }
         })
@@ -57,6 +62,14 @@ class CreateAndEditCustomer extends React.Component {
             })
         })
     }
+    setDataTable(arr) {
+        let res = []
+        arr.forEach(element => {
+            let d = new Date(element.date)
+            res.push([[d.toLocaleDateString('es-ES', { hour: "2-digit", minute: "2-digit" }), element.total.withTax + '€'], element._id])
+        })
+        return [res, '/ticket/']
+    }
     render() {
         return (
             <div className="mx-4">
@@ -86,6 +99,8 @@ class CreateAndEditCustomer extends React.Component {
                         <BSAlert stt={this.state} alertError={this.state.id ? 'Customer modification failed' : 'Customer creation failed'} alertSuccess={this.state.creation ? 'Customer creation successful' : 'Customer modification successful'} />
                     </div>
                     <div className="col-md">
+                        <label>Customer history</label>
+                        <TableData data={this.state.tickets} heads={['Date', 'Total']} callback={this.setDataTable} />
                     </div>
                 </div>
             </div>
