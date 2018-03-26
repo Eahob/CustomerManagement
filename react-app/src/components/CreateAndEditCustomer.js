@@ -44,7 +44,7 @@ class CreateAndEditCustomer extends React.Component {
         }
     }
     readInput = (input, query) => {
-        this.setState({ [query]: input, creation: false })
+        this.setState({ [query]: input, creation: false, responseStatus: '' })
     }
     readTableInput = (input, query) => {
         this.setState({ [query]: input.trim() }, () => this.submitTable())

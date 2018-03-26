@@ -35,7 +35,7 @@ class CreateAndEditService extends React.Component {
         }
     }
     readInput = (input, query) => {
-        this.setState({ [query]: input, creation: false })
+        this.setState({ [query]: input, creation: false, responseStatus: '' })
     }
     delete() {
         api.deleteService(this.state.id).then(() => this.props.history.push('/services'))
