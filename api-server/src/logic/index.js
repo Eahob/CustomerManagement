@@ -1,6 +1,5 @@
 const { Customer, Ticket, Service, Product } = require('../models')
 
-// to do: add pagination
 module.exports = {
     findCustomersBy(name, surname, phone, email, observations) {
         const filter = {}
@@ -61,16 +60,29 @@ module.exports = {
         return Product.find(filter, { __v: 0, hide: 0 })
     },
     createCustomer(name, surname, phone, email, observations = '') {
-        customer = new Customer({ name, surname, phone, email, observations, hide: false })
-        return customer.save()
+        return Promise.all([Customer.find({ phone }).then(res => res.length), Customer.find({ email }).then(res => res.length)]).then(res => {
+            if (res[0]) throw Error('Phone already in database')
+            if (res[1]) throw Error('Email already in database')
+        }).then(() => {
+            customer = new Customer({ name, surname, phone, email, observations, hide: false })
+            return customer.save()
+        })
     },
     createService(name, price, tax) {
-        service = new Service({ name, price, tax, hide: false })
-        return service.save()
+        return Promise.resolve().then(() => Service.find({ name })).then(res => {
+            if (res.length) throw Error('Service name already in database')
+        }).then(() => {
+            service = new Service({ name, price, tax, hide: false })
+            return service.save()
+        })
     },
     createProduct(name, price, tax) {
-        product = new Product({ name, price, tax, hide: false })
-        return product.save()
+        return Promise.resolve().then(() => Product.find({ name })).then(res => {
+            if (res.length) throw Error('Product name already in database')
+        }).then(() => {
+            product = new Product({ name, price, tax, hide: false })
+            return product.save()
+        })
     },
     calculateTicket(services = [], products = []) {
         // services is an array. Each element has and id for the service and the quantity
@@ -156,14 +168,19 @@ module.exports = {
         return Product.findOne({ _id }, { _id: 0, __v: 0, hide: 0 })
     },
     editCustomer(name, surname, phone, email, observations, _id) {
-        return Customer.findById(_id).then(customer => {
-            let update = {}
-            if (customer.name != name) update.name = name.trim()
-            if (customer.surname != surname) update.surname = surname.trim()
-            if (customer.phone != phone) { update.phone = phone.trim() }
-            if (customer.email != email) update.email = email.trim()
-            if (customer.observations != observations) update.observations = observations.trim()
-            return Customer.updateOne({ _id }, { $set: update })
+        return Promise.all([Customer.findOne({ phone }), Customer.findOne({ email })]).then(res => {
+            if (res[0] ? res[0]._id != _id : false) throw Error('Phone already in database')
+            if (res[1] ? res[1]._id != _id : false) throw Error('Email already in database')
+        }).then(() => {
+            return Customer.findById(_id).then(customer => {
+                let update = {}
+                if (customer.name != name) update.name = name.trim()
+                if (customer.surname != surname) update.surname = surname.trim()
+                if (customer.phone != phone) update.phone = phone.trim()
+                if (customer.email != email) update.email = email.trim()
+                if (customer.observations != observations) update.observations = observations.trim()
+                return Customer.updateOne({ _id }, { $set: update })
+            })
         }).then(() => ({ _id }))
     },
     editTicket(customer, services, products, _id) {
@@ -176,21 +193,29 @@ module.exports = {
         }).then(() => ({ _id }))
     },
     editService(name, price, tax, _id) {
-        return Service.findById(_id).then(service => {
-            let update = {}
-            if (service.name != name) update.name = name
-            if (service.price != price) update.price = price
-            if (service.tax != tax) update.tax = tax
-            return Service.updateOne({ _id }, { $set: update })
+        return Promise.resolve().then(() => Service.findOne({ name })).then(res => {
+            if (res ? res._id != _id : false) throw Error('Service name already in database')
+        }).then(() => {
+            return Service.findById(_id).then(service => {
+                let update = {}
+                if (service.name != name) update.name = name
+                if (service.price != price) update.price = price
+                if (service.tax != tax) update.tax = tax
+                return Service.updateOne({ _id }, { $set: update })
+            })
         }).then(() => ({ _id }))
     },
     editProduct(name, price, tax, _id) {
-        return Product.findById(_id).then(product => {
-            let update = {}
-            if (product.name != name) update.name = name
-            if (product.price != price) update.price = price
-            if (product.tax != tax) update.tax = tax
-            return Product.updateOne({ _id }, { $set: update })
+        return Promise.resolve().then(() => Product.findOne({ name })).then(res => {
+            if (res ? res._id != _id : false) throw Error('Product name already in database')
+        }).then(() => {
+            return Product.findById(_id).then(product => {
+                let update = {}
+                if (product.name != name) update.name = name
+                if (product.price != price) update.price = price
+                if (product.tax != tax) update.tax = tax
+                return Product.updateOne({ _id }, { $set: update })
+            })
         }).then(() => ({ _id }))
     }
 }

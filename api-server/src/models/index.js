@@ -5,16 +5,16 @@ const { Schema, Schema: { ObjectId } } = mongoose
 const Customer = new Schema({
     name: {
         type: String,
-        required: true
+        required: [true, 'Customer name required']
     },
     surname: {
         type: String,
-        required: true
+        required: [true, 'Customer surname required']
     },
     phone: {
         type: String,
         unique: true,
-        required: true
+        required: [true, 'Customer phone number required']
     },
     email: {
         type: String,
@@ -35,7 +35,7 @@ const Ticket = new Schema({
     customer: {
         type: ObjectId,
         ref: 'Customer',
-        required: true
+        required: [true, 'Customer name required']
     },
     services: [
         {
@@ -95,15 +95,15 @@ const Service = new Schema({
     name: {
         type: String,
         unique: true,
-        required: true
+        required: [true, 'Service name required']
     },
     price: {
         type: Number,
-        required: true
+        required: [true, 'Service price required']
     },
     tax: {
         type: Number,
-        required: true
+        required: [true, 'Service tax required']
     },
     hide:{
         type: Boolean,
@@ -115,15 +115,15 @@ const Product = new Schema({
     name: {
         type: String,
         unique: true,
-        required: true
+        required: [true, 'Product name required']
     },
     price: {
         type: Number,
-        required: true
+        required: [true, 'Product price required']
     },
     tax: {
         type: Number,
-        required: true
+        required: [true, 'Product tax required']
     },
     hide:{
         type: Boolean,
