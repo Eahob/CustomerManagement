@@ -110,24 +110,26 @@ class CreateAndEditTicket extends React.Component {
         this.forceUpdate()
     }
     modifyProductQuantity = (index, operation) => {
-        let quantity = this.state.selected.products[index].quantity
+        let selected = this.state.selected
+        let quantity = selected.products[index].quantity
         if (operation) {
             quantity++
         } else if (quantity > 1) {
             quantity--
         }
-        this.state.selected.products[index].quantity = quantity
-        this.forceUpdate()
+        selected.products[index].quantity = quantity
+        this.setState({ selected })
     }
     modifyServiceQuantity = (index, operation) => {
-        let quantity = this.state.selected.services[index].quantity
+        let selected = this.state.selected
+        let quantity = selected.services[index].quantity
         if (operation) {
             quantity++
         } else if (quantity > 1) {
             quantity--
         }
-        this.state.selected.services[index].quantity = quantity
-        this.forceUpdate()
+        selected.services[index].quantity = quantity
+        this.setState({ selected })
     }
     submit() {
         let customerId = this.state.selected.customer.id
