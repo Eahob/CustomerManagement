@@ -4,17 +4,18 @@ import BSAlert from './BSAlert'
 import BSLabeledInput from './BSLabeledInput'
 
 class CreateAndEditService extends React.Component {
+    defaultState = {
+        id: '',
+        responseStatus: '',
+        error: '',
+        creation: false,
+        name: '',
+        price: '',
+        tax: 21
+    }
     constructor(props) {
         super(props)
-        this.state = {
-            id: '',
-            responseStatus: '',
-            error: '',
-            creation: false,
-            name: '',
-            price: '',
-            tax: 21
-        }
+        this.state = this.defaultState
     }
     componentDidMount() {
         this.setState({ id: this.props.match.params.id }, function () {
@@ -27,13 +28,17 @@ class CreateAndEditService extends React.Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-        this.setState({ id: nextProps.match.params.id })
+        if (nextProps.match.params.id) {
+            this.setState({ id: nextProps.match.params.id })
+        } else {
+            this.setState(this.defaultState)
+        }
     }
     readInput = (input, query) => {
         this.setState({ [query]: input, creation: false })
     }
     delete() {
-        api.deleteService(this.state.id).then(()=> this.props.history.push('/services'))
+        api.deleteService(this.state.id).then(() => this.props.history.push('/services'))
     }
     submit() {
         const { name, price, tax } = this.state

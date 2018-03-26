@@ -5,19 +5,20 @@ import BSLabeledInput from './BSLabeledInput'
 import BSLabeledTextarea from './BSLabeledTextarea'
 
 class CreateAndEditCustomer extends React.Component {
+    defaultState = {
+        id: '',
+        responseStatus: '',
+        error: '',
+        creation: false,
+        name: '',
+        surname: '',
+        phone: '',
+        email: '',
+        observations: ''
+    }
     constructor(props) {
         super(props)
-        this.state = {
-            id: '',
-            responseStatus: '',
-            error: '',
-            creation: false,
-            name: '',
-            surname: '',
-            phone: '',
-            email: '',
-            observations: ''
-        }
+        this.state = this.defaultState
     }
     componentDidMount() {
         this.setState({ id: this.props.match.params.id }, function () {
@@ -30,7 +31,11 @@ class CreateAndEditCustomer extends React.Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-        this.setState({ id: nextProps.match.params.id })
+        if (nextProps.match.params.id) {
+            this.setState({ id: nextProps.match.params.id })
+        } else {
+            this.setState(this.defaultState)
+        }
     }
     readInput = (input, query) => {
         this.setState({ [query]: input, creation: false })
