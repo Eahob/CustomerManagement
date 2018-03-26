@@ -145,6 +145,9 @@ class CreateAndEditTicket extends React.Component {
             })
         })
     }
+    delete() {
+        api.deleteTicket(this.state.id).then(() => this.props.history.push('/tickets'))
+    }
     render() {
         let reducer = (accum, current) => {
             return accum + current.price * current.quantity
@@ -170,6 +173,7 @@ class CreateAndEditTicket extends React.Component {
                         <br />
                         <h6 className="text-muted">Products <span className="badge badge-secondary">{productsTotal}€</span></h6>
                         <TicketList data={this.state.selected.products} removeSelected={this.removeSelectedProduct} modify={this.modifyProductQuantity} />
+                        {this.state.id && <a className="btn btn-danger float-left text-white mt-4" onClick={e => this.delete()}>Delete Ticket</a>}
                     </div>
                     <div className="col">
                         <InputAutoSubmit read={this.readCustomerName} placeholder="Search customer by name" />
