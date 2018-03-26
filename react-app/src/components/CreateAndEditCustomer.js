@@ -83,10 +83,16 @@ class CreateAndEditCustomer extends React.Component {
                             <div className="row">
                                 <div className="col-sm">
                                     <BSLabeledInput value={this.state.name} query="name" read={this.readInput} label="Name" />
-                                    <BSLabeledInput value={this.state.phone} query="phone" read={this.readInput} label="Phone" />
                                 </div>
                                 <div className="col-sm">
                                     <BSLabeledInput value={this.state.surname} query="surname" read={this.readInput} label="Surname" />
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm">
+                                    <BSLabeledInput value={this.state.phone} query="phone" read={this.readInput} label="Phone" />
+                                </div>
+                                <div className="col-sm">
                                     <BSLabeledInput value={this.state.email} query="email" read={this.readInput} label="email" />
                                 </div>
                             </div>
