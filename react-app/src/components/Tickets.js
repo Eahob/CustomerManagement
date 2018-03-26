@@ -42,8 +42,8 @@ class Tickets extends React.Component {
             <div className="mx-4">
                 <h1 className="mb-4">Ticket List</h1>
                 <div className="row mb-4">
-                    <InputAutoSubmit read={this.readInput} query="datemin" placeholder="Minimun date" type="date" />
-                    <InputAutoSubmit read={this.readInput} query="datemax" placeholder="Maximun date" type="date" />
+                    <InputAutoSubmit read={this.readInput} query="datemin" placeholder="Minimun date" type="date" label="From"/>
+                    <InputAutoSubmit read={this.readInput} query="datemax" placeholder="Maximun date" type="date" label="To"/>
                     <InputAutoSubmit read={this.readInput} query="pricemin" placeholder="Minimun total with tax" type="text" />
                     <InputAutoSubmit read={this.readInput} query="pricemax" placeholder="Maximun total with tax" type="text" />
                 </div>
