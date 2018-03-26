@@ -27,7 +27,7 @@ module.exports = {
             if (datemax) filter.date['$lte'] = datemax
         }
 
-        return Ticket.find(filter)
+        return Ticket.find(filter).populate('customer','name surname')
     },
     findServicesBy(pricemin, pricemax, name) {
         const filter = {}
