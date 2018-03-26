@@ -170,7 +170,7 @@ module.exports = {
     editCustomer(name, surname, phone, email, observations, _id) {
         return Promise.all([Customer.findOne({ phone }), Customer.findOne({ email })]).then(res => {
             if (res[0] ? res[0]._id != _id : false) throw Error('Phone already in database')
-            if (res[1] ? res[1]._id != _id : false) throw Error('Email already in database')
+            if ((res[1] ? res[1]._id != _id : false) && email) throw Error('Email already in database')
         }).then(() => {
             return Customer.findById(_id).then(customer => {
                 let update = {}

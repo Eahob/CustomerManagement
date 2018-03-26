@@ -16,10 +16,7 @@ const Customer = new Schema({
         unique: true,
         required: [true, 'Customer phone number required']
     },
-    email: {
-        type: String,
-        unique: true
-    },
+    email: String,
     observations: String,
     hide:{
         type: Boolean,
