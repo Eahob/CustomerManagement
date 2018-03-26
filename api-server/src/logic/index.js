@@ -13,7 +13,7 @@ module.exports = {
 
         return Customer.find(filter)
     },
-    findTicketsBy(pricemin, pricemax, datemin, datemax) {
+    findTicketsBy(pricemin, pricemax, datemin, datemax, customerId) {
         const filter = {}
 
         if (pricemax || pricemin) {
@@ -26,8 +26,9 @@ module.exports = {
             if (datemin) filter.date['$gte'] = datemin
             if (datemax) filter.date['$lte'] = datemax
         }
+        if (customerId) filter.customer = customerId
 
-        return Ticket.find(filter).populate('customer','name surname')
+        return Ticket.find(filter).populate('customer', 'name surname')
     },
     findServicesBy(pricemin, pricemax, name) {
         const filter = {}
@@ -137,7 +138,7 @@ module.exports = {
         return Customer.findOne({ _id }, { _id: 0, __v: 0 })
     },
     showTicket(_id) {
-        return Ticket.findOne({ _id }, { _id: 0, __v: 0 }).populate('customer', 'name').populate('services.service', 'name').populate('products.product','name')
+        return Ticket.findOne({ _id }, { _id: 0, __v: 0 }).populate('customer', 'name').populate('services.service', 'name').populate('products.product', 'name')
     },
     showService(_id) {
         return Service.findOne({ _id }, { _id: 0, __v: 0 })

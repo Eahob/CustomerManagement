@@ -22,8 +22,8 @@ const api = {
     showCustomersBy(name, surname, phone, email, observations) {
         return this._call('get', 'customers', undefined, { name, surname, phone, email, observations })
     },
-    showTicketsBy(pricemin, pricemax, datemin, datemax) {
-        return this._call('get', 'tickets', undefined, { pricemin, pricemax, datemin, datemax })
+    showTicketsBy(pricemin, pricemax, datemin, datemax, customerId) {
+        return this._call('get', 'tickets', undefined, { pricemin, pricemax, datemin, datemax, customerId })
     },
     showServicesBy(pricemin, pricemax, name) {
         return this._call('get', 'services', undefined, { pricemin, pricemax, name })
