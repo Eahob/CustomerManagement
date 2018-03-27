@@ -8,6 +8,9 @@ function PrimaryHeader() {
                 <div className="navbar-collapse collapse order-1 order-md-0 dual-collapse2">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
+                            <NavLink exact className="btn btn-dark nav-link mr-1" activeClassName="active" to="/">#</NavLink>
+                        </li>
+                        <li className="nav-item">
                             <NavLink className="btn btn-dark nav-link mr-1" activeClassName="active" to="/customers">Customers</NavLink>
                         </li>
                         <li className="nav-item">
