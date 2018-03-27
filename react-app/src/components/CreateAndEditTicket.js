@@ -12,8 +12,11 @@ class CreateAndEditTicket extends React.Component {
             error: '',
             creation: false,
             customers: [],
+            responseStatusCustomers: '',
             services: [],
+            responseStatusServices: '',
             products: [],
+            responseStatusProducts: '',
             selected: {
                 customer: '',
                 services: [],
@@ -23,11 +26,11 @@ class CreateAndEditTicket extends React.Component {
     }
     componentDidMount() {
         Promise.all([
-            api.showCustomersBy().then(res => res.data || []),
-            api.showServicesBy().then(res => res.data || []),
-            api.showProductsBy().then(res => res.data || [])
+            api.showCustomersBy()/*.then(res => res.data || [])*/,
+            api.showServicesBy()/*.then(res => res.data || [])*/,
+            api.showProductsBy()/*.then(res => res.data || [])*/
         ]).then(res => {
-            this.setState({ customers: res[0], services: res[1], products: res[2] })
+            this.setState({ customers: res[0].data, responseStatusCustomers: res[0].status, services: res[1].data, responseStatusServices: res[0].status, products: res[2].data,  responseStatusProducts: res[0].status })
         })
         this.setState({ id: this.props.match.params.id }, function () {
             if (this.state.id) {
@@ -189,15 +192,15 @@ class CreateAndEditTicket extends React.Component {
                     </div>
                     <div className="col">
                         <InputAutoSubmit read={this.readCustomerName} placeholder="Search customer by name" />
-                        <FindAndList select={this.selectCustomer} data={this.state.customers} />
+                        <FindAndList response={this.state.responseStatusCustomers} select={this.selectCustomer} data={this.state.customers} />
                     </div>
                     <div className="col">
                         <InputAutoSubmit read={this.readServiceName} placeholder="Search service by name" />
-                        <FindAndList select={this.selectService} data={this.state.services} />
+                        <FindAndList response={this.state.responseStatusServices} select={this.selectService} data={this.state.services} />
                     </div>
                     <div className="col">
                         <InputAutoSubmit read={this.readProductName} placeholder="Search product by name" />
-                        <FindAndList select={this.selectProduct} data={this.state.products} />
+                        <FindAndList response={this.state.responseStatusProducts} select={this.selectProduct} data={this.state.products} />
                     </div>
                 </div>
             </div>
@@ -213,7 +216,11 @@ function FindAndList(props) {
     }
     return (
         <div className="list-group list-group-flush mt-4">
-            {props.data.map(elm => <a onClick={e => props.select(elm._id, elm.name, elm.price)} key={keyGenerator()} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center">{elm.name} {elm.surname ? elm.surname : ''} {elm.price && <span className="badge badge-info">{elm.price + '€'}</span>}</a>)}
+            {props.data.length ?
+                props.data.map(elm => <a onClick={e => props.select(elm._id, elm.name, elm.price)} key={keyGenerator()} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center">{elm.name} {elm.surname ? elm.surname : ''} {elm.price && <span className="badge badge-info">{elm.price + '€'}</span>}</a>)
+            :
+                <h5 className="my-4 text-center">{props.response ? 'We found nothing' : 'No response from server'}</h5>
+            }
         </div>
     )
 }
