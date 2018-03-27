@@ -30,7 +30,7 @@ class CreateAndEditTicket extends React.Component {
             api.showServicesBy(this.props.token),
             api.showProductsBy(this.props.token)
         ]).then(res => {
-            this.setState({ customers: res[0].data, responseStatusCustomers: res[0].status, services: res[1].data, responseStatusServices: res[0].status, products: res[2].data,  responseStatusProducts: res[0].status })
+            this.setState({ customers: res[0].data || [], responseStatusCustomers: res[0].status, services: res[1].data || [], responseStatusServices: res[0].status, products: res[2].data || [],  responseStatusProducts: res[0].status })
         })
         this.setState({ id: this.props.match.params.id }, function () {
             if (this.state.id) {
