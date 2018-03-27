@@ -14,7 +14,18 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url('../img/home_bg.jpg');
+    background-color: #333;
     background-position: center;
     z-index: -1;
+    padding-top: 100px;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#home > div {
+    width: 560px;
+    font-size: 18pt;
+}
+
+#home footer {
+    text-shadow: initial;
 }
