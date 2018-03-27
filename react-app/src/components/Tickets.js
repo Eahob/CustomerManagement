@@ -32,7 +32,7 @@ class Tickets extends React.Component {
         let res = []
         arr.forEach(element => {
             let d = new Date(element.date)
-            res.push([[d.toLocaleDateString('es-ES', { hour: "2-digit", minute: "2-digit" }), element.customer.name + ' ' + element.customer.surname, element.total.withTax + '€'], element._id])
+            res.push([[d.toLocaleDateString('es-ES', { hour: "2-digit", minute: "2-digit" }), element.customer.name + ' ' + element.customer.surname, element.total.withTax.toFixed(2) + '€'], element._id])
         })
         return [res, '/ticket/']
     }
@@ -44,8 +44,8 @@ class Tickets extends React.Component {
                 <div className="row mb-4">
                     <InputAutoSubmit read={this.readInput} query="datemin" placeholder="Minimun date" type="date" label="From"/>
                     <InputAutoSubmit read={this.readInput} query="datemax" placeholder="Maximun date" type="date" label="To"/>
-                    <InputAutoSubmit read={this.readInput} query="pricemin" placeholder="Minimun total with tax" type="text" />
-                    <InputAutoSubmit read={this.readInput} query="pricemax" placeholder="Maximun total with tax" type="text" />
+                    <InputAutoSubmit read={this.readInput} query="pricemin" placeholder="Minimun total" type="text" />
+                    <InputAutoSubmit read={this.readInput} query="pricemax" placeholder="Maximun total" type="text" />
                 </div>
                 <TableData data={this.state.tickets} heads={['Date', 'Customer', 'Total']} callback={this.setDataTable} />
             </div>
