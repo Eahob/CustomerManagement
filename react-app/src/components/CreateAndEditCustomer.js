@@ -17,7 +17,8 @@ class CreateAndEditCustomer extends React.Component {
         phone: '',
         email: '',
         observations: '',
-        tickets: []
+        tickets: [],
+        responseStatusTicket: ''
     }
     constructor(props) {
         super(props)
@@ -31,7 +32,7 @@ class CreateAndEditCustomer extends React.Component {
                     this.setState({ name, surname, phone, email, observations })
                 })
                 api.showTicketsBy(undefined, undefined, undefined, undefined, this.state.id).then(res => {
-                    this.setState({ tickets: res.data || [] })
+                    this.setState({ tickets: res.data || [], responseStatusTicket: res.status })
                 })
             }
         })
@@ -52,7 +53,7 @@ class CreateAndEditCustomer extends React.Component {
     submitTable() {
         const { pricemin, pricemax, datemin, datemax, id } = this.state
         api.showTicketsBy(pricemin, pricemax, datemin, datemax, id).then(res => {
-            this.setState({ tickets: res.data || [] })
+            this.setState({ tickets: res.data || [], responseStatusTicket: res.status })
         })
     }
     delete() {
@@ -125,7 +126,7 @@ class CreateAndEditCustomer extends React.Component {
                                 <InputAutoSubmit read={this.readTableInput} query="pricemin" placeholder="Minimun total" type="text" />
                                 <InputAutoSubmit read={this.readTableInput} query="pricemax" placeholder="Maximun total" type="text" />
                             </div>
-                            <TableData data={this.state.tickets} heads={['Date', 'Total']} callback={this.setDataTable} />
+                            <TableData response={this.state.responseStatusTicket} data={this.state.tickets} heads={['Date', 'Total']} callback={this.setDataTable} />
                         </div>
                     :
                         <div className="col-md"></div>

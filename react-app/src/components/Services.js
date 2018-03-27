@@ -46,7 +46,7 @@ class Services extends React.Component {
                     <InputAutoSubmit read={this.readInput} query="pricemin" placeholder="Minimun price" type="number" />
                     <InputAutoSubmit read={this.readInput} query="pricemax" placeholder="Maximun price" type="number" />
                 </div>
-                <TableData data={this.state.services} heads={['Name', 'Price', 'Tax']} callback={this.setDataTable} />
+                <TableData response={this.state.responseStatus} data={this.state.services} heads={['Name', 'Price', 'Tax']} callback={this.setDataTable} />
             </div>
         )
     }

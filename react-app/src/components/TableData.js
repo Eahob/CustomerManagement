@@ -18,16 +18,22 @@ function TableData(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {tableData.map(element => {
-                        return (
-                            <tr key={keyGenerator()}>
-                                {element[0].map(elm => <td key={keyGenerator()}>{elm}</td>)}
-                                <td>
-                                    <Link className="btn btn-sm btn-outline-primary" to={path+element[1]}>More/Edit</Link>
-                                </td>
-                            </tr>
-                        )
-                    })}
+                    {tableData.length ?
+                        tableData.map(element => {
+                            return (
+                                <tr key={keyGenerator()}>
+                                    {element[0].map(elm => <td key={keyGenerator()}>{elm}</td>)}
+                                    <td>
+                                        <Link className="btn btn-sm btn-outline-primary" to={path+element[1]}>More/Edit</Link>
+                                    </td>
+                                </tr>
+                            )
+                    })
+                    :
+                        <tr>
+                            <td colspan={props.heads.length+1}><h4 className="my-4">{props.response ? 'We found nothing' : 'No response from server'}</h4></td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>

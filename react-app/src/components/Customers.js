@@ -47,7 +47,7 @@ class Customers extends React.Component {
                     <InputAutoSubmit read={this.readInput} query="email" placeholder="Search email" type="text" />
                     <InputAutoSubmit read={this.readInput} query="observations" placeholder="Search observation" type="text" />
                 </div>
-                <TableData data={this.state.customers} heads={['Name', 'Surname', 'Phone', 'email']} callback={this.setDataTable} />
+                <TableData response={this.state.responseStatus} data={this.state.customers} heads={['Name', 'Surname', 'Phone', 'email']} callback={this.setDataTable} />
             </div>
         )
     }

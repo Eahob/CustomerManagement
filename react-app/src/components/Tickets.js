@@ -47,7 +47,7 @@ class Tickets extends React.Component {
                     <InputAutoSubmit read={this.readInput} query="pricemin" placeholder="Minimun total" type="text" />
                     <InputAutoSubmit read={this.readInput} query="pricemax" placeholder="Maximun total" type="text" />
                 </div>
-                <TableData data={this.state.tickets} heads={['Date', 'Customer', 'Total']} callback={this.setDataTable} />
+                <TableData response={this.state.responseStatus} data={this.state.tickets} heads={['Date', 'Customer', 'Total']} callback={this.setDataTable} />
             </div>
         )
     }
