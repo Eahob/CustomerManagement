@@ -61,6 +61,9 @@ class CreateAndEditTicket extends React.Component {
             })
         }
     }
+    setFormodify() {
+        this.setState({ creation: false, error: '', responseStatus: '' })
+    }
     readCustomerName = (name) => {
         api.showCustomersBy(name).then(res => res.data || []).then(res => {
             this.setState({ customers: res })
@@ -79,9 +82,11 @@ class CreateAndEditTicket extends React.Component {
     selectCustomer = (id, name) => {
         let selected = this.state.selected
         selected.customer = { id, name }
-        this.forceUpdate()
+        this.setFormodify()
+        this.setState({ selected })
     }
     selectService = (id, name, price, quantity = 1) => {
+        this.setFormodify()
         let selected = this.state.selected
         let index = selected.services.findIndex(element => {
             return element.id === id
@@ -92,6 +97,7 @@ class CreateAndEditTicket extends React.Component {
         }
     }
     selectProduct = (id, name, price, quantity = 1) => {
+        this.setFormodify()
         let selected = this.state.selected
         let index = selected.products.findIndex(element => {
             return element.id === id
@@ -102,14 +108,17 @@ class CreateAndEditTicket extends React.Component {
         }
     }
     removeSelectedService = (index) => {
+        this.setFormodify()
         this.state.selected.services.splice(index, 1)
         this.forceUpdate()
     }
     removeSelectedProduct = (index) => {
+        this.setFormodify()
         this.state.selected.products.splice(index, 1)
         this.forceUpdate()
     }
     modifyProductQuantity = (index, operation) => {
+        this.setFormodify()
         let selected = this.state.selected
         let quantity = selected.products[index].quantity
         if (operation) {
@@ -121,6 +130,7 @@ class CreateAndEditTicket extends React.Component {
         this.setState({ selected })
     }
     modifyServiceQuantity = (index, operation) => {
+        this.setFormodify()
         let selected = this.state.selected
         let quantity = selected.services[index].quantity
         if (operation) {
@@ -166,14 +176,14 @@ class CreateAndEditTicket extends React.Component {
                             <span className="text-muted">Customer:</span> {this.state.selected.customer.name}
                         </h4>
                         <h4>
-                            <span className="text-muted">Total:</span> <span className="badge badge-primary">{total}€</span>
+                            <span className="text-muted">Total:</span> <span className="badge badge-primary">{total.toFixed(2)}€</span>
                         </h4>
                         <BSAlert stt={this.state} alertError={this.state.id ? 'Ticket modification failed' : 'Ticket creation failed'} alertSuccess={this.state.creation ? 'Ticket creation successful' : 'Ticket modification successful'} />
                         <button onClick={() => this.submit()} type="button" className="my-4 btn btn-primary btn-lg btn-block">{this.state.id ? 'Modify' : 'Create'} ticket</button>
-                        <h6 className="text-muted">Services <span className="badge badge-secondary">{servicesTotal}€</span></h6>
+                        <h6 className="text-muted">Services <span className="badge badge-secondary">{servicesTotal.toFixed(2)}€</span></h6>
                         <TicketList data={this.state.selected.services} removeSelected={this.removeSelectedService} modify={this.modifyServiceQuantity} />
                         <br />
-                        <h6 className="text-muted">Products <span className="badge badge-secondary">{productsTotal}€</span></h6>
+                        <h6 className="text-muted">Products <span className="badge badge-secondary">{productsTotal.toFixed(2)}€</span></h6>
                         <TicketList data={this.state.selected.products} removeSelected={this.removeSelectedProduct} modify={this.modifyProductQuantity} />
                         {this.state.id && <a className="btn btn-danger float-left text-white mt-4" onClick={e => this.delete()}>Delete Ticket</a>}
                     </div>
