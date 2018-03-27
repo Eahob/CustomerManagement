@@ -26,16 +26,16 @@ class CreateAndEditTicket extends React.Component {
     }
     componentDidMount() {
         Promise.all([
-            api.showCustomersBy()/*.then(res => res.data || [])*/,
-            api.showServicesBy()/*.then(res => res.data || [])*/,
-            api.showProductsBy()/*.then(res => res.data || [])*/
+            api.showCustomersBy(this.props.token),
+            api.showServicesBy(this.props.token),
+            api.showProductsBy(this.props.token)
         ]).then(res => {
             this.setState({ customers: res[0].data, responseStatusCustomers: res[0].status, services: res[1].data, responseStatusServices: res[0].status, products: res[2].data,  responseStatusProducts: res[0].status })
         })
         this.setState({ id: this.props.match.params.id }, function () {
             if (this.state.id) {
                 this.setState({ creation: false })
-                api.showTicket(this.state.id).then(res => {
+                api.showTicket(this.state.id, this.props.token).then(res => {
                     this.selectCustomer(res.data.customer._id, res.data.customer.name)
                     res.data.services.forEach(service => {
                         this.selectService(service.service._id, service.service.name, service.price, service.quantity)
@@ -68,17 +68,17 @@ class CreateAndEditTicket extends React.Component {
         this.setState({ creation: false, error: '', responseStatus: '' })
     }
     readCustomerName = (name) => {
-        api.showCustomersBy(name).then(res => res.data || []).then(res => {
+        api.showCustomersBy(this.props.token, name).then(res => res.data || []).then(res => {
             this.setState({ customers: res })
         })
     }
     readServiceName = (name) => {
-        api.showServicesBy(undefined, undefined, name).then(res => res.data || []).then(res => {
+        api.showServicesBy(this.props.token, undefined, undefined, name).then(res => res.data || []).then(res => {
             this.setState({ services: res })
         })
     }
     readProductName = (name) => {
-        api.showProductsBy(undefined, undefined, name).then(res => res.data || []).then(res => {
+        api.showProductsBy(this.props.token, undefined, undefined, name).then(res => res.data || []).then(res => {
             this.setState({ products: res })
         })
     }
@@ -149,9 +149,9 @@ class CreateAndEditTicket extends React.Component {
         let selectedServices = this.state.selected.services.map(e => ({ id: e.id, quantity: e.quantity }))
         let selectedProducts = this.state.selected.products.map(e => ({ id: e.id, quantity: e.quantity }))
         Promise.resolve().then(() => {
-            if (this.state.id) return api.modifyTicket(customerId, selectedServices, selectedProducts, this.state.id)
+            if (this.state.id) return api.modifyTicket(customerId, selectedServices, selectedProducts, this.state.id, this.props.token)
             this.setState({ creation: true })
-            return api.createTicket(customerId, selectedServices, selectedProducts)
+            return api.createTicket(customerId, selectedServices, selectedProducts, this.props.token)
         }).then(res => {
             this.setState({ responseStatus: res.status, error: res.error }, function () {
                 if (res.status === 'OK') {
@@ -161,7 +161,7 @@ class CreateAndEditTicket extends React.Component {
         })
     }
     delete() {
-        api.deleteTicket(this.state.id).then(() => this.props.history.push('/tickets'))
+        api.deleteTicket(this.state.id, this.props.token).then(() => this.props.history.push('/tickets'))
     }
     render() {
         let reducer = (accum, current) => {

@@ -18,12 +18,12 @@ class Products extends React.Component {
 
     submit() {
         const { pricemin, pricemax, name } = this.state
-        api.showProductsBy(pricemin, pricemax, name).then(res => {
+        api.showProductsBy(this.props.token, pricemin, pricemax, name).then(res => {
             this.setState({ products: res.data || [], responseStatus: res.status })
         })
     }
     componentDidMount() {
-        api.showProductsBy().then(res => {
+        api.showProductsBy(this.props.token).then(res => {
             this.setState({ products: res.data || [], responseStatus: res.status })
         })
     }

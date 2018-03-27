@@ -20,7 +20,7 @@ class CreateAndEditService extends React.Component {
     componentDidMount() {
         this.setState({ id: this.props.match.params.id }, function () {
             if (this.state.id) {
-                api.showService(this.state.id).then(res => {
+                api.showService(this.state.id, this.props.token).then(res => {
                     const { name, price, tax } = res.data
                     this.setState({ name, price, tax })
                 })
@@ -38,14 +38,14 @@ class CreateAndEditService extends React.Component {
         this.setState({ [query]: input, creation: false, responseStatus: '' })
     }
     delete() {
-        api.deleteService(this.state.id).then(() => this.props.history.push('/services'))
+        api.deleteService(this.state.id, this.props.token).then(() => this.props.history.push('/services'))
     }
     submit() {
         const { name, price, tax } = this.state
         Promise.resolve().then(() => {
-            if (this.state.id) return api.modifyService(name, price, tax, this.state.id)
+            if (this.state.id) return api.modifyService(name, price, tax, this.state.id, this.props.token)
             this.setState({ creation: true })
-            return api.createService(name, price, tax)
+            return api.createService(name, price, tax, this.props.token)
         }).then(res => {
             this.setState({ responseStatus: res.status, error: res.error }, function () {
                 if (res.status === 'OK') {

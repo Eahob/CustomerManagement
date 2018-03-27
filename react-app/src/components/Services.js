@@ -18,13 +18,13 @@ class Services extends React.Component {
 
     submit() {
         const { pricemin, pricemax, name } = this.state
-        api.showServicesBy(pricemin, pricemax, name).then(res => {
+        api.showServicesBy(this.props.token, pricemin, pricemax, name).then(res => {
             this.setState({ services: res.data || [], responseStatus: res.status })
         })
     }
 
     componentDidMount() {
-        api.showServicesBy().then(res => {
+        api.showServicesBy(this.props.token).then(res => {
             this.setState({ services: res.data || [], responseStatus: res.status })
         })
     }

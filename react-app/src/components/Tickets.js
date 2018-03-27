@@ -18,12 +18,12 @@ class Tickets extends React.Component {
 
     submit() {
         const { pricemin, pricemax, datemin, datemax } = this.state
-        api.showTicketsBy(pricemin, pricemax, datemin, datemax).then(res => {
+        api.showTicketsBy(this.props.token, pricemin, pricemax, datemin, datemax).then(res => {
             this.setState({ tickets: res.data || [], responseStatus: res.status })
         })
     }
     componentDidMount() {
-        api.showTicketsBy().then(res => {
+        api.showTicketsBy(this.props.token).then(res => {
             this.setState({ tickets: res.data || [], responseStatus: res.status })
         })
     }

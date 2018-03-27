@@ -20,7 +20,7 @@ class CreateAndEditProduct extends React.Component {
     componentDidMount() {
         this.setState({ id: this.props.match.params.id }, function () {
             if (this.state.id) {
-                api.showProduct(this.state.id).then(res => {
+                api.showProduct(this.state.id, this.props.token).then(res => {
                     const { name, price, tax } = res.data
                     this.setState({ name, price, tax })
                 })
@@ -38,14 +38,14 @@ class CreateAndEditProduct extends React.Component {
         this.setState({ [query]: input, creation: false, responseStatus: '' })
     }
     delete() {
-        api.deleteProduct(this.state.id).then(()=> this.props.history.push('/products'))
+        api.deleteProduct(this.state.id, this.props.token).then(()=> this.props.history.push('/products'))
     }
     submit() {
         const { name, price, tax } = this.state
         Promise.resolve().then(() => {
-            if (this.state.id) return api.modifyProduct(name, price, tax, this.state.id)
+            if (this.state.id) return api.modifyProduct(name, price, tax, this.state.id, this.props.token)
             this.setState({ creation: true })
-            return api.createProduct(name, price, tax)
+            return api.createProduct(name, price, tax, this.props.token)
         }).then(res => {
             this.setState({ responseStatus: res.status, error: res.error }, function () {
                 if (res.status === 'OK') {

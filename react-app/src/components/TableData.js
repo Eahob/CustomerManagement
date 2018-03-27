@@ -31,7 +31,7 @@ function TableData(props) {
                     })
                     :
                         <tr>
-                            <td colspan={props.heads.length+1}><h4 className="my-4">{props.response ? 'We found nothing' : 'No response from server'}</h4></td>
+                            <td colSpan={props.heads.length+1}><h4 className="my-4">{props.response ? 'We found nothing' : 'No response from server'}</h4></td>
                         </tr>
                     }
                 </tbody>

@@ -21,65 +21,68 @@ var api = {
 
         return rp(options);
     },
-    showCustomersBy: function showCustomersBy(name, surname, phone, email, observations) {
-        return this._call('get', 'customers', undefined, { name: name, surname: surname, phone: phone, email: email, observations: observations });
+    login: function login(username, password) {
+        return this._call('post', 'login', { username: username, password: password });
     },
-    showTicketsBy: function showTicketsBy(pricemin, pricemax, datemin, datemax, customerId) {
-        return this._call('get', 'tickets', undefined, { pricemin: pricemin, pricemax: pricemax, datemin: datemin, datemax: datemax, customerId: customerId });
+    showCustomersBy: function showCustomersBy(token, name, surname, phone, email, observations) {
+        return this._call('get', 'customers', undefined, { name: name, surname: surname, phone: phone, email: email, observations: observations }, token);
     },
-    showServicesBy: function showServicesBy(pricemin, pricemax, name) {
-        return this._call('get', 'services', undefined, { pricemin: pricemin, pricemax: pricemax, name: name });
+    showTicketsBy: function showTicketsBy(token, pricemin, pricemax, datemin, datemax, customerId) {
+        return this._call('get', 'tickets', undefined, { pricemin: pricemin, pricemax: pricemax, datemin: datemin, datemax: datemax, customerId: customerId }, token);
     },
-    showProductsBy: function showProductsBy(pricemin, pricemax, name) {
-        return this._call('get', 'products', undefined, { pricemin: pricemin, pricemax: pricemax, name: name });
+    showServicesBy: function showServicesBy(token, pricemin, pricemax, name) {
+        return this._call('get', 'services', undefined, { pricemin: pricemin, pricemax: pricemax, name: name }, token);
     },
-    createCustomer: function createCustomer(name, surname, phone, email, observations) {
-        return this._call('post', 'customer', { name: name, surname: surname, phone: phone, email: email, observations: observations });
+    showProductsBy: function showProductsBy(token, pricemin, pricemax, name) {
+        return this._call('get', 'products', undefined, { pricemin: pricemin, pricemax: pricemax, name: name }, token);
     },
-    createTicket: function createTicket(customer, services, products) {
-        return this._call('post', 'ticket', { customer: customer, services: services, products: products });
+    createCustomer: function createCustomer(name, surname, phone, email, observations, token) {
+        return this._call('post', 'customer', { name: name, surname: surname, phone: phone, email: email, observations: observations }, token);
     },
-    createService: function createService(name, price, tax) {
-        return this._call('post', 'service', { name: name, price: price, tax: tax });
+    createTicket: function createTicket(customer, services, products, token) {
+        return this._call('post', 'ticket', { customer: customer, services: services, products: products }, token);
     },
-    createProduct: function createProduct(name, price, tax) {
-        return this._call('post', 'product', { name: name, price: price, tax: tax });
+    createService: function createService(name, price, tax, token) {
+        return this._call('post', 'service', { name: name, price: price, tax: tax }, token);
     },
-    deleteCustomer: function deleteCustomer(id) {
-        return this._call('delete', 'customer/' + id);
+    createProduct: function createProduct(name, price, tax, token) {
+        return this._call('post', 'product', { name: name, price: price, tax: tax }, token);
     },
-    deleteTicket: function deleteTicket(id) {
-        return this._call('delete', 'ticket/' + id);
+    deleteCustomer: function deleteCustomer(id, token) {
+        return this._call('delete', 'customer/' + id, token);
     },
-    deleteService: function deleteService(id) {
-        return this._call('delete', 'service/' + id);
+    deleteTicket: function deleteTicket(id, token) {
+        return this._call('delete', 'ticket/' + id, token);
     },
-    deleteProduct: function deleteProduct(id) {
-        return this._call('delete', 'product/' + id);
+    deleteService: function deleteService(id, token) {
+        return this._call('delete', 'service/' + id, token);
     },
-    showCustomer: function showCustomer(id) {
-        return this._call('get', 'customer/' + id);
+    deleteProduct: function deleteProduct(id, token) {
+        return this._call('delete', 'product/' + id, token);
     },
-    showTicket: function showTicket(id) {
-        return this._call('get', 'ticket/' + id);
+    showCustomer: function showCustomer(id, token) {
+        return this._call('get', 'customer/' + id, token);
     },
-    showService: function showService(id) {
-        return this._call('get', 'service/' + id);
+    showTicket: function showTicket(id, token) {
+        return this._call('get', 'ticket/' + id, token);
     },
-    showProduct: function showProduct(id) {
-        return this._call('get', 'product/' + id);
+    showService: function showService(id, token) {
+        return this._call('get', 'service/' + id, token);
     },
-    modifyCustomer: function modifyCustomer(name, surname, phone, email, observations, id) {
-        return this._call('put', 'customer/' + id, { name: name, surname: surname, phone: phone, email: email, observations: observations });
+    showProduct: function showProduct(id, token) {
+        return this._call('get', 'product/' + id, token);
     },
-    modifyTicket: function modifyTicket(customer, services, products, id) {
-        return this._call('put', 'ticket/' + id, { customer: customer, services: services, products: products });
+    modifyCustomer: function modifyCustomer(name, surname, phone, email, observations, id, token) {
+        return this._call('put', 'customer/' + id, { name: name, surname: surname, phone: phone, email: email, observations: observations }, token);
     },
-    modifyService: function modifyService(name, price, tax, id) {
-        return this._call('put', 'service/' + id, { name: name, price: price, tax: tax });
+    modifyTicket: function modifyTicket(customer, services, products, id, token) {
+        return this._call('put', 'ticket/' + id, { customer: customer, services: services, products: products }, token);
     },
-    modifyProduct: function modifyProduct(name, price, tax, id) {
-        return this._call('put', 'product/' + id, { name: name, price: price, tax: tax });
+    modifyService: function modifyService(name, price, tax, id, token) {
+        return this._call('put', 'service/' + id, { name: name, price: price, tax: tax }, token);
+    },
+    modifyProduct: function modifyProduct(name, price, tax, id, token) {
+        return this._call('put', 'product/' + id, { name: name, price: price, tax: tax }, token);
     }
 };
 

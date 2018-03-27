@@ -18,6 +18,7 @@ const editCustomer = require('./editCustomer')
 const editTicket = require('./editTicket')
 const editService = require('./editService')
 const editProduct = require('./editProduct')
+const login = require('./login')
 
 module.exports = {
     findCustomersBy,
@@ -39,5 +40,6 @@ module.exports = {
     editCustomer,
     editTicket,
     editService,
-    editProduct
+    editProduct,
+    login
 }

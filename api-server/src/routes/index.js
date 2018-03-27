@@ -1,7 +1,7 @@
 const url = require('url')
 const { Router } = require('express')
 const bodyParser = require('body-parser')
-const {
+const { login,
     findCustomersBy, findTicketsBy, findServicesBy, findProductsBy,
     createCustomer, createTicket, createService, createProduct,
     deleteCustomer, deleteTicket, deleteService, deleteProduct,
@@ -9,36 +9,37 @@ const {
     editCustomer, editTicket, editService, editProduct } = require('./handlers')
 
 const router = Router()
+const jwtValidator = require('../utils/jwtValidator')
 
 //---
 
-router.get('/customers', findCustomersBy)
+router.get('/customers', jwtValidator, findCustomersBy)
 
-router.get('/tickets', findTicketsBy)
+router.get('/tickets', jwtValidator, findTicketsBy)
 
-router.get('/services', findServicesBy)
+router.get('/services', jwtValidator, findServicesBy)
 
-router.get('/products', findProductsBy)
-
-//---
-
-router.get('/customer/:id', showCustomer)
-
-router.get('/ticket/:id', showTicket)
-
-router.get('/service/:id', showService)
-
-router.get('/product/:id', showProduct)
+router.get('/products', jwtValidator, findProductsBy)
 
 //---
 
-router.delete('/customer/:id', deleteCustomer)
+router.get('/customer/:id', jwtValidator, showCustomer)
 
-router.delete('/ticket/:id', deleteTicket)
+router.get('/ticket/:id', jwtValidator, showTicket)
 
-router.delete('/service/:id', deleteService)
+router.get('/service/:id', jwtValidator, showService)
 
-router.delete('/product/:id', deleteProduct)
+router.get('/product/:id', jwtValidator, showProduct)
+
+//---
+
+router.delete('/customer/:id', jwtValidator, deleteCustomer)
+
+router.delete('/ticket/:id', jwtValidator, deleteTicket)
+
+router.delete('/service/:id', jwtValidator, deleteService)
+
+router.delete('/product/:id', jwtValidator, deleteProduct)
 
 //---
 
@@ -46,22 +47,26 @@ const jsonBodyParser = bodyParser.json()
 
 //--
 
-router.post('/customer', jsonBodyParser, createCustomer)
-
-router.post('/ticket', jsonBodyParser, createTicket)
-
-router.post('/service', jsonBodyParser, createService)
-
-router.post('/product', jsonBodyParser, createProduct)
+router.post('/login', jsonBodyParser, login)
 
 //--
 
-router.put('/customer/:id', jsonBodyParser, editCustomer)
+router.post('/customer', [jwtValidator, jsonBodyParser], createCustomer)
 
-router.put('/ticket/:id', jsonBodyParser, editTicket)
+router.post('/ticket', [jwtValidator, jsonBodyParser], createTicket)
 
-router.put('/service/:id', jsonBodyParser, editService)
+router.post('/service', [jwtValidator, jsonBodyParser], createService)
 
-router.put('/product/:id', jsonBodyParser, editProduct)
+router.post('/product', [jwtValidator, jsonBodyParser], createProduct)
+
+//--
+
+router.put('/customer/:id', [jwtValidator, jsonBodyParser], editCustomer)
+
+router.put('/ticket/:id', [jwtValidator, jsonBodyParser], editTicket)
+
+router.put('/service/:id', [jwtValidator, jsonBodyParser], editService)
+
+router.put('/product/:id', [jwtValidator, jsonBodyParser], editProduct)
 
 module.exports = router

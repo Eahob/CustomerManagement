@@ -1,6 +1,12 @@
 const { Customer, Ticket, Service, Product } = require('../models')
 
 module.exports = {
+    login(username,password) {
+        return Promise.resolve().then(()=>{
+            if (username === 'admin' && password === 'admin') return 'ID-del-User'
+            throw Error('Username and/or password wrong')
+        })
+    },
     findCustomersBy(name, surname, phone, email, observations) {
         const filter = {}
 

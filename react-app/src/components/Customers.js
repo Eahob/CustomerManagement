@@ -26,12 +26,12 @@ class Customers extends React.Component {
 
     submit() {
         const { name, surname, phone, email, observations } = this.state
-        api.showCustomersBy(name, surname, phone, email, observations).then(res => {
+        api.showCustomersBy(this.props.token, name, surname, phone, email, observations).then(res => {
             this.setState({ customers: res.data || [], responseStatus: res.status })
         })
     }
     componentDidMount() {
-        api.showCustomersBy().then(res => {
+        api.showCustomersBy(this.props.token).then(res => {
             this.setState({ customers: res.data || [], responseStatus: res.status })
         })
     }

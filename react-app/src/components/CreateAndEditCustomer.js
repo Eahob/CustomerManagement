@@ -27,11 +27,11 @@ class CreateAndEditCustomer extends React.Component {
     componentDidMount() {
         this.setState({ id: this.props.match.params.id }, function () {
             if (this.state.id) {
-                api.showCustomer(this.state.id).then(res => {
+                api.showCustomer(this.state.id, this.props.token).then(res => {
                     const { name, surname, phone, email, observations } = res.data
                     this.setState({ name, surname, phone, email, observations })
                 })
-                api.showTicketsBy(undefined, undefined, undefined, undefined, this.state.id).then(res => {
+                api.showTicketsBy(undefined, undefined, undefined, undefined, this.state.id, this.props.token).then(res => {
                     this.setState({ tickets: res.data || [], responseStatusTicket: res.status })
                 })
             }
@@ -52,19 +52,19 @@ class CreateAndEditCustomer extends React.Component {
     }
     submitTable() {
         const { pricemin, pricemax, datemin, datemax, id } = this.state
-        api.showTicketsBy(pricemin, pricemax, datemin, datemax, id).then(res => {
+        api.showTicketsBy(pricemin, pricemax, datemin, datemax, id, this.props.token).then(res => {
             this.setState({ tickets: res.data || [], responseStatusTicket: res.status })
         })
     }
     delete() {
-        api.deleteCustomer(this.state.id).then(() => this.props.history.push('/customers'))
+        api.deleteCustomer(this.state.id, this.props.token).then(() => this.props.history.push('/customers'))
     }
     submit() {
         const { name, surname, phone, email, observations } = this.state
         Promise.resolve().then(() => {
-            if (this.state.id) return api.modifyCustomer(name, surname, phone, email, observations, this.state.id)
+            if (this.state.id) return api.modifyCustomer(name, surname, phone, email, observations, this.state.id, this.props.token)
             this.setState({ creation: true })
-            return api.createCustomer(name, surname, phone, email, observations)
+            return api.createCustomer(name, surname, phone, email, observations, this.props.token)
         }).then(res => {
             this.setState({ responseStatus: res.status, error: res.error }, function () {
                 if (res.status === 'OK') {
@@ -128,13 +128,13 @@ class CreateAndEditCustomer extends React.Component {
                             </div>
                             <TableData response={this.state.responseStatusTicket} data={this.state.tickets} heads={['Date', 'Total']} callback={this.setDataTable} />
                         </div>
-                    :
+                        :
                         <div className="col-md"></div>
                     }
                 </div>
-                </div>
-                )
-            }
-        }
-        
-        export default CreateAndEditCustomer
+            </div>
+        )
+    }
+}
+
+export default CreateAndEditCustomer
