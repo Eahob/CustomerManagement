@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 
+const { Customer, Ticket, Service, Product } = require('./schemas')
+/*
 const { Schema, Schema: { ObjectId } } = mongoose
 
 const Customer = new Schema({
@@ -127,7 +129,7 @@ const Product = new Schema({
         required: true
     }
 })
-
+*/
 module.exports = {
     Customer: mongoose.model('Customer', Customer),
     Ticket: mongoose.model('Ticket', Ticket),
