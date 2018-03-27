@@ -3,7 +3,28 @@
 ## What is this?  
 A three week final project for Skylab bootcamp.
 
-A personalized customer managemnet for a hair salon.
+A personalized customer managemnet for a hair salon. Gets the record of what services and/or products the customer recived.
+
+It runs on MongoDB and Node.js
+
+## Local Testing
+You will need a working instalation of MongoDB, Node.js and npm
+
+### Installing
+Run mongodb
+
+```sh
+mongod
+```
+
+Move to were your copy of api-server is and type
+```sh
+npm i
+``` 
+When finished type
+```sh
+npm run
+```
 
 ## Data Model
 I will use mongodb as database.
