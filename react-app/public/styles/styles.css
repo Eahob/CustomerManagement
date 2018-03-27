@@ -5,7 +5,7 @@
 
 .BSAlert {
     animation-name: fade-in;
-    animation-duration: 1s;
+    animation-duration: 0.6s;
 }
 
 #home {
