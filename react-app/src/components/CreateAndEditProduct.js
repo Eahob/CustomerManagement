@@ -59,7 +59,8 @@ class CreateAndEditProduct extends React.Component {
             <div className="mx-4">
                 <h1 className="mb-4">{this.state.id ? 'Modify product' : 'Creating new product'}</h1>
                 <div className="row">
-                    <div className="col-md-4">
+                    <div className="d-none d-md-block col-4"></div>
+                    <div className="col">
                         <form onSubmit={e => {
                             e.preventDefault()
                             this.submit()
@@ -74,8 +75,7 @@ class CreateAndEditProduct extends React.Component {
                         </form>
                         <BSAlert stt={this.state} alertError={this.state.id ? 'Product modification failed' : 'Product creation failed'} alertSuccess={this.state.creation ? 'Product creation successful' : 'Product modification successful'} />
                     </div>
-                    <div className="d-lg-none col-sm-4"></div>
-                    <div className="d-xl-none col-sm-4"></div>
+                    <div className="d-none d-md-block col-4"></div>
                 </div>
             </div>
         )

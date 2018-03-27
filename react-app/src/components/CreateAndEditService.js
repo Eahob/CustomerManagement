@@ -59,7 +59,8 @@ class CreateAndEditService extends React.Component {
             <div className="mx-4">
                 <h1 className="mb-4">{this.state.id ? 'Modify service' : 'Creating new service'}</h1>
                 <div className="row">
-                    <div className="col-md-4">
+                    <div className="d-none d-md-block col-4"></div>
+                    <div className="col">
                         <form onSubmit={e => {
                             e.preventDefault()
                             this.submit()
@@ -74,8 +75,7 @@ class CreateAndEditService extends React.Component {
                         </form>
                         <BSAlert stt={this.state} alertError={this.state.id ? 'Service modification failed' : 'Service creation failed'} alertSuccess={this.state.creation ? 'Service creation successful' : 'Service modification successful'} />
                     </div>
-                    <div className="d-lg-none col-sm-4"></div>
-                    <div className="d-xl-none col-sm-4"></div>
+                    <div className="d-none d-md-block col-4"></div>
                 </div>
             </div>
         )
