@@ -10,12 +10,14 @@ class Home extends React.Component {
             pass: ''
         }
     }
-    componentWillMount() {
+    componentDidMount() {
+        if (this.props.token) this.setState({ validToken: true })
         api.validate(this.props.token).then(res => {
-            this.setState({message:''})
+            this.setState({ message: '' })
             if (res.status === 'OK') {
                 this.setState({ validToken: true })
             } else {
+                this.setState({ validToken: false })
                 this.props.saveToken()
             }
         })
@@ -25,13 +27,12 @@ class Home extends React.Component {
     }
     submit() {
         api.login(this.state.user, this.state.pass).then(res => {
-            //console.log(res)
             if (res.data) {
                 this.props.saveToken(res.data.token)
-                this.setState({ user: '', pass: '', validToken: true, message:'Loged in' })
+                this.setState({ user: '', pass: '', validToken: true, message: 'Loged in' })
             } else {
                 this.props.saveToken()
-                this.setState({ validToken: false, message:res.error })
+                this.setState({ validToken: false, message: res.error })
             }
         })
     }
@@ -42,7 +43,7 @@ class Home extends React.Component {
                 <div className="mx-auto">
                     <p>Here you can create new customers, search them, modify them and consult what they did</p>
                     <p>You can search modify and add products or services for your customers in the top menu</p>
-                    {this.state.validToken || <form className="mb-4" onSubmit={e => {
+                    {this.state.validToken ? null : <form className="mb-4" onSubmit={e => {
                         e.preventDefault()
                         this.submit()
                     }}>
@@ -51,9 +52,9 @@ class Home extends React.Component {
                             <InputAutoSubmit read={this.readInput} label="Password" query="pass" type="password" />
                         </div>
                         <button className="mt-4 col btn btn-secondary" type="submit">Login</button>
-                        
+
                     </form>}
-                    <BSAlert2 stt={this.state}/>
+                    <BSAlert2 stt={this.state} />
                 </div>
                 <footer className="inline-block text-center mt-auto text-secondary">
                     <p>Developed by <a className="badge badge-secondary" href="https://github.com/Eahob">Eahob</a></p>
