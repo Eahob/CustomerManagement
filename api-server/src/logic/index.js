@@ -35,7 +35,7 @@ module.exports = {
         }
         if (customerId) filter.customer = customerId
 
-        return Ticket.find(filter, { __v: 0 }).populate('customer', 'name surname')
+        return Ticket.find(filter, { __v: 0 }).sort([['date', -1]]).populate('customer', 'name surname')
     },
     findServicesBy(pricemin, pricemax, name) {
         const filter = {}
@@ -68,7 +68,7 @@ module.exports = {
     createCustomer(name, surname, phone, email, observations = '') {
         return Promise.all([Customer.find({ phone }).then(res => res.length), Customer.find({ email }).then(res => res.length)]).then(res => {
             if (res[0]) throw Error('Phone already in database')
-            if (res[1]) throw Error('Email already in database')
+            if (res[1] && email) throw Error('Email already in database')
         }).then(() => {
             customer = new Customer({ name, surname, phone, email, observations, hide: false })
             return customer.save()
