@@ -1,7 +1,7 @@
 const url = require('url')
 const { Router } = require('express')
 const bodyParser = require('body-parser')
-const { login,
+const { login, validate,
     findCustomersBy, findTicketsBy, findServicesBy, findProductsBy,
     createCustomer, createTicket, createService, createProduct,
     deleteCustomer, deleteTicket, deleteService, deleteProduct,
@@ -10,6 +10,10 @@ const { login,
 
 const router = Router()
 const jwtValidator = require('../utils/jwtValidator')
+
+//---
+
+router.get('/validate', jwtValidator, validate)
 
 //---
 
