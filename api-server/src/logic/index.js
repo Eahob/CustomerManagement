@@ -70,7 +70,7 @@ module.exports = {
             if (res[0]) throw Error('Phone already in database')
             if (res[1] && email) throw Error('Email already in database')
         }).then(() => {
-            customer = new Customer({ name, surname, phone, email, observations, hide: false })
+            customer = new Customer({ name: name.trim(), surname: surname.trim(), phone: phone.trim(), email: email.trim(), observations: observations.trim(), hide: false })
             return customer.save()
         })
     },
@@ -78,7 +78,7 @@ module.exports = {
         return Promise.resolve().then(() => Service.find({ name })).then(res => {
             if (res.length) throw Error('Service name already in database')
         }).then(() => {
-            service = new Service({ name, price, tax, hide: false })
+            service = new Service({ name: name.trim(), price, tax, hide: false })
             return service.save()
         })
     },
@@ -86,7 +86,7 @@ module.exports = {
         return Promise.resolve().then(() => Product.find({ name })).then(res => {
             if (res.length) throw Error('Product name already in database')
         }).then(() => {
-            product = new Product({ name, price, tax, hide: false })
+            product = new Product({ name: name.trim(), price, tax, hide: false })
             return product.save()
         })
     },
@@ -204,7 +204,7 @@ module.exports = {
         }).then(() => {
             return Service.findById(_id).then(service => {
                 let update = {}
-                if (service.name != name) update.name = name
+                if (service.name != name) update.name = name.trim()
                 if (service.price != price) update.price = price
                 if (service.tax != tax) update.tax = tax
                 return Service.updateOne({ _id }, { $set: update })
@@ -217,7 +217,7 @@ module.exports = {
         }).then(() => {
             return Product.findById(_id).then(product => {
                 let update = {}
-                if (product.name != name) update.name = name
+                if (product.name != name) update.name = name.trim()
                 if (product.price != price) update.price = price
                 if (product.tax != tax) update.tax = tax
                 return Product.updateOne({ _id }, { $set: update })
