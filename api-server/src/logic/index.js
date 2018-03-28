@@ -1,9 +1,9 @@
-const { Customer, Ticket, Service, Product } = require('../models')
+const { Customer, Ticket, Service, Product, User } = require('../models')
 
 module.exports = {
-    login(username,password) {
-        return Promise.resolve().then(()=>{
-            if (username === 'admin' && password === 'admin') return 'ID-del-User'
+    login(username, password) {
+        return User.findOne({ username, password }, { _id: 1 }).then(res => {
+            if (res) return res._id
             throw Error('Username and/or password wrong')
         })
     },
