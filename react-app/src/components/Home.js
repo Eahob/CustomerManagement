@@ -42,13 +42,16 @@ class Home extends React.Component {
                 <div className="mx-auto">
                     <p>Here you can create new customers, search them, modify them and consult what they did</p>
                     <p>You can search modify and add products or services for your customers in the top menu</p>
-                    {this.state.validToken || <form onSubmit={e => {
+                    {this.state.validToken || <form className="mb-4" onSubmit={e => {
                         e.preventDefault()
                         this.submit()
                     }}>
-                        <InputAutoSubmit read={this.readInput} label="Username" query="user" />
-                        <InputAutoSubmit read={this.readInput} label="Password" query="pass" type="password" />
-                        <button type="submit">Login</button>
+                        <div className="row mt-4">
+                            <InputAutoSubmit read={this.readInput} label="Username" query="user" />
+                            <InputAutoSubmit read={this.readInput} label="Password" query="pass" type="password" />
+                        </div>
+                        <button className="mt-4 col btn btn-secondary" type="submit">Login</button>
+                        
                     </form>}
                     <BSAlert2 stt={this.state}/>
                 </div>
@@ -65,7 +68,7 @@ function BSAlert2(props) {
 
     return (
         <div className={'BSAlert alert alert-' + (props.stt.validToken ? 'success' : 'danger')} role="alert">
-            <p>{props.stt.message}</p>
+            <span>{props.stt.message}</span>
         </div>
     )
 }
