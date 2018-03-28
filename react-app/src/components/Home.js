@@ -6,24 +6,33 @@ class Home extends React.Component {
     constructor() {
         super()
         this.state = {
-            user:'',
-            pass:'',
-            token: ''
+            user: '',
+            pass: ''
         }
+    }
+    componentWillMount() {
+        api.validate(this.props.token).then(res => {
+            this.setState({message:''})
+            if (res.status === 'OK') {
+                this.setState({ validToken: true })
+            } else {
+                this.props.saveToken()
+            }
+        })
     }
     readInput = (input, query) => {
         this.setState({ [query]: input })
     }
-    submit(){
-        api.login(this.state.user,this.state.pass).then(res => {
-            return res.data && res.data.token
-        }).then(token => {
-            if (token) {
-                this.props.saveToken(token)
+    submit() {
+        api.login(this.state.user, this.state.pass).then(res => {
+            //console.log(res)
+            if (res.data) {
+                this.props.saveToken(res.data.token)
+                this.setState({ user: '', pass: '', validToken: true, message:'Loged in' })
             } else {
-                //error message
+                this.props.saveToken()
+                this.setState({ validToken: false, message:res.error })
             }
-
         })
     }
     render() {
@@ -33,14 +42,15 @@ class Home extends React.Component {
                 <div className="mx-auto">
                     <p>Here you can create new customers, search them, modify them and consult what they did</p>
                     <p>You can search modify and add products or services for your customers in the top menu</p>
-                    <form onSubmit={e => {
-                            e.preventDefault()
-                            this.submit()
-                        }}>
-                        <InputAutoSubmit read={this.readInput} label="Username" query="user"/>
+                    {this.state.validToken || <form onSubmit={e => {
+                        e.preventDefault()
+                        this.submit()
+                    }}>
+                        <InputAutoSubmit read={this.readInput} label="Username" query="user" />
                         <InputAutoSubmit read={this.readInput} label="Password" query="pass" type="password" />
                         <button type="submit">Login</button>
-                    </form>
+                    </form>}
+                    <BSAlert2 stt={this.state}/>
                 </div>
                 <footer className="inline-block text-center mt-auto text-secondary">
                     <p>Developed by <a className="badge badge-secondary" href="https://github.com/Eahob">Eahob</a></p>
@@ -48,6 +58,16 @@ class Home extends React.Component {
             </div>
         )
     }
+}
+
+function BSAlert2(props) {
+    if (!props.stt.message) return null
+
+    return (
+        <div className={'BSAlert alert alert-' + (props.stt.validToken ? 'success' : 'danger')} role="alert">
+            <p>{props.stt.message}</p>
+        </div>
+    )
 }
 
 export default Home

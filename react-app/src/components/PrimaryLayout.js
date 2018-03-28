@@ -27,7 +27,7 @@ class PrimaryLayout extends React.Component {
             <div>
                 <PrimaryHeader />
                 <Switch>
-                    <Route exact path="/" render={props => <Home {...props} saveToken={this.saveToken}/>}/>
+                    <Route exact path="/" render={props => <Home {...props} token={this.state.token} saveToken={this.saveToken}/>}/>
                     <Route path="/customers" render={props => (this.state.token ? <Customers {...props} token={this.state.token}/> : <Redirect to={{ pathname: '/', state: { from: props.location } }} />)} />
                     <Route path="/tickets" render={props => (this.state.token ? <Tickets {...props} token={this.state.token} /> : <Redirect to={{ pathname: '/', state: { from: props.location } }} />)} />
                     <Route path="/services" render={props => (this.state.token ? <Services {...props} token={this.state.token} /> : <Redirect to={{ pathname: '/', state: { from: props.location } }} />)} />
