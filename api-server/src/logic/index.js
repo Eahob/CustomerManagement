@@ -155,11 +155,11 @@ module.exports = {
     },
     deleteService(_id) {
         //return Service.deleteOne({ _id })
-        return Customer.updateOne({ _id }, { $set: { hide: true } })
+        return Service.updateOne({ _id }, { $set: { hide: true } })
     },
     deleteProduct(_id) {
         //return Product.deleteOne({ _id })
-        return Customer.updateOne({ _id }, { $set: { hide: true } })
+        return Product.updateOne({ _id }, { $set: { hide: true } })
     },
     showCustomer(_id) {
         return Customer.findOne({ _id }, { _id: 0, __v: 0, hide: 0 })
