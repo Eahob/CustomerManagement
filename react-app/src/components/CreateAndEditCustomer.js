@@ -39,7 +39,7 @@ class CreateAndEditCustomer extends React.Component {
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.match.params.id) {
-            this.setState({ id: nextProps.match.params.id })
+            this.setState({ id: nextProps.match.params.id, responseStatusTicket: 'nothing' })
         } else {
             this.setState(this.defaultState)
         }

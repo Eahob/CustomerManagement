@@ -30,10 +30,13 @@ class Tickets extends React.Component {
 
     setDataTable(arr) {
         let res = []
-        arr.forEach(element => {
-            let d = new Date(element.date)
-            res.push([[d.toLocaleDateString('es-ES', { hour: "2-digit", minute: "2-digit" }), element.customer.name + ' ' + element.customer.surname, element.total.withTax.toFixed(2) + '€'], element._id])
-        })
+        if (arr.length) {
+            arr.forEach(element => {
+                let d = new Date(element.date)
+                res.push([[d.toLocaleDateString('es-ES', { hour: "2-digit", minute: "2-digit" }), element.customer.name + ' ' + element.customer.surname, element.total.withTax.toFixed(2) + '€'], element._id])
+            })
+        }
+        
         return [res, '/ticket/']
     }
 
