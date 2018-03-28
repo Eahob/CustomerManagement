@@ -67,7 +67,7 @@ class CreateAndEditCustomer extends React.Component {
             return api.createCustomer(name, surname, phone, email, observations, this.props.token)
         }).then(res => {
             this.setState({ responseStatus: res.status, error: res.error }, function () {
-                if (res.status === 'OK') {
+                if (res.status === 'OK' && !this.state.id) {
                     this.props.history.push('/customer/' + res.data.id)
                 }
             })

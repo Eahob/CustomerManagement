@@ -154,7 +154,7 @@ class CreateAndEditTicket extends React.Component {
             return api.createTicket(customerId, selectedServices, selectedProducts, this.props.token)
         }).then(res => {
             this.setState({ responseStatus: res.status, error: res.error }, function () {
-                if (res.status === 'OK') {
+                if (res.status === 'OK' && !this.state.id) {
                     this.props.history.push('/ticket/' + res.data.id)
                 }
             })
