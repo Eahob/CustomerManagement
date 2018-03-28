@@ -31,7 +31,7 @@ class CreateAndEditCustomer extends React.Component {
                     const { name, surname, phone, email, observations } = res.data
                     this.setState({ name, surname, phone, email, observations })
                 })
-                api.showTicketsBy(undefined, undefined, undefined, undefined, this.state.id, this.props.token).then(res => {
+                api.showTicketsBy(this.props.token, undefined, undefined, undefined, undefined, this.state.id).then(res => {
                     this.setState({ tickets: res.data || [], responseStatusTicket: res.status })
                 })
             }
