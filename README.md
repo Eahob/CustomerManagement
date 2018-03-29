@@ -7,122 +7,21 @@ A personalized customer managemnet for a hair salon. Gets the record of what ser
 
 It runs on MongoDB and Node.js
 
-## Local Testing
-You will need a working instalation of MongoDB, Node.js and npm
+## Functional description
 
-### Installing
-Run mongodb
+![uml](doc/uml_functional.png)
 
-```sh
-mongod
-```
-
-Move to were your copy of api-server is and type
-```sh
-npm i
-``` 
-When finished type
-```sh
-npm run
-```
+An user can Manage customers, tickets, services and products. Can create, search, modify and delete them.
 
 ## Data Model
-I will use mongodb as database.
 
-It will have four collections:
-* Customers
-* Services
-* Transactions
-* Attendants
+![uml](doc/db_model.png)
 
-### Customers
-``` json
-[
-    {
-        "idCustomer":"00000000-0000-0000-0000-000000000000",
-        "name":"Jane",
-        "surname":"Roe",
-        "phone":[
-            555-555 555,
-            555-555 333
-        ],
-        "services":[
-            {
-                "idTransaction":"00000000-0000-0000-0000-000000000001"
-            },
-            {
-                "idTransaction":"00000000-0000-0000-0000-000000000002",
-            }
-        ],
-        "observations":"some observation"
-    }
-]
-```
-### Services
-``` json
-[
-    {
-        "name":"Nails",
-        "price":"2.55"
-    },
-    {
-        "name":"Hair cut",
-        "price":"5.75"
-    }
-]
-```
-### Transactions
-``` json
-[
-    {
-        "idTransaction":"00000000-0000-0000-0000-000000000002",
-        "time":"1520790318369",
-        "idCustomer":"00000000-0000-0000-0000-000000000000",
-        "services": [
-            {
-                "idAttendant":"00000000-0000-0000-0000-000000000004",
-                "serviceName":"Nails",
-                "price":"2.55",
-            },
-            {
-                "idAttendant":"00000000-0000-0000-0000-000000000005",
-                "serviceName":"Hair cut",
-                "price":"5.75",
-            }
-        ],
-        "total":"8.30"
-    }
-]
-```
-### Attendants
-``` json
-[
-    {
-        "idAttendant":"00000000-0000-0000-0000-000000000004",
-        "name":"Jhon doe"
-    },
-    {
-        "idAttendant":"00000000-0000-0000-0000-000000000005",
-        "name":"Oedn Ohj"
-    }
-]
-```
+## Block model
 
-## Functions
+![uml](doc/uml_blockmodel.png)
 
-Each collection will have this functions:
+## Demo
 
-* Add
-* Show All
-* Search by query
-* Modify
-* Delete
-
-And more functions for accounting:
-
-* Show daily
-* Show weekly
-
-[Trello](https://trello.com/b/Pexusfgm/customermanagement)
-
+You can try the app here: 
 [Demo](http://eahob-cm.surge.sh)
