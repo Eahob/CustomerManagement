@@ -1,26 +1,23 @@
 require('dotenv').config()
-
-const express = require('express')
-const mongoose = require('mongoose')
-//const uuid = require('uuid/v4')
-const cors = require('cors')
-const routes = require('./routes')
-
 const port = process.env.PORT
-const database = process.env.MONGO_DB
 
-if (process.env.WORKING_LOCALLY) {
-    const host = process.env.MONGO_HOST
-    const mongo_port = process.env.MONGO_PORT
-    mongoose.connect(`mongodb://${host}:${mongo_port}/${database}`)
-} else {
-    const user = process.env.MLAB_USER
-    const password = process.env.MLAB_PASSWORD
-    const mlab_port = process.env.MLAB_PORT
-    mongoose.connect(`mongodb://${user}:${password}@ds1${mlab_port}.mlab.com:${mlab_port}/${database}`)
+if (!port) {
+	console.error('Missing PORT configuration in .env file');
+	process.exit();
 }
 
+try {
+	require('./mongoose.js').init(process.env, process.argv.includes('localDB'))
+} catch (error) {
+	console.error(error);
+	process.exit();
+}
+
+const cors = require('cors')
+const express = require('express')
+const routes = require('./routes')
 const app = express()
+
 app.use(cors())
 
 app.use('/api', routes)
