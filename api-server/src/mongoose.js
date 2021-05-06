@@ -3,10 +3,10 @@ const { exitIfFalse } = require('./utils/api-utils')
 
 const init = (env, local) => {
 	let mongoUri;
+	const database = env.MONGO_DB;
 
 	if (local) {
 		const port = env.MONGO_PORT;
-		const database = env.MONGO_DB;
 
 		exitIfFalse('Missing mongo port in .env file', port)
 		exitIfFalse('Missing mongo databese name in .env file', database)
@@ -23,7 +23,9 @@ const init = (env, local) => {
 	mongoose.set('useFindAndModify', false);
 	mongoose.set('useCreateIndex', true);
 	mongoose.set('useUnifiedTopology', true);
-	mongoose.connect(mongoUri)
-}
+	mongoose.connect(mongoUri);
+
+	return mongoose.connection;
+};
 
 module.exports = { init }

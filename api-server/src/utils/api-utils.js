@@ -10,7 +10,7 @@ const failResponse = error => response(STATUS_FAIL, undefined, error)
 const exitIfFalse = (message, check) => {
 	if (!check) {
 		console.error(message);
-		process.exit();
+		process.exit(1);
 	}
 }
 
