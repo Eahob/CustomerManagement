@@ -3,7 +3,6 @@ const express = require('express')
 const routes = require('./routes')
 const { exitIfFalse } = require('./utils/api-utils')
 
-
 const init = port => {
 	exitIfFalse('Missing PORT configuration in .env file', port)
 
