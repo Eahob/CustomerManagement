@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const { exitIfFalse } = require('./utils/api-utils')
 
 const init = (env, local) => {
 	let mongoUri;
@@ -7,15 +8,8 @@ const init = (env, local) => {
 		const port = env.MONGO_PORT;
 		const database = env.MONGO_DB;
 
-		if (!port) {
-			console.error('Missing mongo port in .env file');
-			process.exit();
-		}
-
-		if (!database) {
-			console.error('Missing mongo databese name in .env file');
-			process.exit();
-		}
+		exitIfFalse('Missing mongo port in .env file', port)
+		exitIfFalse('Missing mongo databese name in .env file', database)
 
 		mongoUri = `mongodb://127.0.0.1:${port}/${database}`;
 	} else {

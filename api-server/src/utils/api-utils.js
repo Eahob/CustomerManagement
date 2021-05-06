@@ -7,4 +7,11 @@ const successResponse = data => response(STATUS_SUCCESS, data)
 
 const failResponse = error => response(STATUS_FAIL, undefined, error)
 
-module.exports = { successResponse, failResponse }
+const exitIfFalse = (message, check) => {
+	if (!check) {
+		console.error(message);
+		process.exit();
+	}
+}
+
+module.exports = { successResponse, failResponse, exitIfFalse }

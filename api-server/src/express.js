@@ -1,12 +1,11 @@
 const cors = require('cors')
 const express = require('express')
 const routes = require('./routes')
+const { exitIfFalse } = require('./utils/api-utils')
+
 
 const init = port => {
-	if (!port) {
-		console.error('Missing PORT configuration in .env file');
-		process.exit();
-	}
+	exitIfFalse('Missing PORT configuration in .env file', port)
 
 	const app = express()
 
