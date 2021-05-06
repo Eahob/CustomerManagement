@@ -1,17 +1,10 @@
-function successResponse(data) {
-    const res = { status: 'OK' }
+const STATUS_SUCCESS = 'OK';
+const STATUS_FAIL = 'KO';
 
-    if (data) res.data = data
+const response = (status, data, error) => ({status, data, error})
 
-    return res
-}
+const successResponse = data => response(STATUS_SUCCESS, data)
 
-function failResponse(error) {
-    const res = { status: 'KO' }
-
-    if (error) res.error = error
-
-    return res
-}
+const failResponse = error => response(STATUS_FAIL, undefined, error)
 
 module.exports = { successResponse, failResponse }
