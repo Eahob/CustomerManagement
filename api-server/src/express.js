@@ -4,7 +4,8 @@ const routes = require('./routes')
 
 const init = port => {
 	if (!port) {
-		throw new Error('Missing PORT configuration in .env file');
+		console.error('Missing PORT configuration in .env file');
+		process.exit();
 	}
 
 	const app = express()

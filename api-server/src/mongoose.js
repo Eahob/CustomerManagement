@@ -8,11 +8,13 @@ const init = (env, local) => {
 		const database = env.MONGO_DB;
 
 		if (!port) {
-			throw new Error('Missing mongo port in .env file');
+			console.error('Missing mongo port in .env file');
+			process.exit();
 		}
 
 		if (!database) {
-			throw new Error('Missing mongo databese name in .env file');
+			console.error('Missing mongo databese name in .env file');
+			process.exit();
 		}
 
 		mongoUri = `mongodb://127.0.0.1:${port}/${database}`;
