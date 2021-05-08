@@ -1,4 +1,3 @@
-const url = require('url')
 const { Router } = require('express')
 const bodyParser = require('body-parser')
 const { login, validate,
