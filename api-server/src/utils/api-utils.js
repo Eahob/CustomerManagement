@@ -1,17 +1,25 @@
 const STATUS_SUCCESS = 'OK';
 const STATUS_FAIL = 'KO';
 
-const response = (status, data, error) => ({status, data, error})
+const responseHelper = (status, data, error) => ({status, data, error})
 
-const successResponse = data => response(STATUS_SUCCESS, data)
+const successResponse = data => responseHelper(STATUS_SUCCESS, data)
 
-const failResponse = error => response(STATUS_FAIL, undefined, error)
+const failResponse = error => responseHelper(STATUS_FAIL, undefined, error)
 
-const exitIfFalse = (message, check) => {
-	if (!check) {
-		console.error(message);
-		process.exit(1);
-	}
+const handleFindQueryResponse = (res, _query) => {
+	_query
+		.then(query => res.json(successResponse(query)))
+		.catch(err => res.json(failResponse(err.message)))
 }
 
-module.exports = { successResponse, failResponse, exitIfFalse }
+const getEnvValue = envVariableName => {
+	if (!process.env[envVariableName]) {
+		console.error(`Missing ${envVariableName} in .env file`);
+		process.exit(1);
+	}
+
+	return process.env[envVariableName];
+};
+
+module.exports = { successResponse, failResponse, handleFindQueryResponse, getEnvValue }

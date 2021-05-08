@@ -1,8 +1,13 @@
-require('dotenv').config()
+const { getEnvValue } = require('./utils/api-utils');
+require('dotenv').config();
 
-console.log('Connecting to database');
+const remoteDB = process.argv.includes('remote');
 
-const mongoDBConection = require('./mongoose').init(process.env, process.argv.includes('localDB'))
+console.log(`Connecting to ${remoteDB ? 'remote' : 'local'} database`);
+
+const mongoUri = remoteDB ? getEnvValue('MONGODB_REMOTE') : getEnvValue('MONGODB_LOCAL');
+
+const mongoDBConection = require('./mongoose').init(mongoUri);
 
 mongoDBConection.on('error', error => {
 	console.error('Failed to connect to database');
@@ -12,5 +17,5 @@ mongoDBConection.on('error', error => {
 
 mongoDBConection.once('open', () => {
 	console.log('Connected to database');
-	require('./express').init(process.env.PORT)
+	require('./express').init(getEnvValue('PORT'))
 });
