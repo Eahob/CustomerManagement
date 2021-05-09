@@ -4,7 +4,8 @@ module.exports = new Schema({
 	name: {
 		type: String,
 		unique: true,
-		required: [true, 'Product name required']
+		required: [true, 'Product name required'],
+		uppercase: true
 	},
 	price: {
 		type: Number,

@@ -20,7 +20,8 @@ const customerSchema = new Schema({
 	},
 	email: {
 		type: String,
-		trim: true
+		trim: true,
+		lowercase: true
 	},
 	observations: {
 		type: String,

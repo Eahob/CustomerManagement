@@ -6,7 +6,8 @@ const serviceSchema = new Schema({
 		type: String,
 		unique: true,
 		required: [true, 'Service name required'],
-		trim: true
+		trim: true,
+		uppercase: true
 	},
 	price: {
 		type: Number,
