@@ -66,8 +66,7 @@ module.exports = {
 		return Product.find(filter, { __v: 0, hide: 0 })
 	},
 	createCustomer(name, surname, phone, email, observations) {
-		const customer = new Customer({ name, surname, phone, email, observations })
-		return customer.save()
+		return new Customer({ name, surname, phone, email, observations }).save();
 	},
 	createService(name, price, tax) {
 		return new Service({ name, price, tax }).save()
