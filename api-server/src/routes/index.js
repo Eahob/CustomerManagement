@@ -1,14 +1,32 @@
-const { Router } = require('express')
-const bodyParser = require('body-parser')
-const { login, validate,
-    findCustomersBy, findTicketsBy, findServicesBy, findProductsBy,
-    createCustomer, createTicket, createService, createProduct,
-    deleteCustomer, deleteTicket, deleteService, deleteProduct,
-    showCustomer, showTicket, showService, showProduct,
-    editCustomer, editTicket, editService, editProduct } = require('./handlers')
+import Router from 'express';
+import bodyParser from 'body-parser';
+import jwtValidator from '../utils/jwtValidator';
+import {
+	login,
+	validate,
+	findCustomersBy,
+	findTicketsBy,
+	findServicesBy,
+	findProductsBy,
+	createCustomer,
+	createTicket,
+	createService,
+	createProduct,
+	deleteCustomer,
+	deleteTicket,
+	deleteService,
+	deleteProduct,
+	showCustomer,
+	showTicket,
+	showService,
+	showProduct,
+	editCustomer,
+	editTicket,
+	editService,
+	editProduct
+} from './handlers';
 
 const router = Router()
-const jwtValidator = require('../utils/jwtValidator')
 
 //---
 
@@ -72,4 +90,4 @@ router.put('/service/:id', [jwtValidator, jsonBodyParser], editService)
 
 router.put('/product/:id', [jwtValidator, jsonBodyParser], editProduct)
 
-module.exports = router
+export { router };

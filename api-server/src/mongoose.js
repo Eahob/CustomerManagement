@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const init = mongoUri => {
+export default mongoUri => {
 	mongoose.set('useNewUrlParser', true);
 	mongoose.set('useFindAndModify', false);
 	mongoose.set('useCreateIndex', true);
@@ -9,5 +9,3 @@ const init = mongoUri => {
 
 	return mongoose.connection;
 };
-
-module.exports = { init }

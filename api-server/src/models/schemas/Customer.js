@@ -1,7 +1,7 @@
-const { Schema } = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+import mongoose from 'mongoose';
+import uniqueValidator from 'mongoose-unique-validator';
 
-const customerSchema = new Schema({
+const customerSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: [true, 'Customer name required'],
@@ -37,4 +37,4 @@ const customerSchema = new Schema({
 
 customerSchema.plugin(uniqueValidator);
 
-module.exports = customerSchema;
+export default customerSchema;

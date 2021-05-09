@@ -1,7 +1,7 @@
-const { successResponse, failResponse } = require('../../utils/api-utils')
-const logic = require('../../logic')
+import { successResponse, failResponse } from '../../utils/api-utils';
+import * as logic from '../../logic';
 
-module.exports = (req, res) => {
+export default (req, res) => {
     const { name, price, tax } = req.body
     logic.editService(name, price, tax, req.params.id)
         .then(service => res.json(successResponse({ id: service._id })))

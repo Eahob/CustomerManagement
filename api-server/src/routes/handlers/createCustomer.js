@@ -1,7 +1,7 @@
-const { handleCreateQueryResponse } = require('../../utils/api-utils')
-const { createCustomer } = require('../../logic')
+import { handleCreateQueryResponse } from '../../utils/api-utils';
+import { createCustomer } from '../../logic';
 
-module.exports = (req, res) => {
+export default (req, res) => {
 	const { name, surname, phone, email, observations } = req.body;
 	handleCreateQueryResponse(res, createCustomer(name, surname, phone, email, observations));
 }

@@ -1,5 +1,5 @@
-const { successResponse, failResponse } = require('../../utils/api-utils')
+import { successResponse, failResponse } from '../../utils/api-utils';
 
-module.exports = (req, res) => {
+export default (req, res) => {
     res.json(successResponse())
 }

@@ -1,6 +1,6 @@
-const { Schema } = require('mongoose');
+import mongoose from 'mongoose';
 
-module.exports = new Schema({
+export default new mongoose.Schema({
 	username: {
 		type: String,
 		unique: true,

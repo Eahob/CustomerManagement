@@ -1,7 +1,7 @@
-const  { successResponse, failResponse } = require('../../utils/api-utils')
-const logic = require('../../logic')
+import  { successResponse, failResponse } from '../../utils/api-utils';
+import * as logic from '../../logic';
 
-module.exports = (req, res) => {
+export default (req, res) => {
     const {pricemin, pricemax, name} = req.query
     logic.findProductsBy(pricemin, pricemax, name)
         .then(products => res.json(successResponse(products)))

@@ -1,7 +1,7 @@
-const { successResponse, failResponse } = require('../../utils/api-utils')
-const logic = require('../../logic')
+import { successResponse, failResponse } from '../../utils/api-utils';
+import * as logic from '../../logic';
 
-module.exports = (req, res) => {
+export default (req, res) => {
     logic.showService(req.params.id)
         .then(service => res.json(successResponse(service)))
         .catch(err => res.json(failResponse(err.message)))

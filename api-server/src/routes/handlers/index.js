@@ -1,47 +1,22 @@
-const findCustomersBy = require('./findCustomersBy')
-const findTicketsBy = require('./findTicketsBy')
-const findServicesBy = require('./findServicesBy')
-const findProductsBy = require('./findProductsBy')
-const createCustomer = require('./createCustomer')
-const createTicket = require('./createTicket')
-const createService = require('./createService')
-const createProduct = require('./createProduct')
-const deleteCustomer = require('./deleteCustomer')
-const deleteTicket = require('./deleteTicket')
-const deleteService = require('./deleteService')
-const deleteProduct = require('./deleteProduct')
-const showCustomer = require('./showCustomer')
-const showTicket = require('./showTicket')
-const showService = require('./showService')
-const showProduct = require('./showProduct')
-const editCustomer = require('./editCustomer')
-const editTicket = require('./editTicket')
-const editService = require('./editService')
-const editProduct = require('./editProduct')
-const login = require('./login')
-const validate = require('./validate')
-
-module.exports = {
-    findCustomersBy,
-    findTicketsBy,
-    findServicesBy,
-    findProductsBy,
-    createCustomer,
-    createTicket,
-    createService,
-    createProduct,
-    deleteCustomer,
-    deleteTicket,
-    deleteService,
-    deleteProduct,
-    showCustomer,
-    showTicket,
-    showService,
-    showProduct,
-    editCustomer,
-    editTicket,
-    editService,
-    editProduct,
-    login,
-    validate
-}
+export { default as findCustomersBy } from './findCustomersBy';
+export { default as findTicketsBy } from './findTicketsBy';
+export { default as findServicesBy } from './findServicesBy';
+export { default as findProductsBy } from './findProductsBy';
+export { default as createCustomer } from './createCustomer';
+export { default as createTicket } from './createTicket';
+export { default as createService } from './createService';
+export { default as createProduct } from './createProduct';
+export { default as deleteCustomer } from './deleteCustomer';
+export { default as deleteTicket } from './deleteTicket';
+export { default as deleteService } from './deleteService';
+export { default as deleteProduct } from './deleteProduct';
+export { default as showCustomer } from './showCustomer';
+export { default as showTicket } from './showTicket';
+export { default as showService } from './showService';
+export { default as showProduct } from './showProduct';
+export { default as editCustomer } from './editCustomer';
+export { default as editTicket } from './editTicket';
+export { default as editService } from './editService';
+export { default as editProduct } from './editProduct';
+export { default as login } from './login';
+export { default as validate } from './validate';

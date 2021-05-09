@@ -1,13 +1,5 @@
-const Customer = require('./Customer');
-const Ticket = require('./Ticket');
-const Service = require('./Service');
-const Product = require('./Product');
-const User = require('./User');
-
-module.exports = {
-	Customer,
-	Ticket,
-	Service,
-	Product,
-	User
-};
+export { default as Customer } from './Customer';
+export { default as Ticket } from './Ticket';
+export { default as Service } from './Service';
+export { default as Product } from './Product';
+export { default as User } from './User';

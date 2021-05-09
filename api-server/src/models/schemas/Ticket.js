@@ -1,6 +1,7 @@
-const { Schema, Schema: { ObjectId } } = require('mongoose');
+import mongoose from 'mongoose';
+const ObjectId = mongoose.ObjectId;
 
-module.exports = new Schema({
+export default new mongoose.Schema({
 	date: {
 		type: Date,
 		required: true
