@@ -73,12 +73,7 @@ module.exports = {
 		return new Service({ name, price, tax }).save()
 	},
 	createProduct(name, price, tax) {
-		return Promise.resolve().then(() => Product.find({ name })).then(res => {
-			if (res.length) throw Error('Product name already in database')
-		}).then(() => {
-			product = new Product({ name: name.trim(), price, tax, hide: false })
-			return product.save()
-		})
+		return new Product({ name, price, tax}).save();
 	},
 	calculateTicket(services = [], products = []) {
 		// services is an array. Each element has and id for the service and the quantity

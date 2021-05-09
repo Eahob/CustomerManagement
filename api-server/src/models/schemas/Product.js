@@ -1,6 +1,7 @@
-const { Schema } = require('mongoose')
+const { Schema } = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
-module.exports = new Schema({
+const productSchema = new Schema({
 	name: {
 		type: String,
 		unique: true,
@@ -17,6 +18,11 @@ module.exports = new Schema({
 	},
 	hide:{
 		type: Boolean,
-		required: true
+		required: true,
+		default: false
 	}
 });
+
+productSchema.plugin(uniqueValidator);
+
+module.exports = productSchema;
