@@ -1,23 +1,39 @@
 const { Schema } = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
-module.exports = new Schema({
+const customerSchema = new Schema({
 	name: {
 		type: String,
-		required: [true, 'Customer name required']
+		required: [true, 'Customer name required'],
+		trim: true
 	},
 	surname: {
 		type: String,
-		required: [true, 'Customer surname required']
+		required: [true, 'Customer surname required'],
+		trim: true
 	},
 	phone: {
 		type: String,
 		unique: true,
-		required: [true, 'Customer phone number required']
+		required: [true, 'Customer phone number required'],
+		trim: true
 	},
-	email: String,
-	observations: String,
+	email: {
+		type: String,
+		trim: true
+	},
+	observations: {
+		type: String,
+		trim: true,
+		default: ''
+	},
 	hide:{
 		type: Boolean,
-		required: true
+		required: true,
+		default: false
 	}
 });
+
+customerSchema.plugin(uniqueValidator);
+
+module.exports = customerSchema;

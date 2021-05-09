@@ -65,14 +65,9 @@ module.exports = {
 
         return Product.find(filter, { __v: 0, hide: 0 })
     },
-    createCustomer(name, surname, phone, email, observations = '') {
-        return Promise.all([Customer.find({ phone }).then(res => res.length), Customer.find({ email }).then(res => res.length)]).then(res => {
-            if (res[0]) throw Error('Phone already in database')
-            if (res[1] && email) throw Error('Email already in database')
-        }).then(() => {
-            customer = new Customer({ name: name.trim(), surname: surname.trim(), phone: phone.trim(), email: email.trim(), observations: observations.trim(), hide: false })
-            return customer.save()
-        })
+    createCustomer(name, surname, phone, email, observations) {
+		const customer = new Customer({ name, surname, phone, email, observations })
+		return customer.save()
     },
     createService(name, price, tax) {
         return Promise.resolve().then(() => Service.find({ name })).then(res => {
