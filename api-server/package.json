@@ -6,6 +6,7 @@
   "scripts": {
     "remote": "node . remote",
     "start": "node .",
+    "dev": "nodemon .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,5 +20,8 @@
     "jsonwebtoken": "^8.2.0",
     "mongoose": "^5.12.7",
     "mongoose-unique-validator": "^2.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }
