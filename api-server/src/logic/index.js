@@ -69,7 +69,7 @@ module.exports = {
 		return new Customer({ name, surname, phone, email, observations }).save();
 	},
 	createService(name, price, tax) {
-		return new Service({ name, price, tax }).save()
+		return new Service({ name, price, tax }).save();
 	},
 	createProduct(name, price, tax) {
 		return new Product({ name, price, tax}).save();
