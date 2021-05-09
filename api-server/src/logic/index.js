@@ -70,12 +70,7 @@ module.exports = {
 		return customer.save()
 	},
 	createService(name, price, tax) {
-		return Promise.resolve().then(() => Service.find({ name })).then(res => {
-			if (res.length) throw Error('Service name already in database')
-		}).then(() => {
-			service = new Service({ name: name.trim(), price, tax, hide: false })
-			return service.save()
-		})
+		return new Service({ name, price, tax }).save()
 	},
 	createProduct(name, price, tax) {
 		return Promise.resolve().then(() => Product.find({ name })).then(res => {

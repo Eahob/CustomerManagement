@@ -1,10 +1,12 @@
 const { Schema } = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
-module.exports = new Schema({
+const serviceSchema = new Schema({
 	name: {
 		type: String,
 		unique: true,
-		required: [true, 'Service name required']
+		required: [true, 'Service name required'],
+		trim: true
 	},
 	price: {
 		type: Number,
@@ -16,6 +18,11 @@ module.exports = new Schema({
 	},
 	hide:{
 		type: Boolean,
-		required: true
+		required: true,
+		default: false
 	}
 });
+
+serviceSchema.plugin(uniqueValidator);
+
+module.exports = serviceSchema;
