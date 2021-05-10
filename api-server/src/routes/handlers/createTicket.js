@@ -1,9 +1,7 @@
-import { successResponse, failResponse } from '../../utils/api-utils';
-import * as logic from '../../logic';
+import { handleCreateQueryResponse } from '../../utils/api-utils';
+import { createTicket } from '../../logic';
 
 export default (req, res) => {
-    const { customer, services, products } = req.body
-    logic.createTicket(customer, services, products)
-        .then(ticket => res.json(successResponse({ id: ticket._id })))
-        .catch(err => res.json(failResponse(err.message)))
+	const { customer, services, products } = req.body;
+	handleCreateQueryResponse(res, createTicket(customer, services, products));
 }
