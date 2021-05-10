@@ -1,9 +1,7 @@
-import  { successResponse, failResponse } from '../../utils/api-utils';
-import * as logic from '../../logic';
+import { handleFindQueryResponse } from '../../utils/api-utils';
+import { findTicketsBy } from '../../logic';
 
 export default (req, res) => {
-    const {pricemin, pricemax, datemin, datemax, customerId} = req.query
-    logic.findTicketsBy(pricemin, pricemax, datemin, datemax, customerId)
-        .then(tickets => res.json(successResponse(tickets)))
-        .catch(err => res.json(failResponse(err.message)))
-}
+	const { pricemin, pricemax, datemin, datemax, customerId } = req.query;
+	handleFindQueryResponse(res, findTicketsBy(pricemin, pricemax, datemin, datemax, customerId));
+};
