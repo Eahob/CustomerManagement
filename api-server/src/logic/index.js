@@ -8,7 +8,7 @@ export function login(username, password) {
 	});
 }
 
-export function findCustomersBy(name, surname, phone, email, observations) {
+export function findCustomersBy({name, surname, phone, email, observations}) {
 	const filter = {};
 
 	if (name) filter.name = { $regex: new RegExp(name, 'i') };
@@ -22,7 +22,7 @@ export function findCustomersBy(name, surname, phone, email, observations) {
 	return Customer.find(filter, { __v: 0, hide: 0 });
 }
 
-export function findTicketsBy(pricemin, pricemax, datemin, datemax, customerId) {
+export function findTicketsBy({pricemin, pricemax, datemin, datemax, customerId}) {
 	const filter = {};
 
 	if (pricemax || pricemin) {
@@ -40,7 +40,7 @@ export function findTicketsBy(pricemin, pricemax, datemin, datemax, customerId) 
 	return Ticket.find(filter, { __v: 0 }).sort([['date', -1]]).populate('customer', 'name surname');
 }
 
-export function findServicesBy(pricemin, pricemax, name) {
+export function findServicesBy({pricemin, pricemax, name}) {
 	const filter = {};
 
 	if (pricemax || pricemin) {
@@ -55,7 +55,7 @@ export function findServicesBy(pricemin, pricemax, name) {
 	return Service.find(filter, { __v: 0, hide: 0 });
 }
 
-export function findProductsBy(pricemin, pricemax, name) {
+export function findProductsBy({pricemin, pricemax, name}) {
 	const filter = {};
 
 	if (pricemax || pricemin) {
@@ -70,15 +70,15 @@ export function findProductsBy(pricemin, pricemax, name) {
 	return Product.find(filter, { __v: 0, hide: 0 });
 }
 
-export function createCustomer(name, surname, phone, email, observations) {
+export function createCustomer({name, surname, phone, email, observations}) {
 	return new Customer({ name, surname, phone, email, observations }).save();
 }
 
-export function createService(name, price, tax) {
+export function createService({name, price, tax}) {
 	return new Service({ name, price, tax }).save();
 }
 
-export function createProduct(name, price, tax) {
+export function createProduct({name, price, tax}) {
 	return new Product({ name, price, tax }).save();
 }
 
@@ -142,7 +142,7 @@ function calculateTicket(services = [], products = []) {
 	});
 }
 
-export function createTicket(customer, services, products) {
+export function createTicket({customer, services, products}) {
 	return calculateTicket(services, products).then(res => {
 		ticket = new Ticket({ date: Date(), customer, services: res[0], products: res[1], total: res[2] });
 
@@ -185,7 +185,7 @@ export function showProduct(_id) {
 	return Product.findOne({ _id }, { _id: 0, __v: 0, hide: 0 });
 }
 
-export function editCustomer(name, surname, phone, email, observations, _id) {
+export function editCustomer({name, surname, phone, email, observations}, _id) {
 	return Promise.all([Customer.findOne({ phone }), Customer.findOne({ email })]).then(res => {
 		if (res[0] ? res[0]._id != _id : false) throw Error('Phone already in database');
 		if ((res[1] ? res[1]._id != _id : false) && email) throw Error('Email already in database');
@@ -204,7 +204,7 @@ export function editCustomer(name, surname, phone, email, observations, _id) {
 	}).then(() => ({ _id }));
 }
 
-export function editTicket(customer, services, products, _id) {
+export function editTicket({customer, services, products}, _id) {
 	return Ticket.findById(_id).then(ticket => {
 		return calculateTicket(services, products);
 	}).then(res => {
@@ -216,7 +216,7 @@ export function editTicket(customer, services, products, _id) {
 	}).then(() => ({ _id }));
 }
 
-export function editService(name, price, tax, _id) {
+export function editService({name, price, tax}, _id) {
 	return Promise.resolve().then(() => Service.findOne({ name })).then(res => {
 		if (res ? res._id != _id : false) throw Error('Service name already in database');
 	}).then(() => {
@@ -232,7 +232,7 @@ export function editService(name, price, tax, _id) {
 	}).then(() => ({ _id }));
 }
 
-export function editProduct(name, price, tax, _id) {
+export function editProduct({name, price, tax}, _id) {
 	return Promise.resolve().then(() => Product.findOne({ name })).then(res => {
 		if (res ? res._id != _id : false) throw Error('Product name already in database');
 	}).then(() => {

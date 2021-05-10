@@ -1,6 +1,4 @@
-import { handleDeleteQueryResponse } from '../../utils/api-utils';
+import { handleHideQueryResponse } from '../../utils/api-utils';
 import { deleteProduct } from '../../logic';
 
-export default (req, res) => {
-	handleDeleteQueryResponse(res, deleteProduct(req.params.id));
-};
+export default handleHideQueryResponse(deleteProduct);
