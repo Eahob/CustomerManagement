@@ -35,7 +35,7 @@ export const handleShowResponse = queryLogicCallback => (request, response) => {
 	queryLogicCallback(request.params.id)
 		.then(data => response.json(successResponse(data)))
 		.catch(err => response.json(failResponse(err.message)));
-}
+};
 
 export const getEnvValue = envVariableName => {
 	if (!process.env[envVariableName]) {
