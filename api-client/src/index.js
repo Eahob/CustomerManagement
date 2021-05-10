@@ -4,7 +4,7 @@ const api = {
     _baseUrl() {
         return `${this.protocol}://${this.host}${this.port ? ':' + this.port : ''}/api`
     },
-    _call(method, path, body, query, token) {
+    _call(method, path, data, query, token) {
         const options = {
             method,
             uri: `${this._baseUrl()}/${path}`,
@@ -13,7 +13,9 @@ const api = {
 
         if (query) options.qs = query
 
-        if (body) options.body = body
+        if (data) {
+			options.body = {data}
+		}
 
         if (token) options.headers = { authorization: `Bearer ${token}` }
 
