@@ -1,8 +1,6 @@
-import { successResponse, failResponse } from '../../utils/api-utils';
-import * as logic from '../../logic';
+import { handleFindQueryResponse } from '../../utils/api-utils';
+import { showTicket } from '../../logic';
 
 export default (req, res) => {
-    logic.showTicket(req.params.id)
-        .then(ticket => res.json(successResponse(ticket)))
-        .catch(err => res.json(failResponse(err.message)))
+	handleFindQueryResponse(res, showTicket(req.params.id))
 }
