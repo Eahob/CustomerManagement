@@ -19,6 +19,12 @@ export const handleCreateQueryResponse = (res, query) => {
 		.catch(err => res.json(failResponse(err.message)))
 }
 
+export const handleUpdateOneQueryResponse = (res, query) => {
+	query
+		.then(data => res.json(successResponse({id: data.id})))
+		.catch(err => res.json(failResponse(err.message)))
+}
+
 export const getEnvValue = envVariableName => {
 	if (!process.env[envVariableName]) {
 		console.error(`Missing ${envVariableName} in .env file`);
