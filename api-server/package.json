@@ -8,7 +8,8 @@
     "remote": "node --experimental-specifier-resolution=node -r dotenv/config . remote",
     "start": "node --experimental-specifier-resolution=node -r dotenv/config .",
     "dev": "nodemon --experimental-specifier-resolution=node -r dotenv/config .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --ext .js ."
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,11 @@
     "mongoose-unique-validator": "^2.0.3"
   },
   "devDependencies": {
+    "eslint": "^7.26.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
     "nodemon": "^2.0.7"
   }
 }
