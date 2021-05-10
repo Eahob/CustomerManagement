@@ -1,9 +1,6 @@
-import dotenv from 'dotenv';
 import { getEnvValue } from './utils/api-utils.js';
 import mongooseInit from './mongoose';
 import expressInit from './express';
-
-dotenv.config();
 
 const remoteDB = process.argv.includes('remote');
 
