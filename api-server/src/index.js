@@ -18,5 +18,5 @@ mongoDBConection.on('error', error => {
 
 mongoDBConection.once('open', () => {
 	console.log('Connected to database');
-	expressInit(getEnvValue('PORT'))
+	expressInit(getEnvValue('PORT'));
 });

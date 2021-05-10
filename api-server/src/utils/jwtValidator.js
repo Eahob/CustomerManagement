@@ -14,10 +14,10 @@ const validator = (req, res, next) => {
 	try {
 		const token = auth.split(' ')[1];
 
-		jwt.verify(token, JWT_SECRET)
-		next()
+		jwt.verify(token, JWT_SECRET);
+		next();
 	} catch (err) {
-		res.json(failResponse('invalid token'))
+		res.json(failResponse('invalid token'));
 	}
 };
 
@@ -27,7 +27,7 @@ const jwtValidator = () => {
 	}
 
 	return validator;
-}
+};
 
 export default jwtValidator();
 
