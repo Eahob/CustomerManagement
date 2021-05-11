@@ -89,22 +89,28 @@ function calculateTicket(services = [], products = []) {
 	// In this case the price for products and services comes with tax, so the price adds directly to the total + tax
 
 	return Promise.resolve().then(() => {
-		if (!(services.length || products.length)) throw Error('services and products can not be empty at the same time');
+		// TODO: This validation should be done in the schema definition?
+		if (!(services.length || products.length)) {
+			throw Error('services and products can not be empty at the same time');
+		}
 	}).then(() => {
+		// TODO: Refactor this, do not repeat code
 		return Promise.all([
 			Service.find({ _id: { $in: services.map(service => service.id) } })
 				.then(_services => {
 					let withTax = 0;
 					let withoutTax = 0;
-					let copyServices = [];
+					const copyServices = [];
 
 					for (let i = 0; i < _services.length; i++) {
-						let index = services.findIndex(elm => {
-							return elm.id == _services[i]._id;
-						});
+						const service = _services[i]._id;
+						const price = _services[i].price;
+						const tax = _services[i].tax;
+						const index = services.findIndex(elm => elm.id == service);
+						const quantity = services[index].quantity;
 
-						copyServices.push({ service: _services[i]._id, price: _services[i].price, quantity: services[index].quantity, tax: _services[i].tax });
-						let subTotal = _services[i].price * services[index].quantity;
+						copyServices.push({ service, price, quantity, tax });
+						let subTotal = price * quantity;
 
 						withTax += subTotal;
 						withoutTax += subTotal / (1 + _services[i].tax / 100);
@@ -116,18 +122,20 @@ function calculateTicket(services = [], products = []) {
 				.then(_products => {
 					let withTax = 0;
 					let withoutTax = 0;
-					let copyProducts = [];
+					const copyProducts = [];
 
 					for (let i = 0; i < _products.length; i++) {
-						let index = products.findIndex(elm => {
-							return elm.id == _products[i]._id;
-						});
+						const product = _products[i]._id;
+						const price = _products[i].price;
+						const tax = _products[i].tax;
+						const index = products.findIndex(elm => elm.id == product);
+						const quantity = products[index].quantity;
 
-						copyProducts.push({ product: _products[i]._id, price: _products[i].price, quantity: products[index].quantity, tax: _products[i].tax });
-						let subTotal = _products[i].price * products[index].quantity;
+						copyProducts.push({ product, price, quantity, tax });
+						let subTotal = price * quantity;
 
 						withTax += subTotal;
-						withoutTax += subTotal / (1 + _products[i].tax / 100);
+						withoutTax += subTotal / (1 + tax / 100);
 					}
 
 					return [withTax, withoutTax, copyProducts];
@@ -144,7 +152,7 @@ function calculateTicket(services = [], products = []) {
 
 export function createTicket({customer, services, products}) {
 	return calculateTicket(services, products).then(res => {
-		ticket = new Ticket({ date: Date(), customer, services: res[0], products: res[1], total: res[2] });
+		const ticket = new Ticket({ date: Date(), customer, services: res[0], products: res[1], total: res[2] });
 
 		return ticket.save();
 	});
@@ -174,7 +182,10 @@ export function showCustomer(_id) {
 }
 
 export function showTicket(_id) {
-	return Ticket.findOne({ _id }, { _id: 0, __v: 0, hide: 0 }).populate('customer', 'name').populate('services.service', 'name').populate('products.product', 'name');
+	return Ticket.findOne({ _id }, { _id: 0, __v: 0, hide: 0 })
+		.populate('customer', 'name')
+		.populate('services.service', 'name')
+		.populate('products.product', 'name');
 }
 
 export function showService(_id) {
@@ -204,8 +215,8 @@ export function editCustomer({name, surname, phone, email, observations}, _id) {
 	}).then(() => ({ _id }));
 }
 
-export function editTicket({customer, services, products}, _id) {
-	return Ticket.findById(_id).then(ticket => {
+export function editTicket({services, products}, _id) {
+	return Ticket.findById(_id).then(() => {
 		return calculateTicket(services, products);
 	}).then(res => {
 		let update = {};

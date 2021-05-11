@@ -59,6 +59,12 @@
                 "prev": "*",
                 "next": "throw"
             }
+        ],
+        "max-len": [
+            "error",
+            {
+                "code": 120
+            }
         ]
     }
 }
