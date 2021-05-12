@@ -10,7 +10,7 @@ export const successResponse = data => responseHelper(STATUS_SUCCESS, data);
 export const failResponse = error => responseHelper(STATUS_FAIL, undefined, error);
 
 export const handleFindQueryResponse = queryLogicCallback => (request, response) => {
-	queryLogicCallback(request.body.data)
+	queryLogicCallback(request.body?.data ?? {})
 		.then(data => response.json(successResponse(data)))
 		.catch(err => response.json(failResponse(err.message)));
 };
