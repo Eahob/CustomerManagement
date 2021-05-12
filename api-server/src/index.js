@@ -1,4 +1,5 @@
 import { getEnvValue } from './utils/api-utils.js';
+import { EXIT_CODE_DB_CONNECTION_FAILED } from './utils/exit_codes';
 import mongooseInit from './mongoose';
 import expressInit from './express';
 
@@ -13,7 +14,7 @@ const mongoDBConection = mongooseInit(mongoUri);
 mongoDBConection.on('error', error => {
 	console.error('Failed to connect to database');
 	console.error(error);
-	process.exit(1);
+	process.exit(EXIT_CODE_DB_CONNECTION_FAILED);
 });
 
 mongoDBConection.once('open', () => {

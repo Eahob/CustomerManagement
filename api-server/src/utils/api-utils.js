@@ -1,3 +1,4 @@
+import { EXIT_CODE_MISSING_VARIABLE_DOTENV } from './exit_codes';
 const STATUS_SUCCESS = 'OK';
 const STATUS_FAIL = 'KO';
 
@@ -40,7 +41,7 @@ export const handleShowResponse = queryLogicCallback => (request, response) => {
 export const getEnvValue = envVariableName => {
 	if (!process.env[envVariableName]) {
 		console.error(`Missing ${envVariableName} in .env file`);
-		process.exit(1);
+		process.exit(EXIT_CODE_MISSING_VARIABLE_DOTENV);
 	}
 
 	return process.env[envVariableName];
