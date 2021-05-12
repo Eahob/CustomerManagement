@@ -14,7 +14,7 @@ export default new mongoose.Schema({
 	},
 	services: [
 		{
-			service: {
+			taxable: {
 				type: ObjectId,
 				ref: 'Service',
 				required: true
@@ -35,7 +35,7 @@ export default new mongoose.Schema({
 	],
 	products: [
 		{
-			product: {
+			taxable: {
 				type: ObjectId,
 				ref: 'Product',
 				required: true

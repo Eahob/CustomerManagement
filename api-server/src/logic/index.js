@@ -82,81 +82,82 @@ export function createProduct({ name, price, tax }) {
 	return new Product({ name, price, tax }).save();
 }
 
+function expandTaxableList(taxableList) {
+	return document => {
+		const index = taxableList.findIndex(taxable => taxable.id === document.id);
+
+		return {
+			document,
+			quantity: taxableList[index].quantity
+		};
+	};
+}
+
+function calculateTax(model, taxableList) {
+	const INITIAL_PRICE = 0;
+	const taxableIdList = taxableList.map(taxable => taxable.id);
+
+	return model
+		.find({ _id: { $in: taxableIdList } })
+		.then(documents => documents
+			.map(expandTaxableList(taxableList))
+			.reduce(({ withTax, withoutTax, description }, { document, quantity }) => {
+				const taxable = document._id;
+				const price = document.price;
+				const tax = document.tax;
+				const subTotal = price * quantity;
+
+				description.push({ taxable, price, quantity, tax });
+
+				return {
+					withTax: withTax + (subTotal * (1 + (tax / 100))),
+					withoutTax: withoutTax + subTotal,
+					description
+				};
+			}, {
+				withTax: INITIAL_PRICE,
+				withoutTax: INITIAL_PRICE,
+				description: []
+			})
+		);
+}
+
 function calculateTicket(services = [], products = []) {
 	// services is an array. Each element has and id for the service and the quantity
 	// products is an array. Each element has and id for the product and the quantity
 
-	// In this case the price for products and services comes with tax, so the price adds directly to the total + tax
-
 	return Promise.resolve().then(() => {
-		// TODO: This validation should be done in the schema definition?
-		if (!(services.length || products.length)) {
-			throw Error('services and products can not be empty at the same time');
-		}
-	}).then(() => {
-		// TODO: Refactor this, do not repeat code
 		return Promise.all([
-			Service.find({ _id: { $in: services.map(service => service.id) } })
-				.then(_services => {
-					let withTax = 0;
-					let withoutTax = 0;
-					const copyServices = [];
-
-					for (let i = 0; i < _services.length; i++) {
-						const service = _services[i]._id;
-						const price = _services[i].price;
-						const tax = _services[i].tax;
-						const index = services.findIndex(elm => elm.id === service);
-						const quantity = services[index].quantity;
-
-						copyServices.push({ service, price, quantity, tax });
-						const subTotal = price * quantity;
-
-						withTax += subTotal;
-						withoutTax += subTotal / (1 + (tax / 100));
-					}
-
-					return [withTax, withoutTax, copyServices];
-				}),
-			Product.find({ _id: { $in: products.map(product => product.id) } })
-				.then(_products => {
-					let withTax = 0;
-					let withoutTax = 0;
-					const copyProducts = [];
-
-					for (let i = 0; i < _products.length; i++) {
-						const product = _products[i]._id;
-						const price = _products[i].price;
-						const tax = _products[i].tax;
-						const index = products.findIndex(elm => elm.id === product);
-						const quantity = products[index].quantity;
-
-						copyProducts.push({ product, price, quantity, tax });
-						const subTotal = price * quantity;
-
-						withTax += subTotal;
-						withoutTax += subTotal / (1 + (tax / 100));
-					}
-
-					return [withTax, withoutTax, copyProducts];
-				})
+			calculateTax(Service, services),
+			calculateTax(Product, products)
 		]);
-	}).then(res => {
+	})
+	.then(results => ({
+			servicesResult: results[0],
+			productResult: results[1]
+		}))
+	.then(({servicesResult, productResult}) => {
 		const FIXED_POINTS_DIGIT = 2;
-		const serv = res[0];
-		const prod = res[1];
 		const total = {
-			withTax: (serv[0] + prod[0]).toFixed(FIXED_POINTS_DIGIT),
-			withoutTax: (serv[1] + prod[1]).toFixed(FIXED_POINTS_DIGIT)
+			withTax: (servicesResult.withTax + productResult.withTax).toFixed(FIXED_POINTS_DIGIT),
+			withoutTax: (servicesResult.withoutTax + productResult.withoutTax).toFixed(FIXED_POINTS_DIGIT)
 		};
 
-		return [serv[2], prod[2], total];
+		return {
+			services: servicesResult.description,
+			products: productResult.description,
+			total
+		};
 	});
 }
 
 export function createTicket({ customer, services, products }) {
-	return calculateTicket(services, products).then(res => {
-		const ticket = new Ticket({ date: Date(), customer, services: res[0], products: res[1], total: res[2] });
+	if (!(services.length || products.length)) {
+		throw Error('services and products can not be empty at the same time');
+	}
+
+	return calculateTicket(services, products).then(({services, products, total}) => {
+		const ticket = new Ticket({ date: Date(), customer, services, products, total });
 
 		return ticket.save();
 	});
