@@ -17,7 +17,7 @@ const serviceSchema = new mongoose.Schema({
 		type: Number,
 		required: [true, 'Service tax required']
 	},
-	hide:{
+	hide: {
 		type: Boolean,
 		required: true,
 		default: false

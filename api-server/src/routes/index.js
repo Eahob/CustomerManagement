@@ -1,4 +1,4 @@
-import Router from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import jwtValidator from '../utils/jwtValidator';
 import {
@@ -26,7 +26,7 @@ import {
 	editProduct
 } from './handlers';
 
-const router = Router();
+const router = express();
 
 //---
 

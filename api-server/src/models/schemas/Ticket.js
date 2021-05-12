@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+
 const ObjectId = mongoose.ObjectId;
 
 export default new mongoose.Schema({

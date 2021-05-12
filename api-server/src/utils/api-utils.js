@@ -1,4 +1,5 @@
 import { EXIT_CODE_MISSING_VARIABLE_DOTENV } from './exit_codes';
+
 const STATUS_SUCCESS = 'OK';
 const STATUS_FAIL = 'KO';
 

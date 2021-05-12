@@ -16,7 +16,7 @@ const productSchema = new mongoose.Schema({
 		type: Number,
 		required: [true, 'Product tax required']
 	},
-	hide:{
+	hide: {
 		type: Boolean,
 		required: true,
 		default: false

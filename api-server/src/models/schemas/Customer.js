@@ -28,7 +28,7 @@ const customerSchema = new mongoose.Schema({
 		trim: true,
 		default: ''
 	},
-	hide:{
+	hide: {
 		type: Boolean,
 		required: true,
 		default: false
