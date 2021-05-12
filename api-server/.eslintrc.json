@@ -10,7 +10,6 @@
     },
     "rules": {
         "no-cond-assign": "error",
-        "no-console": "error",
         "no-constant-condition": "error",
         "no-debugger": "error",
         "no-dupe-args": "error",
