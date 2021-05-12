@@ -26,4 +26,4 @@ const taxableSchema = new mongoose.Schema({
 
 taxableSchema.plugin(uniqueValidator);
 
-export default taxableSchema;
+export { taxableSchema };

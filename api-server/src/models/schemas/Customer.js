@@ -37,4 +37,4 @@ const customerSchema = new mongoose.Schema({
 
 customerSchema.plugin(uniqueValidator);
 
-export default customerSchema;
+export { customerSchema };

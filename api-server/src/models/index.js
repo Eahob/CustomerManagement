@@ -1,8 +1,13 @@
 import mongoose from 'mongoose';
-import * as schemas from './schemas';
+import {
+	customerSchema,
+	ticketSchema,
+	taxableSchema,
+	userSchema
+} from './schemas';
 
-export const Customer = mongoose.model('Customer', schemas.Customer);
-export const Ticket = mongoose.model('Ticket', schemas.Ticket);
-export const Service = mongoose.model('Service', schemas.Taxable);
-export const Product = mongoose.model('Product', schemas.Taxable);
-export const User = mongoose.model('User', schemas.User);
+export const Customer = mongoose.model('Customer', customerSchema);
+export const Ticket = mongoose.model('Ticket', ticketSchema);
+export const Service = mongoose.model('Service', taxableSchema);
+export const Product = mongoose.model('Product', taxableSchema);
+export const User = mongoose.model('User', userSchema);

@@ -1,6 +1,4 @@
-export { default as Customer } from './Customer';
-export { default as Ticket } from './Ticket';
-export { default as Service } from './Service';
-export { default as Product } from './Product';
-export { default as User } from './User';
-export { default as Taxable } from './Taxable';
+export { customerSchema } from './Customer';
+export { ticketSchema } from './Ticket';
+export { taxableSchema } from './Taxable';
+export { userSchema } from './User';

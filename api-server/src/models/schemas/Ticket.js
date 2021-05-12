@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const ObjectId = mongoose.ObjectId;
 
-export default new mongoose.Schema({
+export const ticketSchema = new mongoose.Schema({
 	date: {
 		type: Date,
 		required: true
