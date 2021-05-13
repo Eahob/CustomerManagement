@@ -145,17 +145,11 @@ function calculateTicket(services = [], products = []) {
 		});
 }
 
-export function createTicket({ customer, servicesList, productsList }) {
-	if (!(servicesList.length || productsList.length)) {
-		throw Error('services and products can not be empty at the same time');
-	}
+export const createTicket = async({ customer, servicesList, productsList }) => {
+	const { services, products, total } = await calculateTicket(servicesList, productsList);
 
-	return calculateTicket(servicesList, productsList).then(({ services, products, total }) => {
-		const ticket = new Ticket({ date: Date(), customer, services, products, total });
-
-		return ticket.save();
-	});
-}
+	return new Ticket({ date: Date(), customer, services, products, total }).save();
+};
 
 export function deleteTicket(_id) {
 	return Ticket.deleteOne({ _id });
@@ -218,7 +212,7 @@ export function editTicket({ servicesList, productsList }, _id) {
 			ticket.products = products;
 			ticket.total = total;
 
-			return ticket.save()
+			return ticket.save();
 		})
 		.then(() => ({ _id }));
 }

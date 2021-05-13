@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const ObjectId = mongoose.ObjectId;
 
-export const ticketSchema = new mongoose.Schema({
+const ticketSchema = new mongoose.Schema({
 	date: {
 		type: Date,
 		required: true
@@ -65,3 +65,13 @@ export const ticketSchema = new mongoose.Schema({
 		}
 	}
 });
+
+ticketSchema.pre('save', function(next) {
+	if (!(this.services.length || this.products.length)) {
+		next(new Error('services and products can not be empty at the same time'));
+	}
+
+	next();
+});
+
+export { ticketSchema };
