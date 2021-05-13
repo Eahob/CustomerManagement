@@ -126,17 +126,11 @@ function calculateTicket(services = [], products = []) {
 	// services is an array. Each element has and id for the service and the quantity
 	// products is an array. Each element has and id for the product and the quantity
 
-	return Promise.resolve().then(() => {
-		return Promise.all([
-			calculateTax(Service, services),
-			calculateTax(Product, products)
-		]);
-	})
-	.then(results => ({
-			servicesResult: results[0],
-			productResult: results[1]
-		}))
-	.then(({servicesResult, productResult}) => {
+	return Promise.all([
+		calculateTax(Service, services),
+		calculateTax(Product, products)
+	])
+	.then(([servicesResult, productResult]) => {
 		const FIXED_POINTS_DIGIT = 2;
 		const total = {
 			withTax: (servicesResult.withTax + productResult.withTax).toFixed(FIXED_POINTS_DIGIT),
