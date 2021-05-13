@@ -217,34 +217,19 @@ export function editTicket({ servicesList, productsList }, _id) {
 		.then(() => ({ _id }));
 }
 
-export function editService({ name, price, tax }, _id) {
-	return Promise.resolve().then(() => Service.findOne({ name })).then(res => {
-		if (res ? res._id !== _id : false) { throw Error('Service name already in database'); }
-	}).then(() => {
-		return Service.findById(_id).then(service => {
-			const update = {};
+const editTaxable = model => async({ name, price, tax }, _id) => {
+	const taxable = await model.findById(_id);
 
-			if (service.name !== name) { update.name = name.trim(); }
-			if (service.price !== price) { update.price = price; }
-			if (service.tax !== tax) { update.tax = tax; }
+	for (const [key, value] of Object.entries({ name, price, tax })) {
+		if (value !== undefined) {
+			taxable[key] = value;
+		}
+	}
 
-			return Service.updateOne({ _id }, { $set: update });
-		});
-	}).then(() => ({ _id }));
-}
+	await taxable.save();
 
-export function editProduct({ name, price, tax }, _id) {
-	return Promise.resolve().then(() => Product.findOne({ name })).then(res => {
-		if (res ? res._id !== _id : false) { throw Error('Product name already in database'); }
-	}).then(() => {
-		return Product.findById(_id).then(product => {
-			const update = {};
+	return { _id };
+};
 
-			if (product.name !== name) { update.name = name.trim(); }
-			if (product.price !== price) { update.price = price; }
-			if (product.tax !== tax) { update.tax = tax; }
-
-			return Product.updateOne({ _id }, { $set: update });
-		});
-	}).then(() => ({ _id }));
-}
+export const editService = editTaxable(Service);
+export const editProduct = editTaxable(Product);
