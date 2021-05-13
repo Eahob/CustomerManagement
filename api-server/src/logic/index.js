@@ -209,16 +209,18 @@ export function editCustomer({ name, surname, phone, email, observations }, _id)
 		.then(() => ({ _id }));
 }
 
-export function editTicket({ services, products }, _id) {
-	return Ticket.findById(_id).then(() => {
-		return calculateTicket(services, products);
-	}).then(res => {
-		let update = {};
+export function editTicket({ servicesList, productsList }, _id) {
+	return Ticket.findById(_id)
+		.then(ticket => {
+			const { services, products, total } = calculateTicket(servicesList, productsList);
 
-		update = { services: res[0], products: res[1], total: res[2] };
+			ticket.services = services;
+			ticket.products = products;
+			ticket.total = total;
 
-		return Ticket.updateOne({ _id }, { $set: update });
-	}).then(() => ({ _id }));
+			return ticket.save()
+		})
+		.then(() => ({ _id }));
 }
 
 export function editService({ name, price, tax }, _id) {
