@@ -151,31 +151,18 @@ export const createTicket = async({ customer, servicesList, productsList }) => {
 	return new Ticket({ date: Date(), customer, services, products, total }).save();
 };
 
-export function deleteTicket(_id) {
-	return Ticket.deleteOne({ _id });
-}
+const hide = model => _id => model.findByIdAndUpdate(_id, { $set: { hide: true } });
 
-export function deleteCustomer(_id) {
-	//return Customer.deleteOne({ _id })
-	return Customer.updateOne({ _id }, { $set: { hide: true } });
-}
-
-export function deleteService(_id) {
-	//return Service.deleteOne({ _id })
-	return Service.updateOne({ _id }, { $set: { hide: true } });
-}
-
-export function deleteProduct(_id) {
-	//return Product.deleteOne({ _id })
-	return Product.updateOne({ _id }, { $set: { hide: true } });
-}
+export const deleteCustomer = hide(Customer);
+export const deleteService = hide(Service);
+export const deleteProduct = hide(Product);
+export const deleteTicket = _id => Ticket.findOneAndDelete(_id);
 
 const show = model => _id => model.findById(_id, { _id: 0, __v: 0, hide: 0 });
 
 export const showCustomer = show(Customer);
 export const showService = show(Service);
 export const showProduct = show(Product);
-
 export const showTicket = _id => Ticket.findById(_id, { _id: 0, __v: 0, hide: 0 })
 		.populate('customer', 'name')
 		.populate('services.service', 'name')
