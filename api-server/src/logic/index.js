@@ -196,22 +196,17 @@ export function showProduct(_id) {
 }
 
 export function editCustomer({ name, surname, phone, email, observations }, _id) {
-	return Promise.all([Customer.findOne({ phone }), Customer.findOne({ email })]).then(res => {
-		if (res[0] ? res[0]._id !== _id : false) { throw Error('Phone already in database'); }
-		if ((res[1] ? res[1]._id !== _id : false) && email) { throw Error('Email already in database'); }
-	}).then(() => {
-		return Customer.findById(_id).then(customer => {
-			const update = {};
+	return Customer.findById(_id)
+		.then(customer => {
+			for (const [key, value] of Object.entries({ name, surname, phone, email, observations })) {
+				if (value !== undefined) {
+					customer[key] = value;
+				}
+			}
 
-			if (customer.name !== name) { update.name = name.trim(); }
-			if (customer.surname !== surname) { update.surname = surname.trim(); }
-			if (customer.phone !== phone) { update.phone = phone.trim(); }
-			if (customer.email !== email) { update.email = email.trim(); }
-			if (customer.observations !== observations) { update.observations = observations.trim(); }
-
-			return Customer.updateOne({ _id }, { $set: update });
-		});
-	}).then(() => ({ _id }));
+			return customer.save();
+		})
+		.then(() => ({ _id }));
 }
 
 export function editTicket({ services, products }, _id) {
