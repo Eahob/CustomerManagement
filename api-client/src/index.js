@@ -42,8 +42,8 @@ const api = {
     createCustomer(name, surname, phone, email, observations, token) {
         return this._call('post', 'customer', { name, surname, phone, email, observations }, undefined, token)
     },
-    createTicket(customer, services, products, token) {
-        return this._call('post', 'ticket', { customer, services, products }, undefined, token)
+    createTicket(customer, servicesList, productsList, token) {
+        return this._call('post', 'ticket', { customer, servicesList, productsList }, undefined, token)
     },
     createService(name, price, tax, token) {
         return this._call('post', 'service', { name, price, tax }, undefined, token)

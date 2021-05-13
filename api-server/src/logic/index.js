@@ -145,12 +145,12 @@ function calculateTicket(services = [], products = []) {
 	});
 }
 
-export function createTicket({ customer, services, products }) {
-	if (!(services.length || products.length)) {
+export function createTicket({ customer, servicesList, productsList }) {
+	if (!(servicesList.length || productsList.length)) {
 		throw Error('services and products can not be empty at the same time');
 	}
 
-	return calculateTicket(services, products).then(({services, products, total}) => {
+	return calculateTicket(servicesList, productsList).then(({services, products, total}) => {
 		const ticket = new Ticket({ date: Date(), customer, services, products, total });
 
 		return ticket.save();
