@@ -9,35 +9,31 @@ export const successResponse = data => responseHelper(STATUS_SUCCESS, data);
 
 export const failResponse = error => responseHelper(STATUS_FAIL, undefined, error);
 
-export const handleFindQueryResponse = queryLogicCallback => (request, response) => {
-	queryLogicCallback(request.body?.data ?? {})
-		.then(data => response.json(successResponse(data)))
-		.catch(err => response.json(failResponse(err.message)));
+const handler = (requestFilter, dataFilter) => queryLogicCallback => async(request, response) => {
+	try {
+		const data = await queryLogicCallback(...requestFilter(request));
+
+		return response.json(successResponse(dataFilter(data)));
+	} catch (error) {
+		console.error(error);
+
+		return response.json(failResponse(error.message));
+	}
 };
 
-export const handleSaveQueryResponse = queryLogicCallback => (request, response) => {
-	queryLogicCallback(request.body.data)
-		.then(data => response.json(successResponse({ id: data.id })))
-		.catch(err => response.json(failResponse(err.message)));
-};
+const idObject = data => ({ id: data.id });
+const identity = data => data;
+const doNothing = () => {};
+const getIdFromParams = request => [request.params.id];
+const getDataFromBody = request => [request.body?.data ?? {}];
+const getDataFromBodyStrict = request => [request.body.data];
+const getDataFromBodyStrictAndIdFromParams = request => getDataFromBodyStrict(request).concat(getIdFromParams(request));
 
-export const handleEditQueryResponse = queryLogicCallback => (request, response) => {
-	queryLogicCallback(request.body.data, request.params.id)
-		.then(data => response.json(successResponse({ id: data.id })))
-		.catch(err => response.json(failResponse(err.message)));
-};
-
-export const handleHideQueryResponse = queryLogicCallback => (request, response) => {
-	queryLogicCallback(request.params.id)
-		.then(() => response.json(successResponse()))
-		.catch(err => response.json(failResponse(err.message)));
-};
-
-export const handleShowResponse = queryLogicCallback => (request, response) => {
-	queryLogicCallback(request.params.id)
-		.then(data => response.json(successResponse(data)))
-		.catch(err => response.json(failResponse(err.message)));
-};
+export const handleShowResponse = handler(getIdFromParams, identity);
+export const handleHideQueryResponse = handler(getIdFromParams, doNothing);
+export const handleFindQueryResponse = handler(getDataFromBody, identity);
+export const handleSaveQueryResponse = handler(getDataFromBodyStrict, idObject);
+export const handleEditQueryResponse = handler(getDataFromBodyStrictAndIdFromParams, idObject);
 
 export const getEnvValue = envVariableName => {
 	if (!process.env[envVariableName]) {
