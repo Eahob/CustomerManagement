@@ -130,19 +130,19 @@ function calculateTicket(services = [], products = []) {
 		calculateTax(Service, services),
 		calculateTax(Product, products)
 	])
-	.then(([servicesResult, productResult]) => {
-		const FIXED_POINTS_DIGIT = 2;
-		const total = {
-			withTax: (servicesResult.withTax + productResult.withTax).toFixed(FIXED_POINTS_DIGIT),
-			withoutTax: (servicesResult.withoutTax + productResult.withoutTax).toFixed(FIXED_POINTS_DIGIT)
-		};
+		.then(([servicesResult, productResult]) => {
+			const FIXED_POINTS_DIGIT = 2;
+			const total = {
+				withTax: (servicesResult.withTax + productResult.withTax).toFixed(FIXED_POINTS_DIGIT),
+				withoutTax: (servicesResult.withoutTax + productResult.withoutTax).toFixed(FIXED_POINTS_DIGIT)
+			};
 
-		return {
-			services: servicesResult.description,
-			products: productResult.description,
-			total
-		};
-	});
+			return {
+				services: servicesResult.description,
+				products: productResult.description,
+				total
+			};
+		});
 }
 
 export function createTicket({ customer, servicesList, productsList }) {
@@ -150,7 +150,7 @@ export function createTicket({ customer, servicesList, productsList }) {
 		throw Error('services and products can not be empty at the same time');
 	}
 
-	return calculateTicket(servicesList, productsList).then(({services, products, total}) => {
+	return calculateTicket(servicesList, productsList).then(({ services, products, total }) => {
 		const ticket = new Ticket({ date: Date(), customer, services, products, total });
 
 		return ticket.save();
