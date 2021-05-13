@@ -164,9 +164,9 @@ export const showCustomer = show(Customer);
 export const showService = show(Service);
 export const showProduct = show(Product);
 export const showTicket = _id => Ticket.findById(_id, { _id: 0, __v: 0, hide: 0 })
-		.populate('customer', 'name')
-		.populate('services.service', 'name')
-		.populate('products.product', 'name');
+	.populate('customer', 'name')
+	.populate('services.service', 'name')
+	.populate('products.product', 'name');
 
 export function editCustomer({ name, surname, phone, email, observations }, _id) {
 	return Customer.findById(_id)
