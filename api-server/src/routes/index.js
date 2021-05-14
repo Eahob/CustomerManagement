@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import jwtValidator from '../utils/jwtValidator';
 import {
 	login,
@@ -27,6 +26,7 @@ import {
 } from './handlers';
 
 const router = express();
+const jsonBodyParser = express.json();
 
 //---
 
@@ -64,13 +64,9 @@ router.delete('/product/:id', jwtValidator, deleteProduct);
 
 //---
 
-const jsonBodyParser = bodyParser.json();
-
-//--
-
 router.post('/login', jsonBodyParser, login);
 
-//--
+//---
 
 router.post('/customer', [jwtValidator, jsonBodyParser], createCustomer);
 
@@ -80,7 +76,7 @@ router.post('/service', [jwtValidator, jsonBodyParser], createService);
 
 router.post('/product', [jwtValidator, jsonBodyParser], createProduct);
 
-//--
+//---
 
 router.put('/customer/:id', [jwtValidator, jsonBodyParser], editCustomer);
 
