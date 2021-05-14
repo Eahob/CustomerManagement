@@ -168,16 +168,6 @@ export const showTicket = _id => Ticket.findById(_id, { _id: 0, __v: 0, hide: 0 
 	.populate('services.service', 'name')
 	.populate('products.product', 'name');
 
-// const saveNewValuesInDocument = async(document, newValues) => {
-// 	for (const [key, value] of Object.entries(newValues)) {
-// 		if (value !== undefined) {
-// 			document[key] = value;
-// 		}
-// 	}
-
-// 	return document.save();
-// };
-
 const editDocument = (model, parseData) => async(data, _id) => {
 	const document = await model.findById(_id);
 	const newValues = parseData(data);
@@ -203,13 +193,3 @@ export const editCustomer = editDocument(Customer, parseCustomerData);
 export const editTicket = editDocument(Ticket, parseTicketData);
 export const editService = editDocument(Service, parseTaxableData);
 export const editProduct = editDocument(Product, parseTaxableData);
-
-// const editTaxable = model => async({ name, price, tax }, _id) => {
-// 	const taxable = await model.findById(_id);
-
-// 	await saveNewValuesInDocument(taxable, { name, price, tax });
-
-// 	return { _id };
-// };
-
-
