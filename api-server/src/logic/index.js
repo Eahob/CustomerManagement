@@ -82,68 +82,62 @@ export function createProduct({ name, price, tax }) {
 	return new Product({ name, price, tax }).save();
 }
 
-function expandTaxableList(taxableList) {
-	return document => {
-		const index = taxableList.findIndex(taxable => taxable.id === document.id);
+const expandTaxableList = taxableList => document => {
+	const index = taxableList.findIndex(taxable => taxable.id === document.id);
 
-		return {
-			document,
-			quantity: taxableList[index].quantity
-		};
+	return {
+		document,
+		quantity: taxableList[index].quantity
 	};
-}
+};
 
-function calculateTax(model, taxableList) {
+const calculateTax = async(model, taxableList) => {
 	const INITIAL_PRICE = 0;
 	const taxableIdList = taxableList.map(taxable => taxable.id);
+	const documents = await model.find({ _id: { $in: taxableIdList } });
 
-	return model
-		.find({ _id: { $in: taxableIdList } })
-		.then(documents => documents
-			.map(expandTaxableList(taxableList))
-			.reduce(({ withTax, withoutTax, description }, { document, quantity }) => {
-				const taxable = document._id;
-				const price = document.price;
-				const tax = document.tax;
-				const subTotal = price * quantity;
+	return documents
+		.map(expandTaxableList(taxableList))
+		.reduce(({ withTax, withoutTax, description }, { document, quantity }) => {
+			const taxable = document._id;
+			const price = document.price;
+			const tax = document.tax;
+			const subTotal = price * quantity;
 
-				description.push({ taxable, price, quantity, tax });
+			description.push({ taxable, price, quantity, tax });
 
-				return {
-					withTax: withTax + (subTotal * (1 + (tax / 100))),
-					withoutTax: withoutTax + subTotal,
-					description
-				};
-			}, {
-				withTax: INITIAL_PRICE,
-				withoutTax: INITIAL_PRICE,
-				description: []
-			})
-		);
-}
+			return {
+				withTax: withTax + (subTotal * (1 + (tax / 100))),
+				withoutTax: withoutTax + subTotal,
+				description
+			};
+		}, {
+			withTax: INITIAL_PRICE,
+			withoutTax: INITIAL_PRICE,
+			description: []
+		});
+};
 
-function calculateTicket(services = [], products = []) {
+const calculateTicket = async(services = [], products = []) => {
 	// services is an array. Each element has and id for the service and the quantity
 	// products is an array. Each element has and id for the product and the quantity
 
-	return Promise.all([
+	const [servicesResult, productResult] = await Promise.all([
 		calculateTax(Service, services),
 		calculateTax(Product, products)
-	])
-		.then(([servicesResult, productResult]) => {
-			const FIXED_POINTS_DIGIT = 2;
-			const total = {
-				withTax: (servicesResult.withTax + productResult.withTax).toFixed(FIXED_POINTS_DIGIT),
-				withoutTax: (servicesResult.withoutTax + productResult.withoutTax).toFixed(FIXED_POINTS_DIGIT)
-			};
+	]);
+	const FIXED_POINTS_DIGIT = 2;
+	const total = {
+		withTax: (servicesResult.withTax + productResult.withTax).toFixed(FIXED_POINTS_DIGIT),
+		withoutTax: (servicesResult.withoutTax + productResult.withoutTax).toFixed(FIXED_POINTS_DIGIT)
+	};
 
-			return {
-				services: servicesResult.description,
-				products: productResult.description,
-				total
-			};
-		});
-}
+	return {
+		services: servicesResult.description,
+		products: productResult.description,
+		total
+	};
+};
 
 export const createTicket = async({ customer, servicesList, productsList }) => {
 	const { services, products, total } = await calculateTicket(servicesList, productsList);
