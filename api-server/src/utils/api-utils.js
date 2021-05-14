@@ -25,13 +25,14 @@ const idObject = data => ({ id: data.id });
 const identity = data => data;
 const doNothing = () => {};
 const getIdFromParams = request => [request.params.id];
-const getDataFromBody = request => [request.body?.data ?? {}];
+// const getDataFromBody = request => [request.body?.data ?? {}];
+const getDataFromQuery = request => [request.query];
 const getDataFromBodyStrict = request => [request.body.data];
 const getDataFromBodyStrictAndIdFromParams = request => getDataFromBodyStrict(request).concat(getIdFromParams(request));
 
 export const handleShowResponse = handler(getIdFromParams, identity);
 export const handleHideQueryResponse = handler(getIdFromParams, doNothing);
-export const handleFindQueryResponse = handler(getDataFromBody, identity);
+export const handleFindQueryResponse = handler(getDataFromQuery, identity);
 export const handleSaveQueryResponse = handler(getDataFromBodyStrict, idObject);
 export const handleEditQueryResponse = handler(getDataFromBodyStrictAndIdFromParams, idObject);
 
