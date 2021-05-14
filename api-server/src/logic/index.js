@@ -1,74 +1,99 @@
 import { Customer, Ticket, Service, Product, User } from '../models';
 
-export function login(username, password) {
-	return User.findOne({ username, password }, { _id: 1 }).then(res => {
-		if (res) { return res._id; }
+export const login = async(username, password) => {
+	const res = await User.findOne({ username, password }, { _id: 1 });
 
-		throw Error('Username and/or password wrong');
-	});
-}
+	if (res) {
+		return res._id;
+	}
 
-export function findCustomersBy({ name, surname, phone, email, observations }) {
+	throw Error('Username and/or password wrong');
+};
+
+export const findCustomersBy = ({ name, surname, phone, email, observations }) => {
 	const filter = {};
 
-	if (name) { filter.name = { $regex: new RegExp(name, 'i') }; }
-	if (surname) { filter.surname = { $regex: new RegExp(surname, 'i') }; }
-	if (phone) { filter.phone = { $regex: new RegExp(phone, 'i') }; }
-	if (email) { filter.email = { $regex: new RegExp(email, 'i') }; }
-	if (observations) { filter.observations = { $regex: new RegExp(observations, 'i') }; }
+	if (name) {
+		filter.name = { $regex: new RegExp(name, 'i') };
+	}
+
+	if (surname) {
+		filter.surname = { $regex: new RegExp(surname, 'i') };
+	}
+
+	if (phone) {
+		filter.phone = { $regex: new RegExp(phone, 'i') };
+	}
+
+	if (email) {
+		filter.email = { $regex: new RegExp(email, 'i') };
+	}
+
+	if (observations) {
+		filter.observations = { $regex: new RegExp(observations, 'i') };
+	}
 
 	filter.hide = false;
 
 	return Customer.find(filter, { __v: 0, hide: 0 });
-}
+};
 
-export function findTicketsBy({ pricemin, pricemax, datemin, datemax, customerId }) {
+export const findTicketsBy = ({ pricemin, pricemax, datemin, datemax, customerId }) => {
 	const filter = {};
 
 	if (pricemax || pricemin) {
 		filter['total.withTax'] = {};
-		if (pricemin) { filter['total.withTax']['$gte'] = pricemin; }
-		if (pricemax) { filter['total.withTax']['$lte'] = pricemax; }
+		if (pricemin) {
+			filter['total.withTax']['$gte'] = pricemin;
+		}
+
+		if (pricemax) {
+			filter['total.withTax']['$lte'] = pricemax;
+		}
 	}
+
 	if (datemin || datemax) {
 		filter.date = {};
-		if (datemin) { filter.date['$gte'] = datemin; }
-		if (datemax) { filter.date['$lte'] = datemax; }
+		if (datemin) {
+			filter.date['$gte'] = datemin;
+		}
+
+		if (datemax) {
+			filter.date['$lte'] = datemax;
+		}
 	}
-	if (customerId) { filter.customer = customerId; }
+
+	if (customerId) {
+		filter.customer = customerId;
+	}
 
 	return Ticket.find(filter, { __v: 0 }).sort([['date', -1]]).populate('customer', 'name surname');
-}
+};
 
-export function findServicesBy({ pricemin, pricemax, name }) {
+const findTaxable = model => async({ pricemin, pricemax, name }) => {
 	const filter = {};
 
 	if (pricemax || pricemin) {
 		filter.price = {};
-		if (pricemin) { filter.price['$gte'] = parseFloat(pricemin); }
-		if (pricemax) { filter.price['$lte'] = parseFloat(pricemax); }
+		if (pricemin) {
+			filter.price['$gte'] = parseFloat(pricemin);
+		}
+		if (pricemax) {
+			filter.price['$lte'] = parseFloat(pricemax);
+		}
 	}
-	if (name) { filter.name = { $regex: new RegExp(name, 'i') }; }
+
+	if (name) {
+		filter.name = { $regex: name.toUpperCase() };
+	}
 
 	filter.hide = false;
 
-	return Service.find(filter, { __v: 0, hide: 0 });
-}
+	return model.find(filter, { __v: 0, hide: 0 });
+};
 
-export function findProductsBy({ pricemin, pricemax, name }) {
-	const filter = {};
-
-	if (pricemax || pricemin) {
-		filter.price = {};
-		if (pricemin) { filter.price['$gte'] = parseFloat(pricemin); }
-		if (pricemax) { filter.price['$lte'] = parseFloat(pricemax); }
-	}
-	if (name) { filter.name = { $regex: new RegExp(name, 'i') }; }
-
-	filter.hide = false;
-
-	return Product.find(filter, { __v: 0, hide: 0 });
-}
+export const findServicesBy = findTaxable(Service);
+export const findProductsBy = findTaxable(Product);
 
 export const createCustomer = ({ name, surname, phone, email, observations }) => {
 	return new Customer({ name, surname, phone, email, observations }).save();
