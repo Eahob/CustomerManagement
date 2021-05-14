@@ -168,47 +168,48 @@ export const showTicket = _id => Ticket.findById(_id, { _id: 0, __v: 0, hide: 0 
 	.populate('services.service', 'name')
 	.populate('products.product', 'name');
 
-export function editCustomer({ name, surname, phone, email, observations }, _id) {
-	return Customer.findById(_id)
-		.then(customer => {
-			for (const [key, value] of Object.entries({ name, surname, phone, email, observations })) {
-				if (value !== undefined) {
-					customer[key] = value;
-				}
-			}
+// const saveNewValuesInDocument = async(document, newValues) => {
+// 	for (const [key, value] of Object.entries(newValues)) {
+// 		if (value !== undefined) {
+// 			document[key] = value;
+// 		}
+// 	}
 
-			return customer.save();
-		})
-		.then(() => ({ _id }));
-}
+// 	return document.save();
+// };
 
-export function editTicket({ servicesList, productsList }, _id) {
-	return Ticket.findById(_id)
-		.then(ticket => {
-			const { services, products, total } = calculateTicket(servicesList, productsList);
+const editDocument = (model, parseData) => async(data, _id) => {
+	const document = await model.findById(_id);
+	const newValues = parseData(data);
 
-			ticket.services = services;
-			ticket.products = products;
-			ticket.total = total;
-
-			return ticket.save();
-		})
-		.then(() => ({ _id }));
-}
-
-const editTaxable = model => async({ name, price, tax }, _id) => {
-	const taxable = await model.findById(_id);
-
-	for (const [key, value] of Object.entries({ name, price, tax })) {
+	for (const [key, value] of Object.entries(newValues)) {
 		if (value !== undefined) {
-			taxable[key] = value;
+			document[key] = value;
 		}
 	}
 
-	await taxable.save();
+	await document.save();
 
 	return { _id };
 };
 
-export const editService = editTaxable(Service);
-export const editProduct = editTaxable(Product);
+const parseTicketData = ({ servicesList, productsList }) => calculateTicket(servicesList, productsList);
+const parseTaxableData = ({ name, price, tax }) => ({ name, price, tax });
+const parseCustomerData = ({ name, surname, phone, email, observations }) => (
+	{ name, surname, phone, email, observations }
+);
+
+export const editCustomer = editDocument(Customer, parseCustomerData);
+export const editTicket = editDocument(Ticket, parseTicketData);
+export const editService = editDocument(Service, parseTaxableData);
+export const editProduct = editDocument(Product, parseTaxableData);
+
+// const editTaxable = model => async({ name, price, tax }, _id) => {
+// 	const taxable = await model.findById(_id);
+
+// 	await saveNewValuesInDocument(taxable, { name, price, tax });
+
+// 	return { _id };
+// };
+
+
