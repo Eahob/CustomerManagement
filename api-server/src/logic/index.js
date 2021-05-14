@@ -70,17 +70,13 @@ export function findProductsBy({ pricemin, pricemax, name }) {
 	return Product.find(filter, { __v: 0, hide: 0 });
 }
 
-export function createCustomer({ name, surname, phone, email, observations }) {
+export const createCustomer = ({ name, surname, phone, email, observations }) => {
 	return new Customer({ name, surname, phone, email, observations }).save();
-}
+};
 
-export function createService({ name, price, tax }) {
-	return new Service({ name, price, tax }).save();
-}
+export const createService = ({ name, price, tax }) => new Service({ name, price, tax }).save();
 
-export function createProduct({ name, price, tax }) {
-	return new Product({ name, price, tax }).save();
-}
+export const createProduct = ({ name, price, tax }) => new Product({ name, price, tax }).save();
 
 const expandTaxableList = taxableList => document => {
 	const index = taxableList.findIndex(taxable => taxable.id === document.id);
