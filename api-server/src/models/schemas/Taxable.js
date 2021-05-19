@@ -11,10 +11,12 @@ const taxableSchema = new mongoose.Schema({
 	},
 	price: {
 		type: Number,
+		min: 0,
 		required: [true, 'taxable price required']
 	},
 	tax: {
 		type: Number,
+		min: 0,
 		required: [true, 'taxable tax required']
 	},
 	hide: {
