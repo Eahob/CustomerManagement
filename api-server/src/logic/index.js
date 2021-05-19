@@ -1,5 +1,7 @@
 import { Customer, Ticket, Service, Product, User } from '../models';
 
+export const createUser = async({ username, password }) => (new User({ username, password })).save();
+
 export const login = async(username, password) => {
 	const res = await User.findOne({ username, password }, { _id: 1 });
 

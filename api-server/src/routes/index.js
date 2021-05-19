@@ -1,6 +1,7 @@
 import express from 'express';
 import jwtValidator from '../utils/jwtValidator';
 import {
+	createUser,
 	login,
 	validate,
 	findCustomersBy,
@@ -63,6 +64,8 @@ router.delete('/service/:id', jwtValidator, deleteService);
 router.delete('/product/:id', jwtValidator, deleteProduct);
 
 //---
+
+router.post('/user', [jwtValidator, jsonBodyParser], createUser);
 
 router.post('/login', jsonBodyParser, login);
 

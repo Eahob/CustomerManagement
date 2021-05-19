@@ -20,3 +20,4 @@ export { default as editService } from './editService';
 export { default as editProduct } from './editProduct';
 export { default as login } from './login';
 export { default as validate } from './validate';
+export { default as createUser } from './createUser';
