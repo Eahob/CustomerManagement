@@ -165,7 +165,7 @@ const calculateTicket = async(services = [], products = []) => {
 export const createTicket = async({ customer, servicesList, productsList }) => {
 	const { services, products, total } = await calculateTicket(servicesList, productsList);
 
-	return new Ticket({ date: Date(), customer, services, products, total }).save();
+	return new Ticket({ customer, services, products, total }).save();
 };
 
 const hide = model => _id => model.findByIdAndUpdate(_id, { $set: { hide: true } });

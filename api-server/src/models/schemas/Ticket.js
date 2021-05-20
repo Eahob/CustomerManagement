@@ -5,6 +5,7 @@ const ObjectId = mongoose.ObjectId;
 const ticketSchema = new mongoose.Schema({
 	date: {
 		type: Date,
+		default: () => Date.now(),
 		required: true
 	},
 	customer: {
