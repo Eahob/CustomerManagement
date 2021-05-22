@@ -1,9 +1,5 @@
-import { Error } from 'mongoose';
-import { connect, clearDatabase, closeDatabase } from '../db-handler';
+import { connect, clearDatabase, closeDatabase, ValidationError, isTrimmed } from '../test-utils';
 import { Customer, User, Product, Service, Ticket } from '../../src/models/';
-
-const { ValidationError } = Error;
-const isTrimmed = string => !/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/.test(string);
 
 describe('Models', () => {
 	beforeAll(async() => {

@@ -36,3 +36,6 @@ export const closeDatabase = async() => {
 	await mongoose.connection.close();
 	await mongod.stop();
 };
+
+export const { ValidationError } = mongoose.Error;
+export const isTrimmed = string => !/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/.test(string);
