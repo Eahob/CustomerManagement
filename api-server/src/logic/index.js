@@ -110,7 +110,7 @@ export const createService = ({ name, price, tax }) => new Service({ name, price
 export const createProduct = ({ name, price, tax }) => new Product({ name, price, tax }).save();
 
 const expandTaxableList = taxableList => document => {
-	const index = taxableList.findIndex(taxable => taxable.id === document.id);
+	const index = taxableList.findIndex(taxable => document._id.equals(taxable.id));
 
 	return {
 		document,
@@ -119,7 +119,7 @@ const expandTaxableList = taxableList => document => {
 };
 
 const calculateTax = async(model, taxableList) => {
-	const INITIAL_PRICE = 0;
+	const ONE_HUNDREDTH = 0.01;
 	const taxableIdList = taxableList.map(taxable => taxable.id);
 	const documents = await model.find({ _id: { $in: taxableIdList } });
 
@@ -130,17 +130,19 @@ const calculateTax = async(model, taxableList) => {
 			const price = document.price;
 			const tax = document.tax;
 			const subTotal = price * quantity;
+			let preTax = tax * ONE_HUNDREDTH;
+			const subTotalTax = ++preTax * subTotal;
 
 			description.push({ taxable, price, quantity, tax });
 
 			return {
-				withTax: withTax + (subTotal * (1 + (tax / 100))),
+				withTax: withTax + subTotalTax,
 				withoutTax: withoutTax + subTotal,
 				description
 			};
 		}, {
-			withTax: INITIAL_PRICE,
-			withoutTax: INITIAL_PRICE,
+			withTax: 0,
+			withoutTax: 0,
 			description: []
 		});
 };
