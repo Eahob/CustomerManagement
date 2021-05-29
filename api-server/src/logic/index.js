@@ -193,7 +193,7 @@ export const showTicket = _id => Ticket.findById(_id, { _id: 0, __v: 0, hide: 0 
 
 const editDocument = (model, parseData) => async(data, _id) => {
 	const document = await model.findById(_id);
-	const newValues = parseData(data);
+	const newValues = await parseData(data);
 
 	for (const [key, value] of Object.entries(newValues)) {
 		if (value !== undefined) {
@@ -206,7 +206,7 @@ const editDocument = (model, parseData) => async(data, _id) => {
 	return { _id };
 };
 
-const parseTicketData = ({ servicesList, productsList }) => calculateTicket(servicesList, productsList);
+const parseTicketData = async({ servicesList, productsList }) => await calculateTicket(servicesList, productsList);
 const parseTaxableData = ({ name, price, tax }) => ({ name, price, tax });
 const parseCustomerData = ({ name, surname, phone, email, observations }) => (
 	{ name, surname, phone, email, observations }
