@@ -192,6 +192,10 @@ export const showTicket = _id => Ticket.findById(_id, { _id: 0, __v: 0, hide: 0 
 	.populate('products.product', 'name');
 
 const editDocument = (model, parseData) => async(data, _id) => {
+	if (!_id) {
+		throw new Error('Need id to edit');
+	}
+
 	const document = await model.findById(_id);
 	const newValues = await parseData(data);
 
