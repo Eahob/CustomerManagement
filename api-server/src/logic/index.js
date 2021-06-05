@@ -73,7 +73,7 @@ export const findTicketsBy = ({ pricemin, pricemax, datemin, datemax, customerId
 		filter.customer = customerId;
 	}
 
-	return Ticket.find(filter, { __v: 0 }).sort([['date', -1]]).populate('customer', 'name surname');
+	return Ticket.find(filter, { __v: 0 }).sort('-date').populate('customer', 'name surname');
 };
 
 const findTaxable = model => async({ pricemin, pricemax, name }) => {
