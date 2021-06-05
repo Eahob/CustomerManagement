@@ -159,7 +159,8 @@
            "files": ["*.test.js"],
            "rules": {
                "max-nested-callbacks": "off",
-               "max-len": ["error", 120, { "ignoreStrings": true }]
+               "max-len": ["error", 120, { "ignoreStrings": true }],
+               "no-magic-numbers": ["error", { "detectObjects": false, "ignoreArrayIndexes": true }]
             }
         }
     ]

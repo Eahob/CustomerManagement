@@ -3,14 +3,11 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 
 const mongod = new MongoMemoryServer({ instance: { storageEngine: 'wiredTiger' } });
 
-// const RECONNECT_INTERVAL = 1000;
 const mongooseOpts = {
 	useCreateIndex: true,
 	useUnifiedTopology: true,
+	useFindAndModify: false,
 	useNewUrlParser: true
-	// autoReconnect: true,
-	// reconnectTries: Number.MAX_VALUE,
-	// reconnectInterval: RECONNECT_INTERVAL
 };
 
 export const connect = async() => {
@@ -37,5 +34,6 @@ export const closeDatabase = async() => {
 	await mongod.stop();
 };
 
+export const { ObjectId } = mongoose.Types;
 export const { ValidationError } = mongoose.Error;
 export const isTrimmed = string => !/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/.test(string);
