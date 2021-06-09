@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 const { JWT_SECRET: secret, JWT_EXP: expiration } = process.env;
 const expiresIn = parseInt(expiration, 10);
 
-export default (req, res) => {
+export const handleLogin = (req, res) => {
 	const { username, password } = req.body;
 
 	login(username, password)

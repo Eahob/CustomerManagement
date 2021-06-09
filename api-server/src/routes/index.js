@@ -1,29 +1,29 @@
 import express from 'express';
 import jwtValidator from '../utils/jwtValidator';
 import {
-	createUser,
-	login,
-	validate,
-	findCustomersBy,
-	findTicketsBy,
-	findServicesBy,
-	findProductsBy,
-	createCustomer,
-	createTicket,
-	createService,
-	createProduct,
-	deleteCustomer,
-	deleteTicket,
-	deleteService,
-	deleteProduct,
-	showCustomer,
-	showTicket,
-	showService,
-	showProduct,
-	editCustomer,
-	editTicket,
-	editService,
-	editProduct
+	handleCreateUser,
+	handleLogin,
+	handleValidate,
+	handleFindCustomersBy,
+	handleFindTicketsBy,
+	handleFindServicesBy,
+	handleFindProductsBy,
+	handleCreateCustomer,
+	handleCreateTicket,
+	handleCreateService,
+	handleCreateProduct,
+	handleDeleteCustomer,
+	handleDeleteTicket,
+	handleDeleteService,
+	handleDeleteProduct,
+	handleShowCustomer,
+	handleShowTicket,
+	handleShowService,
+	handleShowProduct,
+	handleEditCustomer,
+	handleEditTicket,
+	handleEditService,
+	handleEditProduct
 } from './handlers';
 
 const router = express();
@@ -31,62 +31,62 @@ const jsonBodyParser = express.json();
 
 //---
 
-router.get('/validate', jwtValidator, validate);
+router.get('/validate', jwtValidator, handleValidate);
 
 //---
 
-router.get('/customers', jwtValidator, findCustomersBy);
+router.get('/customers', jwtValidator, handleFindCustomersBy);
 
-router.get('/tickets', jwtValidator, findTicketsBy);
+router.get('/tickets', jwtValidator, handleFindTicketsBy);
 
-router.get('/services', jwtValidator, findServicesBy);
+router.get('/services', jwtValidator, handleFindServicesBy);
 
-router.get('/products', jwtValidator, findProductsBy);
-
-//---
-
-router.get('/customer/:id', jwtValidator, showCustomer);
-
-router.get('/ticket/:id', jwtValidator, showTicket);
-
-router.get('/service/:id', jwtValidator, showService);
-
-router.get('/product/:id', jwtValidator, showProduct);
+router.get('/products', jwtValidator, handleFindProductsBy);
 
 //---
 
-router.delete('/customer/:id', jwtValidator, deleteCustomer);
+router.get('/customer/:id', jwtValidator, handleShowCustomer);
 
-router.delete('/ticket/:id', jwtValidator, deleteTicket);
+router.get('/ticket/:id', jwtValidator, handleShowTicket);
 
-router.delete('/service/:id', jwtValidator, deleteService);
+router.get('/service/:id', jwtValidator, handleShowService);
 
-router.delete('/product/:id', jwtValidator, deleteProduct);
-
-//---
-
-router.post('/user', [jwtValidator, jsonBodyParser], createUser);
-
-router.post('/login', jsonBodyParser, login);
+router.get('/product/:id', jwtValidator, handleShowProduct);
 
 //---
 
-router.post('/customer', [jwtValidator, jsonBodyParser], createCustomer);
+router.delete('/customer/:id', jwtValidator, handleDeleteCustomer);
 
-router.post('/ticket', [jwtValidator, jsonBodyParser], createTicket);
+router.delete('/ticket/:id', jwtValidator, handleDeleteTicket);
 
-router.post('/service', [jwtValidator, jsonBodyParser], createService);
+router.delete('/service/:id', jwtValidator, handleDeleteService);
 
-router.post('/product', [jwtValidator, jsonBodyParser], createProduct);
+router.delete('/product/:id', jwtValidator, handleDeleteProduct);
 
 //---
 
-router.put('/customer/:id', [jwtValidator, jsonBodyParser], editCustomer);
+router.post('/user', [jwtValidator, jsonBodyParser], handleCreateUser);
 
-router.put('/ticket/:id', [jwtValidator, jsonBodyParser], editTicket);
+router.post('/login', jsonBodyParser, handleLogin);
 
-router.put('/service/:id', [jwtValidator, jsonBodyParser], editService);
+//---
 
-router.put('/product/:id', [jwtValidator, jsonBodyParser], editProduct);
+router.post('/customer', [jwtValidator, jsonBodyParser], handleCreateCustomer);
+
+router.post('/ticket', [jwtValidator, jsonBodyParser], handleCreateTicket);
+
+router.post('/service', [jwtValidator, jsonBodyParser], handleCreateService);
+
+router.post('/product', [jwtValidator, jsonBodyParser], handleCreateProduct);
+
+//---
+
+router.put('/customer/:id', [jwtValidator, jsonBodyParser], handleEditCustomer);
+
+router.put('/ticket/:id', [jwtValidator, jsonBodyParser], handleEditTicket);
+
+router.put('/service/:id', [jwtValidator, jsonBodyParser], handleEditService);
+
+router.put('/product/:id', [jwtValidator, jsonBodyParser], handleEditProduct);
 
 export { router };

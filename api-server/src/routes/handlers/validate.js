@@ -1,5 +1,5 @@
 import { successResponse } from '../../utils/api-utils';
 
-export default (req, res) => {
+export const handleValidate = (req, res) => {
 	res.json(successResponse());
 };
