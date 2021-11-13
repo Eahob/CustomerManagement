@@ -2,6 +2,26 @@ import mongoose from 'mongoose';
 
 const ObjectId = mongoose.ObjectId;
 
+const taxable = ref => new mongoose.Schema({
+	taxable: {
+		type: ObjectId,
+		ref,
+		required: true
+	},
+	price: {
+		type: Number,
+		required: true
+	},
+	quantity: {
+		type: Number,
+		required: true
+	},
+	tax: {
+		type: Number,
+		required: true
+	}
+}, { _id: false });
+
 const ticketSchema = new mongoose.Schema({
 	date: {
 		type: Date,
@@ -13,48 +33,8 @@ const ticketSchema = new mongoose.Schema({
 		ref: 'Customer',
 		required: [true, 'Customer name required']
 	},
-	services: [
-		{
-			taxable: {
-				type: ObjectId,
-				ref: 'Service',
-				required: true
-			},
-			price: {
-				type: Number,
-				required: true
-			},
-			quantity: {
-				type: Number,
-				required: true
-			},
-			tax: {
-				type: Number,
-				required: true
-			}
-		}
-	],
-	products: [
-		{
-			taxable: {
-				type: ObjectId,
-				ref: 'Product',
-				required: true
-			},
-			price: {
-				type: Number,
-				required: true
-			},
-			quantity: {
-				type: Number,
-				required: true
-			},
-			tax: {
-				type: Number,
-				required: true
-			}
-		}
-	],
+	services: [taxable('Service')],
+	products: [taxable('Product')],
 	total: {
 		withTax: {
 			type: Number,

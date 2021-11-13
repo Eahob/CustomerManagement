@@ -788,7 +788,7 @@ describe('Logic tests', () => {
 			spy.mockRestore();
 		});
 
-		it('Should populate ticket with customer name services name and products name', async() => {
+		it('Should populate ticket with customer name services name and products name correctly', async() => {
 			const customerData = {
 				name: 'Cust',
 				surname: 'Omer',
@@ -835,6 +835,9 @@ describe('Logic tests', () => {
 			expect(result.customer.name).toBe(customerData.name);
 			expect(result.services[0].taxable.name).toBe(service.name);
 			expect(result.products[0].taxable.name).toBe(product.name);
+
+			expect(result.services[0]._id).toBeUndefined();
+			expect(result.products[0]._id).toBeUndefined();
 		});
 	});
 });
