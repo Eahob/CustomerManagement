@@ -1,0 +1,10 @@
+{
+	"eslint.format.enable": true,
+	"[javascript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"eslint.workingDirectories": [
+		"api-server"
+	],
+	"eslint.run": "onSave"
+}
