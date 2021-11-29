@@ -1,5 +1,5 @@
 jest.mock('node-fetch');
-import fetch, { HeaderInit } from 'node-fetch';
+import fetch, { RequestInit } from 'node-fetch';
 import { API } from '../src/';
 import { mocked } from 'ts-jest/utils';
 import {
@@ -18,6 +18,7 @@ import {
 	TicketListElement,
 	TicketQuery
 } from '../src/types';
+
 const { Response } = jest.requireActual('node-fetch');
 
 const mockFetchResponse = <D>(data?: D, status: CMServerStatus = 'OK', error?: CMServerError) => {
@@ -41,7 +42,7 @@ const makeRequest = (method: string, token: string): RequestInit => ({
 
 const makeRequestBody = (method: string, token: string, data: any): RequestInit => ({
 	headers: {
-		authorization: `Bearer ${token}`,
+		'authorization': `Bearer ${token}`,
 		'Content-Type': 'application/json'
 	},
 	body: JSON.stringify(data),
@@ -50,9 +51,7 @@ const makeRequestBody = (method: string, token: string, data: any): RequestInit 
 
 const makeGetRequest = (token: string): RequestInit => makeRequest('get', token);
 
-class API_TEST extends API {
-	[key: string]: any
-}
+interface API_TEST extends API, Record<string, any> {}
 
 const authorizedAPIShowByMethodsName = [
 	'showCustomersBy',
@@ -87,7 +86,7 @@ const authorizedAPIModifyMethodsName = [
 	'modifyTicket',
 	'modifyService',
 	'modifyProduct'
-]
+];
 
 const authorizedAPIMethodsName = [
 	'validateToken',
@@ -128,13 +127,13 @@ describe('API client', () => {
 		expect(_api.baseURL).toBe('https://test.com/api');
 	});
 
-	it.each(authorizedAPIMethodsName.filter(e => e !== 'validateToken'))('should show error if no token is set (%s)', async (method) => {
+	it.each(authorizedAPIMethodsName.filter(e => e !== 'validateToken'))('should show error if no token is set (%s)', async(method) => {
 		expect(() => api[method]()).toThrow('Validation token is not set');
 	});
 
 	describe('Login', () => {
-		it('should send login credentials', async () => {
-			const url = getUrl('login')
+		it('should send login credentials', async() => {
+			const url = getUrl('login');
 			const user = 'admin';
 			const pass = 'admin';
 
@@ -145,16 +144,16 @@ describe('API client', () => {
 			expect(fetch).toHaveBeenCalledWith(url, {
 				body: `{"username":"${user}","password":"${pass}"}`,
 				headers: {
-					'Content-Type': 'application/json',
+					'Content-Type': 'application/json'
 				},
 				method: 'post'
 			});
 		});
 
-		it('should save token whith correct credentials', async () => {
+		it('should save token whith correct credentials', async() => {
 			const token = '9w83ru37yw3r';
 
-			mockFetchResponse<CMLogin>({ token })
+			mockFetchResponse<CMLogin>({ token });
 
 			await api.login('', '');
 
@@ -165,8 +164,9 @@ describe('API client', () => {
 
 	describe('Calls with validation token', () => {
 		const token = 'xxxxxxxxxxxxxxxxxxxx';
-		beforeEach(async () => {
-			mockFetchResponse<CMLogin>({ token })
+
+		beforeEach(async() => {
+			mockFetchResponse<CMLogin>({ token });
 
 			await api.login('', '');
 		});
@@ -174,8 +174,9 @@ describe('API client', () => {
 		const getHeader = makeGetRequest(token);
 
 		describe('Validate', () => {
-			it('should send validation tooken', async () => {
+			it('should send validation tooken', async() => {
 				const url = getUrl('validate');
+
 				mockFetchResponse();
 
 				await api.validateToken();
@@ -184,16 +185,17 @@ describe('API client', () => {
 
 			});
 
-			it('should validate saved token (valid token)', async () => {
-				mockFetchResponse()
+			it('should validate saved token (valid token)', async() => {
+				mockFetchResponse();
 
 				const tokenIsValid = await api.validateToken();
 
 				expect(tokenIsValid).toBe(true);
 			});
 
-			it('should validate saved token (invalid token)', async () => {
+			it('should validate saved token (invalid token)', async() => {
 				const error = 'invalid token';
+
 				mockFetchResponse(undefined, 'KO', error);
 
 				const tokenIsValid = await api.validateToken();
@@ -211,9 +213,10 @@ describe('API client', () => {
 				getUrl('services')
 			];
 
-			const testCasesWithoutQuery = authorizedAPIShowByMethodsName.map((e: string, i: number): [string, string] => [e, urls[i]]);
+			const testCasesWithoutQuery = authorizedAPIShowByMethodsName
+				.map((e: string, i: number): [string, string] => [e, urls[i]]);
 
-			it.each(testCasesWithoutQuery)('should make the correct call without query (%s)', async (method: string, url: string) => {
+			it.each(testCasesWithoutQuery)('should make the correct call without query (%s)', async(method: string, url: string) => {
 				mockFetchResponse();
 
 				await api[method]({});
@@ -248,9 +251,10 @@ describe('API client', () => {
 				[serviceQuery, `${urls[3]}?name=${serviceQuery.name ? encodeURIComponent(serviceQuery.name) : ''}&pricemin=${serviceQuery.pricemin}`]
 			];
 
-			const testCasesWithQuery: [string, CMQuery, string][] = authorizedAPIShowByMethodsName.map((e: string, i: number): [string, CMQuery, string] => [e, ..._testCasesWithQuery[i]]);
+			const testCasesWithQuery: [string, CMQuery, string][] = authorizedAPIShowByMethodsName
+				.map((e: string, i: number): [string, CMQuery, string] => [e, ..._testCasesWithQuery[i]]);
 
-			it.each(testCasesWithQuery)('should make the correct call with query (%s)', async (method: string, query: CMQuery, expectedUrlCall: string) => {
+			it.each(testCasesWithQuery)('should make the correct call with query (%s)', async(method: string, query: CMQuery, expectedUrlCall: string) => {
 				mockFetchResponse();
 
 				await api[method](query);
@@ -283,7 +287,7 @@ describe('API client', () => {
 					]
 				];
 
-				it.each(customerListsCases)(`should return the correct data (%#)`, async (customerList: CustomerListElement[]) => {
+				it.each(customerListsCases)('should return the correct data (%#)', async(customerList: CustomerListElement[]) => {
 					mockFetchResponse<CustomerListElement[]>(customerList);
 
 					const customerListResponse = await api.showCustomersBy({});
@@ -343,7 +347,7 @@ describe('API client', () => {
 					]
 				];
 
-				it.each(ticketListsCases)(`should return the correct data (%#)`, async (tickets: Ticket[]) => {
+				it.each(ticketListsCases)('should return the correct data (%#)', async(tickets: Ticket[]) => {
 					mockFetchResponse<Ticket[]>(tickets);
 
 					const ticketsResponse = await api.showTicketsBy({});
@@ -373,7 +377,7 @@ describe('API client', () => {
 					]
 				];
 
-				it.each(productListsCases)(`should return the correct data (%#)`, async (producst: TaxableListElement[]) => {
+				it.each(productListsCases)('should return the correct data (%#)', async(producst: TaxableListElement[]) => {
 					mockFetchResponse<TaxableListElement[]>(producst);
 
 					const producstResponse = await api.showProductsBy({});
@@ -403,7 +407,7 @@ describe('API client', () => {
 					]
 				];
 
-				it.each(serviceListsCases)(`should return the correct data (%#)`, async (producst: TaxableListElement[]) => {
+				it.each(serviceListsCases)('should return the correct data (%#)', async(producst: TaxableListElement[]) => {
 					mockFetchResponse<TaxableListElement[]>(producst);
 
 					const producstResponse = await api.showServicesBy({});
@@ -433,7 +437,7 @@ describe('API client', () => {
 			describe('show & delete', () => {
 				const mapper = (e: string, i: number): [string, string, string] => [e, ids[i], urls[i]];
 
-				const callTest = (header: RequestInit) => async (method: string, id: string, url: string) => {
+				const callTest = (header: RequestInit) => async(method: string, id: string, url: string) => {
 					mockFetchResponse();
 
 					await api[method](id);
@@ -446,7 +450,7 @@ describe('API client', () => {
 
 					it.each(testCasesCall)('should make the correct call (%s)', callTest(getHeader));
 
-					it('should return the correct data (showCustomer)', async () => {
+					it('should return the correct data (showCustomer)', async() => {
 						const customer: Customer = {
 							name: 'Zacarías',
 							surname: 'Zack',
@@ -462,7 +466,7 @@ describe('API client', () => {
 						expect(customerRespopnse).toStrictEqual(customer);
 					});
 
-					it('should return the correct data (showTicket)', async () => {
+					it('should return the correct data (showTicket)', async() => {
 						const ticket: Ticket = {
 							date: new Date(),
 							customer: 'iuey7rwy3nwke7fsiufs',
@@ -495,7 +499,7 @@ describe('API client', () => {
 						expect(ticketRespopnse).toStrictEqual(ticket);
 					});
 
-					it('should return the correct data (showService)', async () => {
+					it('should return the correct data (showService)', async() => {
 						const service: Taxable = {
 							name: 'Extra Service',
 							price: 5,
@@ -509,7 +513,7 @@ describe('API client', () => {
 						expect(serviceRespopnse).toStrictEqual(service);
 					});
 
-					it('should return the correct data (showProduct)', async () => {
+					it('should return the correct data (showProduct)', async() => {
 						const product: Taxable = {
 							name: 'Prime product',
 							price: 500,
@@ -529,7 +533,7 @@ describe('API client', () => {
 
 					it.each(testCases)('should make the correct call (%s)', callTest(makeRequest('delete', token)));
 
-					it.each(testCases)('should return void (%s)', async (method: string, id: string) => {
+					it.each(testCases)('should return void (%s)', async(method: string, id: string) => {
 						mockFetchResponse();
 
 						const response = await api[method](id);
@@ -540,6 +544,8 @@ describe('API client', () => {
 			});
 
 			describe('modify & create', () => {
+				type DAT = Customer | Partial<Pick<Ticket, 'products' | 'services'>> | Taxable;
+
 				const customer: Customer = {
 					name: 'Zacarías',
 					surname: 'Zack',
@@ -579,7 +585,7 @@ describe('API client', () => {
 					tax: 25
 				};
 
-				const data = [
+				const tData: DAT[] = [
 					customer,
 					ticket,
 					service,
@@ -587,9 +593,10 @@ describe('API client', () => {
 				];
 
 				describe('modify', () => {
-					const testCases = authorizedAPIModifyMethodsName.map((e: string, i: number): [string, string, any, string] => [e, ids[i], data[i], urls[i]]);
+					const testCases = authorizedAPIModifyMethodsName
+						.map((e: string, i: number): [string, string, DAT, string] => [e, ids[i], tData[i], urls[i]]);
 
-					it.each(testCases)('should make the correct call (%s)', async (method: string, id: string, data: any, url: string) => {
+					it.each(testCases)('should make the correct call (%s)', async(method: string, id: string, data: DAT, url: string) => {
 						mockFetchResponse();
 
 						await api[method](id, data);
@@ -597,7 +604,7 @@ describe('API client', () => {
 						expect(fetch).toHaveBeenCalledWith(url, makeRequestBody('put', token, data));
 					});
 
-					it.each(testCases)('should return void (%s)', async (method: string, id: string, data: any) => {
+					it.each(testCases)('should return void (%s)', async(method: string, id: string, data: DAT) => {
 						mockFetchResponse();
 
 						const response = await api[method](id, data);
@@ -607,9 +614,10 @@ describe('API client', () => {
 				});
 
 				describe('create', () => {
-					const testCases = authorizedAPICreateMethodsName.map((e: string, i: number): [string, string, any] => [e, _urls[i], data[i]]);
+					const testCases = authorizedAPICreateMethodsName
+						.map((e: string, i: number): [string, DAT, string] => [e, tData[i], _urls[i]]);
 
-					it.each(testCases)('should make the correct call (%s)', async (method: string, url: string, data: any) => {
+					it.each(testCases)('should make the correct call (%s)', async(method: string, data: DAT, url: string) => {
 						mockFetchResponse();
 
 						await api[method](data);
@@ -617,14 +625,14 @@ describe('API client', () => {
 						expect(fetch).toHaveBeenCalledWith(url, makeRequestBody('post', token, data));
 					});
 
-					it.each(testCases)('should return void (%s)', async (method: string, data: any) => {
+					it.each(testCases)('should return void (%s)', async(method: string, data: DAT) => {
 						mockFetchResponse();
 
 						const response = await api[method](data);
 
 						expect(response).toBeUndefined();
 					});
-				})
+				});
 			});
 		});
 	});

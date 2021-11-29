@@ -1,4 +1,4 @@
-import fetch, { HeaderInit, Headers, RequestInfo, RequestInit, Response } from 'node-fetch';
+import fetch, { HeaderInit, RequestInfo, RequestInit } from 'node-fetch';
 import {
 	CMQuery,
 	TicketQuery,
@@ -33,7 +33,7 @@ const object2QueryParams = (params: CMQuery): string => Object.entries(params)
 		const field = encodeURIComponent(k);
 		const value = encodeURIComponent(v instanceof Date ? v.getTime() : v.toString());
 
-		return `${field}=${value}`
+		return `${field}=${value}`;
 	})
 	.join('&');
 
@@ -54,9 +54,11 @@ const stringToDate = <T>(obj: any & {date: string}): T => {
 		date: new Date(date),
 		...rest
 	};
-}
+};
 
-const ticketListElementTypeTransform = (ticketList: TicketListElement<string>): TicketListElement => stringToDate<TicketListElement>(ticketList);
+const ticketListElementTypeTransform = (ticketList: TicketListElement<string>): TicketListElement => {
+	return stringToDate<TicketListElement>(ticketList);
+};
 
 const ticketTypeTransform = (ticket: Ticket<string>): Ticket => stringToDate<Ticket>(ticket);
 
@@ -123,7 +125,7 @@ export class API {
 			return true;
 		} catch (e) {
 			if (e instanceof Error) {
-				console.error(e.message)
+				console.error(e.message);
 			}
 
 			return false;
@@ -151,7 +153,8 @@ export class API {
 	}
 
 	showTicketsBy(query: TicketQuery): Promise<Fetched<TicketListElement[]>> {
-		return this.#authorizedGETCall<TicketListElement<string>[]>('tickets', query).then(res => res?.map(ticketListElementTypeTransform));
+		return this.#authorizedGETCall<TicketListElement<string>[]>('tickets', query)
+			.then(res => res?.map(ticketListElementTypeTransform));
 	}
 
 	showProductsBy(query: TaxableQuery): Promise<Fetched<Taxable[]>> {
