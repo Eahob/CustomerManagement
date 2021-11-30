@@ -266,6 +266,7 @@
 				"*.test.ts"
 			],
 			"rules": {
+				"@typescript-eslint/no-explicit-any": "off",
 				"max-nested-callbacks": "off",
 				"max-len": [
 					"error",

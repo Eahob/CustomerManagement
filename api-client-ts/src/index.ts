@@ -47,20 +47,15 @@ const urlWithParams = (url: string, params?: CMQuery): string => {
 	return url;
 };
 
-const stringToDate = <T>(obj: any & {date: string}): T => {
-	const { date, ...rest } = obj;
+const ticketListElementTypeTransform = ({ date, ...rest }: TicketListElement<string>): TicketListElement => ({
+	date: new Date(date),
+	...rest
+});
 
-	return {
-		date: new Date(date),
-		...rest
-	};
-};
-
-const ticketListElementTypeTransform = (ticketList: TicketListElement<string>): TicketListElement => {
-	return stringToDate<TicketListElement>(ticketList);
-};
-
-const ticketTypeTransform = (ticket: Ticket<string>): Ticket => stringToDate<Ticket>(ticket);
+const ticketTypeTransform = ({ date, ...rest }: Ticket<string>): Ticket => ({
+	date: new Date(date),
+	...rest
+});
 
 export class API {
 	#baseURL: string;
