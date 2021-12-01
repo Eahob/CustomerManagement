@@ -1,5 +1,5 @@
 jest.mock('node-fetch');
-import fetch, { RequestInit } from 'node-fetch';
+import nodefetch, { RequestInit } from 'node-fetch';
 import { API } from '../src/';
 import { mocked } from 'ts-jest/utils';
 import {
@@ -19,6 +19,8 @@ import {
 	TicketQuery
 } from '../src/types';
 
+global.fetch = global.fetch ?? nodefetch;
+
 const { Response } = jest.requireActual('node-fetch');
 
 const mockFetchResponse = <D>(data?: D, status: CMServerStatus = 'OK', error?: CMServerError) => {
@@ -34,17 +36,17 @@ const mockFetchResponse = <D>(data?: D, status: CMServerStatus = 'OK', error?: C
 };
 
 const makeRequest = (method: string, token: string): RequestInit => ({
-	headers: {
-		authorization: `Bearer ${token}`
-	},
+	headers: [
+		['authorization', `Bearer ${token}`]
+	],
 	method
 });
 
 const makeRequestBody = (method: string, token: string, data: any): RequestInit => ({
-	headers: {
-		'authorization': `Bearer ${token}`,
-		'Content-Type': 'application/json'
-	},
+	headers: [
+		['authorization', `Bearer ${token}`],
+		['Content-Type', 'application/json']
+	],
 	body: JSON.stringify(data),
 	method
 });

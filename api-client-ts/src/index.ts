@@ -1,4 +1,3 @@
-import fetch, { HeaderInit, RequestInfo, RequestInit } from 'node-fetch';
 import {
 	CMQuery,
 	TicketQuery,
@@ -17,7 +16,7 @@ import {
 
 type Fetched<D> = D | undefined;
 type PUTResponse = Promise<Fetched<ModifyResponse>>;
-const fetchJsonData = <D>(url: RequestInfo, options: RequestInit): Promise<Fetched<D>> => fetch(url, options)
+const fetchJsonData = <D>(...[url, options]: Parameters<typeof fetch>): Promise<Fetched<D>> => fetch(url, options)
 	.then(response => response.json())
 	.then((json: CMServerResponse<D>): Fetched<D> | never => {
 		if (json.status === 'KO') {
@@ -89,18 +88,17 @@ export class API {
 	}
 
 	#bearerCall<D>(method: string, path: string, data?: Partial<CMEntryData>, query?: CMQuery): Promise<Fetched<D>> {
-		const url = urlWithParams(`${this.#baseURL}/${path}`, query);
-		const headers: HeaderInit = {};
-		const options: RequestInit = { method };
+		const [url, options]: Parameters<typeof fetch> = [
+			urlWithParams(`${this.#baseURL}/${path}`, query),
+			{ method }
+		];
 
-		headers.authorization = `Bearer ${this.#token}`;
+		options.headers = [['authorization', `Bearer ${this.#token}`]];
 
 		if (data !== undefined && data !== null) {
 			options.body = JSON.stringify(data);
-			headers['Content-Type'] = 'application/json';
+			options.headers.push(['Content-Type', 'application/json']);
 		}
-
-		options.headers = headers;
 
 		return fetchJsonData<D>(url, options);
 	}
