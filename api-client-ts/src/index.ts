@@ -11,7 +11,9 @@ import {
 	CMEntryData,
 	ModifyResponse,
 	CustomerQuery,
-	TicketListElement
+	TicketListElement,
+	CustomerListElement,
+	TaxableListElement
 } from './types';
 
 type Fetched<D> = D | undefined;
@@ -141,8 +143,8 @@ export class API {
 		return this.#call('delete', path);
 	}
 
-	showCustomersBy(query: CustomerQuery): Promise<Fetched<Customer[]>> {
-		return this.#authorizedGETCall<Customer[]>('customers', query);
+	showCustomersBy(query: CustomerQuery): Promise<Fetched<CustomerListElement[]>> {
+		return this.#authorizedGETCall<CustomerListElement[]>('customers', query);
 	}
 
 	showTicketsBy(query: TicketQuery): Promise<Fetched<TicketListElement[]>> {
@@ -150,12 +152,12 @@ export class API {
 			.then(res => res?.map(ticketListElementTypeTransform));
 	}
 
-	showProductsBy(query: TaxableQuery): Promise<Fetched<Taxable[]>> {
-		return this.#authorizedGETCall<Taxable[]>('products', query);
+	showProductsBy(query: TaxableQuery): Promise<Fetched<TaxableListElement[]>> {
+		return this.#authorizedGETCall<TaxableListElement[]>('products', query);
 	}
 
-	showServicesBy(query: TaxableQuery): Promise<Fetched<Taxable[]>> {
-		return this.#authorizedGETCall<Taxable[]>('services', query);
+	showServicesBy(query: TaxableQuery): Promise<Fetched<TaxableListElement[]>> {
+		return this.#authorizedGETCall<TaxableListElement[]>('services', query);
 	}
 
 	showCustomer(id: string): Promise<Fetched<Customer>> {
