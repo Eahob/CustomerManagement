@@ -2,29 +2,14 @@ jest.mock('node-fetch');
 import nodefetch, { RequestInit } from 'node-fetch';
 import { API } from '../src/';
 import { mocked } from 'ts-jest/utils';
-import {
-	CMLogin,
-	CMQuery,
-	CMServerError,
-	CMServerResponse,
-	CMServerStatus,
-	Customer,
-	CustomerListElement,
-	CustomerQuery,
-	Taxable,
-	TaxableListElement,
-	TaxableQuery,
-	Ticket,
-	TicketListElement,
-	TicketQuery
-} from '../src/types';
+import type * as CM from '../types';
 
 global.fetch = global.fetch ?? nodefetch;
 
 const { Response } = jest.requireActual('node-fetch');
 
-const mockFetchResponse = <D>(data?: D, status: CMServerStatus = 'OK', error?: CMServerError) => {
-	const response: CMServerResponse<D> = {
+const mockFetchResponse = <D>(data?: D, status: CM.Response.ServerStatus = 'OK', error?: CM.Response.ServerError) => {
+	const response: CM.Response.ServerResponse<D> = {
 		status,
 		data,
 		error
@@ -155,7 +140,7 @@ describe('API client', () => {
 		it('should save token whith correct credentials', async() => {
 			const token = '9w83ru37yw3r';
 
-			mockFetchResponse<CMLogin>({ token });
+			mockFetchResponse<CM.Response.Token>({ _id: '_', token });
 
 			await api.login('', '');
 
@@ -168,7 +153,7 @@ describe('API client', () => {
 		const token = 'xxxxxxxxxxxxxxxxxxxx';
 
 		beforeEach(async() => {
-			mockFetchResponse<CMLogin>({ token });
+			mockFetchResponse<CM.Response.Token>({ _id: '_', token });
 
 			await api.login('', '');
 		});
@@ -226,37 +211,37 @@ describe('API client', () => {
 				expect(fetch).toHaveBeenCalledWith(url, getHeader);
 			});
 
-			const customerQuery: CustomerQuery = {
+			const customerQuery: CM.Query.CustomerQuery = {
 				name: 's',
 				phone: '5'
 			};
 
-			const ticketQuery: TicketQuery = {
+			const ticketQuery: CM.Query.TicketQuery = {
 				customer: 'ie9e7eye6e',
 				datemin: new Date('1-1-1970')
 			};
 
-			const productQuery: TaxableQuery = {
+			const productQuery: CM.Query.TaxableQuery = {
 				name: 'product name',
 				pricemax: 100
 			};
 
-			const serviceQuery: TaxableQuery = {
+			const serviceQuery: CM.Query.TaxableQuery = {
 				name: 'service name',
 				pricemin: 5
 			};
 
-			const _testCasesWithQuery: [CMQuery, string][] = [
+			const _testCasesWithQuery: [CM.Query.ShowBy, string][] = [
 				[customerQuery, `${urls[0]}?name=${customerQuery.name}&phone=${customerQuery.phone}`],
 				[ticketQuery, `${urls[1]}?customer=${ticketQuery.customer}&datemin=${ticketQuery.datemin?.getTime()}`],
 				[productQuery, `${urls[2]}?name=${productQuery.name ? encodeURIComponent(productQuery.name) : ''}&pricemax=${productQuery.pricemax}`],
 				[serviceQuery, `${urls[3]}?name=${serviceQuery.name ? encodeURIComponent(serviceQuery.name) : ''}&pricemin=${serviceQuery.pricemin}`]
 			];
 
-			const testCasesWithQuery: [string, CMQuery, string][] = authorizedAPIShowByMethodsName
-				.map((e: string, i: number): [string, CMQuery, string] => [e, ..._testCasesWithQuery[i]]);
+			const testCasesWithQuery: [string, CM.Query.ShowBy, string][] = authorizedAPIShowByMethodsName
+				.map((e: string, i: number): [string, CM.Query.ShowBy, string] => [e, ..._testCasesWithQuery[i]]);
 
-			it.each(testCasesWithQuery)('should make the correct call with query (%s)', async(method: string, query: CMQuery, expectedUrlCall: string) => {
+			it.each(testCasesWithQuery)('should make the correct call with query (%s)', async(method: string, query: CM.Query.ShowBy, expectedUrlCall: string) => {
 				mockFetchResponse();
 
 				await api[method](query);
@@ -265,7 +250,7 @@ describe('API client', () => {
 			});
 
 			describe('showCustomersBy', () => {
-				const customerListsCases: CustomerListElement[][][] = [
+				const customerListsCases: CM.Response.Customer[][][] = [
 					[[]],
 					[
 						[
@@ -289,8 +274,8 @@ describe('API client', () => {
 					]
 				];
 
-				it.each(customerListsCases)('should return the correct data (%#)', async(customerList: CustomerListElement[]) => {
-					mockFetchResponse<CustomerListElement[]>(customerList);
+				it.each(customerListsCases)('should return the correct data (%#)', async(customerList: CM.Response.Customer[]) => {
+					mockFetchResponse<CM.Response.Customer[]>(customerList);
 
 					const customerListResponse = await api.showCustomersBy({});
 
@@ -299,7 +284,7 @@ describe('API client', () => {
 			});
 
 			describe('showTicketsBy', () => {
-				const ticketListsCases: TicketListElement[][][] = [
+				const ticketListsCases: CM.Response.Ticket[][][] = [
 					[[]],
 					[
 						[
@@ -349,8 +334,8 @@ describe('API client', () => {
 					]
 				];
 
-				it.each(ticketListsCases)('should return the correct data (%#)', async(tickets: Ticket[]) => {
-					mockFetchResponse<Ticket[]>(tickets);
+				it.each(ticketListsCases)('should return the correct data (%#)', async(tickets: CM.Response.Ticket[]) => {
+					mockFetchResponse<CM.Response.Ticket[]>(tickets);
 
 					const ticketsResponse = await api.showTicketsBy({});
 
@@ -359,7 +344,7 @@ describe('API client', () => {
 			});
 
 			describe('showProductsBy', () => {
-				const productListsCases: TaxableListElement[][][] = [
+				const productListsCases: CM.Response.Taxable[][][] = [
 					[[]],
 					[
 						[
@@ -379,8 +364,8 @@ describe('API client', () => {
 					]
 				];
 
-				it.each(productListsCases)('should return the correct data (%#)', async(producst: TaxableListElement[]) => {
-					mockFetchResponse<TaxableListElement[]>(producst);
+				it.each(productListsCases)('should return the correct data (%#)', async(producst: CM.Response.Taxable[]) => {
+					mockFetchResponse<CM.Response.Taxable[]>(producst);
 
 					const producstResponse = await api.showProductsBy({});
 
@@ -389,7 +374,7 @@ describe('API client', () => {
 			});
 
 			describe('showServicesBy', () => {
-				const serviceListsCases: TaxableListElement[][][] = [
+				const serviceListsCases: CM.Response.Taxable[][][] = [
 					[[]],
 					[
 						[
@@ -409,8 +394,8 @@ describe('API client', () => {
 					]
 				];
 
-				it.each(serviceListsCases)('should return the correct data (%#)', async(producst: TaxableListElement[]) => {
-					mockFetchResponse<TaxableListElement[]>(producst);
+				it.each(serviceListsCases)('should return the correct data (%#)', async(producst: CM.Response.Taxable[]) => {
+					mockFetchResponse<CM.Response.Taxable[]>(producst);
 
 					const producstResponse = await api.showServicesBy({});
 
@@ -453,7 +438,8 @@ describe('API client', () => {
 					it.each(testCasesCall)('should make the correct call (%s)', callTest(getHeader));
 
 					it('should return the correct data (showCustomer)', async() => {
-						const customer: Customer = {
+						const customer: CM.Response.Customer = {
+							_id: '6qwte53re53re',
 							name: 'Zacarías',
 							surname: 'Zack',
 							phone: '987654132',
@@ -461,7 +447,7 @@ describe('API client', () => {
 							observations: 'Likes ZZ top'
 						};
 
-						mockFetchResponse<Customer>(customer);
+						mockFetchResponse<CM.Response.Customer>(customer);
 
 						const customerRespopnse = await api.showCustomer(ids[0]);
 
@@ -469,7 +455,8 @@ describe('API client', () => {
 					});
 
 					it('should return the correct data (showTicket)', async() => {
-						const ticket: Ticket = {
+						const ticket: CM.Response.Ticket = {
+							_id: '93ienfgf6et',
 							date: new Date(),
 							customer: 'iuey7rwy3nwke7fsiufs',
 							services: [
@@ -494,7 +481,7 @@ describe('API client', () => {
 							}
 						};
 
-						mockFetchResponse<Ticket>(ticket);
+						mockFetchResponse<CM.Response.Ticket>(ticket);
 
 						const ticketRespopnse = await api.showTicket(ids[1]);
 
@@ -502,13 +489,14 @@ describe('API client', () => {
 					});
 
 					it('should return the correct data (showService)', async() => {
-						const service: Taxable = {
+						const service: CM.Response.Taxable = {
+							_id: 'vbhbhbvf093js',
 							name: 'Extra Service',
 							price: 5,
 							tax: 15
 						};
 
-						mockFetchResponse<Taxable>(service);
+						mockFetchResponse<CM.Response.Taxable>(service);
 
 						const serviceRespopnse = await api.showService(ids[2]);
 
@@ -516,13 +504,14 @@ describe('API client', () => {
 					});
 
 					it('should return the correct data (showProduct)', async() => {
-						const product: Taxable = {
+						const product: CM.Response.Taxable = {
+							_id: 'agf63540eiwei',
 							name: 'Prime product',
 							price: 500,
 							tax: 25
 						};
 
-						mockFetchResponse<Taxable>(product);
+						mockFetchResponse<CM.Response.Taxable>(product);
 
 						const productRespopnse = await api.showProduct(ids[3]);
 
@@ -546,9 +535,12 @@ describe('API client', () => {
 			});
 
 			describe('modify & create', () => {
-				type DAT = Customer | Partial<Pick<Ticket, 'products' | 'services'>> | Taxable;
+				type CU = Omit<CM.Response.Customer, '_id'>
+				type TA = Omit<CM.Response.Taxable, '_id'>
+				type TI = Partial<Pick<CM.Response.Ticket, 'products' | 'services'>>
+				type DAT = CU | TA | TI;
 
-				const customer: Customer = {
+				const customer: CU = {
 					name: 'Zacarías',
 					surname: 'Zack',
 					phone: '987654132',
@@ -556,7 +548,7 @@ describe('API client', () => {
 					observations: 'Likes ZZ top'
 				};
 
-				const ticket: Partial<Pick<Ticket, 'products' | 'services'>> = {
+				const ticket: TI = {
 					services: [
 						{
 							taxable: '84urjfvnfs4669jsfdt46',
@@ -575,13 +567,13 @@ describe('API client', () => {
 					]
 				};
 
-				const service: Taxable = {
+				const service: TA = {
 					name: 'Extra Service',
 					price: 5,
 					tax: 15
 				};
 
-				const product: Taxable = {
+				const product: TA = {
 					name: 'Prime product',
 					price: 500,
 					tax: 25

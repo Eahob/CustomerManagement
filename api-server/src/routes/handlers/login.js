@@ -12,7 +12,7 @@ export const handleLogin = (req, res) => {
 		.then(id => {
 			const token = jwt.sign({ id }, secret, { expiresIn });
 
-			res.json(successResponse({ token }));
+			res.json(successResponse({ _id: '_', token }));
 		})
 		.catch(err => res.json(failResponse(err.message)));
 };

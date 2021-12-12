@@ -783,7 +783,7 @@ describe('Logic tests', () => {
 
 			await show(id);
 
-			expect(spy).toHaveBeenCalledWith(id, { _id: 0, __v: 0, hide: 0 });
+			expect(spy).toHaveBeenCalledWith(id, { __v: 0, hide: 0 });
 
 			spy.mockRestore();
 		});

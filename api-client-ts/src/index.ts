@@ -1,34 +1,19 @@
-import {
-	CMQuery,
-	TicketQuery,
-	TaxableQuery,
-	Customer,
-	CMServerResponse,
-	CMLogin,
-	Ticket,
-	Taxable,
-	ID,
-	CMEntryData,
-	ModifyResponse,
-	CustomerQuery,
-	TicketListElement,
-	CustomerListElement,
-	TaxableListElement
-} from './types';
+import type * as CM from '../types';
 
-type Fetched<D> = D | undefined;
-type PUTResponse = Promise<Fetched<ModifyResponse>>;
-const fetchJsonData = <D>(...[url, options]: Parameters<typeof fetch>): Promise<Fetched<D>> => fetch(url, options)
-	.then(response => response.json())
-	.then((json: CMServerResponse<D>): Fetched<D> | never => {
-		if (json.status === 'KO') {
-			throw new Error(json.error);
-		}
+export type { CM };
 
-		return json.data;
-	});
+const fetchJsonData = <D>(
+	...[url, options]: Parameters<typeof fetch>): Promise<D | undefined> => fetch(url, options)
+		.then(response => response.json())
+		.then((json: CM.Response.ServerResponse<D>): D | undefined | never => {
+			if (json.status === 'KO') {
+				throw new Error(json.error);
+			}
 
-const object2QueryParams = (params: CMQuery): string => Object.entries(params)
+			return json.data;
+		});
+
+const object2QueryParams = (params: CM.Query.ShowBy): string => Object.entries(params)
 	.filter(([, v]) => v !== undefined && v !== null)
 	.map(([k, v]) => {
 		const field = encodeURIComponent(k);
@@ -38,7 +23,7 @@ const object2QueryParams = (params: CMQuery): string => Object.entries(params)
 	})
 	.join('&');
 
-const urlWithParams = (url: string, params?: CMQuery): string => {
+const urlWithParams = (url: string, params?: CM.Query.ShowBy): string => {
 	if (params !== undefined && params !== null) {
 		const query = object2QueryParams(params);
 
@@ -48,12 +33,7 @@ const urlWithParams = (url: string, params?: CMQuery): string => {
 	return url;
 };
 
-const ticketListElementTypeTransform = ({ date, ...rest }: TicketListElement<string>): TicketListElement => ({
-	date: new Date(date),
-	...rest
-});
-
-const ticketTypeTransform = ({ date, ...rest }: Ticket<string>): Ticket => ({
+const ticketTypeTransform = ({ date, ...rest }: CM.Response.Ticket<string>): CM.Response.Ticket => ({
 	date: new Date(date),
 	...rest
 });
@@ -78,7 +58,7 @@ export class API {
 	}
 
 	async login(username: string, password: string): Promise<void> {
-		const data: Fetched<CMLogin> = await fetchJsonData<CMLogin>(`${this.#baseURL}/login`, {
+		const data = await fetchJsonData<CM.Response.Token>(`${this.#baseURL}/login`, {
 			method: 'post',
 			body: JSON.stringify({ username, password }),
 			headers: {
@@ -89,7 +69,7 @@ export class API {
 		this.#token = data?.token;
 	}
 
-	#bearerCall<D>(method: string, path: string, data?: Partial<CMEntryData>, query?: CMQuery): Promise<Fetched<D>> {
+	#bearerCall<D>(method: string, path: string, data?: Partial<CM.Response.EntryData>, query?: CM.Query.ShowBy) {
 		const [url, options]: Parameters<typeof fetch> = [
 			urlWithParams(`${this.#baseURL}/${path}`, query),
 			{ method }
@@ -105,7 +85,12 @@ export class API {
 		return fetchJsonData<D>(url, options);
 	}
 
-	#call<D>(method: string, path: string, data?: Partial<CMEntryData>, query?: CMQuery): Promise<Fetched<D>> | never {
+	#call<D>(
+		method: string,
+		path: string,
+		data?: Partial<CM.Response.EntryData>,
+		query?: CM.Query.ShowBy
+	): Promise<D | undefined> | never {
 		if (this.#token === undefined) {
 			throw new Error('Validation token is not set');
 		}
@@ -115,7 +100,7 @@ export class API {
 
 	async validateToken(): Promise<boolean> {
 		try {
-			await this.#call<undefined>('get', 'validate');
+			await this.#call('get', 'validate');
 
 			return true;
 		} catch (e) {
@@ -127,100 +112,101 @@ export class API {
 		}
 	}
 
-	#authorizedGETCall<D>(path: string, query?: CMQuery): Promise<Fetched<D>> {
+	#authorizedGETCall<D>(path: string, query?: CM.Query.ShowBy) {
 		return this.#call<D>('get', path, undefined, query);
 	}
 
-	#authorizedPOSTCall(path: string, data: CMEntryData): Promise<Fetched<ID>> {
-		return this.#call<ID>('post', path, data);
+	#authorizedPOSTCall(path: string, data: CM.Response.ServerData) {
+		return this.#call<CM.Response.ServerData>('post', path, data);
 	}
 
-	#authorizedPUTCall(path: string, data: Partial<CMEntryData>): PUTResponse {
-		return this.#call<ModifyResponse>('put', path, data);
+	#authorizedPUTCall(path: string, data: Partial<CM.Response.EntryData>) {
+		return this.#call<CM.Response.ServerData>('put', path, data);
 	}
 
-	#authorizedDELETECall(path: string): Promise<void> {
+	#authorizedDELETECall(path: string): Promise<undefined> {
 		return this.#call('delete', path);
 	}
 
-	showCustomersBy(query: CustomerQuery): Promise<Fetched<CustomerListElement[]>> {
-		return this.#authorizedGETCall<CustomerListElement[]>('customers', query);
+	showCustomersBy(query: CM.Query.CustomerQuery) {
+		return this.#authorizedGETCall<CM.Response.Customer[]>('customers', query);
 	}
 
-	showTicketsBy(query: TicketQuery): Promise<Fetched<TicketListElement[]>> {
-		return this.#authorizedGETCall<TicketListElement<string>[]>('tickets', query)
-			.then(res => res?.map(ticketListElementTypeTransform));
+	showTicketsBy(query: CM.Query.TicketQuery) {
+		return this.#authorizedGETCall<CM.Response.Ticket<string>[]>('tickets', query)
+			.then(res => res?.map(ticketTypeTransform));
 	}
 
-	showProductsBy(query: TaxableQuery): Promise<Fetched<TaxableListElement[]>> {
-		return this.#authorizedGETCall<TaxableListElement[]>('products', query);
+	showProductsBy(query: CM.Query.TaxableQuery) {
+		return this.#authorizedGETCall<CM.Response.Taxable[]>('products', query);
 	}
 
-	showServicesBy(query: TaxableQuery): Promise<Fetched<TaxableListElement[]>> {
-		return this.#authorizedGETCall<TaxableListElement[]>('services', query);
+	showServicesBy(query: CM.Query.TaxableQuery) {
+		return this.#authorizedGETCall<CM.Response.Taxable[]>('services', query);
 	}
 
-	showCustomer(id: string): Promise<Fetched<Customer>> {
-		return this.#authorizedGETCall<Customer>(`customer/${id}`);
+	showCustomer(id: CM.Response.ObjectId) {
+		return this.#authorizedGETCall<CM.Response.Customer>(`customer/${id}`);
 	}
 
-	showTicket(id: string): Promise<Fetched<Ticket>> {
-		return this.#authorizedGETCall<Ticket<string>>(`ticket/${id}`).then(res => res && ticketTypeTransform(res));
+	showTicket(id: CM.Response.ObjectId) {
+		return this.#authorizedGETCall<CM.Response.Ticket<string>>(`ticket/${id}`)
+			.then(res => res && ticketTypeTransform(res));
 	}
 
-	showService(id: string): Promise<Fetched<Taxable>> {
-		return this.#authorizedGETCall<Taxable>(`service/${id}`);
+	showService(id: CM.Response.ObjectId) {
+		return this.#authorizedGETCall<CM.Response.Taxable>(`service/${id}`);
 	}
 
-	showProduct(id: string): Promise<Fetched<Taxable>> {
-		return this.#authorizedGETCall<Taxable>(`product/${id}`);
+	showProduct(id: CM.Response.ObjectId) {
+		return this.#authorizedGETCall<CM.Response.Taxable>(`product/${id}`);
 	}
 
-	createCustomer(customer: Customer): Promise<Fetched<ID>> {
+	createCustomer(customer: CM.Response.Customer) {
 		return this.#authorizedPOSTCall('customer', customer);
 	}
 
-	createTicket(ticket: Ticket): Promise<Fetched<ID>> {
+	createTicket(ticket: CM.Response.Ticket) {
 		return this.#authorizedPOSTCall('ticket', ticket);
 	}
 
-	createService(service: Taxable): Promise<Fetched<ID>> {
+	createService(service: CM.Response.Taxable) {
 		return this.#authorizedPOSTCall('service', service);
 	}
 
-	createProduct(product: Taxable): Promise<Fetched<ID>> {
+	createProduct(product: CM.Response.Taxable) {
 		return this.#authorizedPOSTCall('product', product);
 	}
 
-	deleteCustomer(id: string): Promise<void> {
+	deleteCustomer(id: CM.Response.ObjectId) {
 		return this.#authorizedDELETECall(`customer/${id}`);
 	}
 
-	deleteTicket(id: string): Promise<void> {
+	deleteTicket(id: CM.Response.ObjectId) {
 		return this.#authorizedDELETECall(`ticket/${id}`);
 	}
 
-	deleteService(id: string): Promise<void> {
+	deleteService(id: CM.Response.ObjectId) {
 		return this.#authorizedDELETECall(`service/${id}`);
 	}
 
-	deleteProduct(id: string): Promise<void> {
+	deleteProduct(id: CM.Response.ObjectId) {
 		return this.#authorizedDELETECall(`product/${id}`);
 	}
 
-	modifyCustomer(id: string, customer: Partial<Customer>): PUTResponse {
+	modifyCustomer(id: CM.Response.ObjectId, customer: Partial<Omit<CM.Response.Customer, '_id'>>) {
 		return this.#authorizedPUTCall(`customer/${id}`, customer);
 	}
 
-	modifyTicket(id: string, ticketContent: Partial<Pick<Ticket, 'products' | 'services'>>): PUTResponse {
+	modifyTicket(id: CM.Response.ObjectId, ticketContent: Partial<Pick<CM.Response.Ticket, 'products' | 'services'>>) {
 		return this.#authorizedPUTCall(`ticket/${id}`, ticketContent);
 	}
 
-	modifyService(id: string, service: Partial<Taxable>): PUTResponse {
+	modifyService(id: CM.Response.ObjectId, service: Partial<CM.Response.Taxable>) {
 		return this.#authorizedPUTCall(`service/${id}`, service);
 	}
 
-	modifyProduct(id: string, product: Partial<Taxable>): PUTResponse {
+	modifyProduct(id: CM.Response.ObjectId, product: Partial<CM.Response.Taxable>) {
 		return this.#authorizedPUTCall(`product/${id}`, product);
 	}
 }

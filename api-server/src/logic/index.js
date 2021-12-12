@@ -181,12 +181,12 @@ export const deleteService = hide(Service);
 export const deleteProduct = hide(Product);
 export const deleteTicket = _id => Ticket.findOneAndDelete(_id);
 
-const show = model => _id => model.findById(_id, { _id: 0, __v: 0, hide: 0 });
+const show = model => _id => model.findById(_id, { __v: 0, hide: 0 });
 
 export const showCustomer = show(Customer);
 export const showService = show(Service);
 export const showProduct = show(Product);
-export const showTicket = _id => Ticket.findById(_id, { _id: 0, __v: 0, hide: 0 })
+export const showTicket = _id => Ticket.findById(_id, { __v: 0, hide: 0 })
 	.populate('customer', 'name')
 	.populate('services.taxable', 'name')
 	.populate('products.taxable', 'name');
@@ -205,9 +205,7 @@ const editDocument = (model, parseData) => async(data, _id) => {
 		}
 	}
 
-	await document.save();
-
-	return { _id };
+	return await document.save();
 };
 
 const parseTicketData = async({ servicesList, productsList }) => await calculateTicket(servicesList, productsList);

@@ -21,7 +21,7 @@ const handler = (requestFilter, dataFilter) => queryLogicCallback => async(reque
 	}
 };
 
-const idObject = data => ({ id: data.id });
+const idObject = data => ({ _id: data.id });
 const identity = data => data;
 const doNothing = () => {};
 const getIdFromParams = request => [request.params.id];
