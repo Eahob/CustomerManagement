@@ -595,7 +595,7 @@ describe('API client', () => {
 
 						await api[method](id, data);
 
-						expect(fetch).toHaveBeenCalledWith(url, makeRequestBody('put', token, data));
+						expect(fetch).toHaveBeenCalledWith(url, makeRequestBody('put', token, { data }));
 					});
 
 					it.each(testCases)('should return void (%s)', async(method: string, id: string, data: DAT) => {
@@ -616,7 +616,7 @@ describe('API client', () => {
 
 						await api[method](data);
 
-						expect(fetch).toHaveBeenCalledWith(url, makeRequestBody('post', token, data));
+						expect(fetch).toHaveBeenCalledWith(url, makeRequestBody('post', token, { data }));
 					});
 
 					it.each(testCases)('should return void (%s)', async(method: string, data: DAT) => {

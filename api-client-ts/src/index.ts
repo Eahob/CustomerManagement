@@ -78,7 +78,7 @@ export class API {
 		options.headers = [['authorization', `Bearer ${this.#token}`]];
 
 		if (data !== undefined && data !== null) {
-			options.body = JSON.stringify(data);
+			options.body = JSON.stringify({ data });
 			options.headers.push(['Content-Type', 'application/json']);
 		}
 
