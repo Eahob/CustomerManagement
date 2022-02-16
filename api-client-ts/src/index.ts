@@ -53,6 +53,10 @@ export class API {
 		return this.#token;
 	}
 
+	set token(value: string | undefined) {
+		this.#token = value;
+	}
+
 	get baseURL() {
 		return this.#baseURL;
 	}

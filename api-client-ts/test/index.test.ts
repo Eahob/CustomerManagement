@@ -104,8 +104,16 @@ describe('API client', () => {
 		jest.clearAllMocks();
 	});
 
-	it('should set token to undefined', () => {
+	it('should set token to undefined as default', () => {
 		expect(api.token).toBeUndefined();
+	});
+
+	it('should be able to set toke', () => {
+		const token = '8uedyhjmfgsg';
+
+		api.token = token;
+
+		expect(api.token).toBe(token);
 	});
 
 	it('should set correct baseURL without  port', () => {
